@@ -1,6 +1,6 @@
 from collections import defaultdict
-
 from aiohttp import web
+import configparser
 from km import *
 import asyncpg
 import aioredis
@@ -8,20 +8,27 @@ import web_interface
 import work_with_db
 import datetime
 
-remote_server_dsn = "postgresql://postgres:111111@10.10.3.105:5432/markirovka"
-local_server_dsn = "postgresql://postgres:111111@10.10.3.105:5432/markirovka"
-redis_dsn = "redis://192.168.100.122/0"
-redis_pass = "Admin61325!"
-local_db_table_name = "line_1"
-time_between_reload_stat = 5
 
+async def readconfig(app):
+    config = configparser.ConfigParser()
+    config.read("settings.conf")
 
-async def create_pool(app):
-    app['remote_server'] = await asyncpg.create_pool(dsn=remote_server_dsn, min_size=1, max_size=3)
-    app['local_server'] = await asyncpg.create_pool(dsn=local_server_dsn, min_size=1, max_size=3)
+    remote_server_dsn = config.get("server", "remote_server_dsn")
+    local_server_dsn = config.get("server", "local_server_dsn")
+    local_db_table_name = config.get("server", "local_db_table_name")
+    redis_dsn = config.get("server", "redis_dsn")
+    redis_pass = config.get("server", "redis_pass")
+    time_between_reload_stat = int(config.get("server", "time_between_reload_stat"))
+    app['remote_server'] = asyncpg.create_pool(dsn=remote_server_dsn, min_size=1, max_size=3)
+    app['local_server'] = asyncpg.create_pool(dsn=local_server_dsn, min_size=1, max_size=3)
     app['local_db_table_name'] = local_db_table_name
     app['redis_pool'] = aioredis.ConnectionPool.from_url(redis_dsn, password=redis_pass, max_connections=3)
     app['time_between_reload_stat'] = time_between_reload_stat
+
+
+async def create_pool(app):
+    await readconfig(app)
+
     app['current_gtin'] = ""
     app['current_product_name'] = ""
     app['current_batch_date'] = datetime.date(1, 1, 1)
