@@ -13,17 +13,11 @@ async def readconfig(app):
     config = configparser.ConfigParser()
     config.read("settings.conf")
 
-    remote_server_dsn = config.get("server", "remote_server_dsn")
-    local_server_dsn = config.get("server", "local_server_dsn")
-    local_db_table_name = config.get("server", "local_db_table_name")
-    redis_dsn = config.get("server", "redis_dsn")
-    redis_pass = config.get("server", "redis_pass")
-    time_between_reload_stat = int(config.get("server", "time_between_reload_stat"))
-    app['remote_server'] = asyncpg.create_pool(dsn=remote_server_dsn, min_size=1, max_size=3)
-    app['local_server'] = asyncpg.create_pool(dsn=local_server_dsn, min_size=1, max_size=3)
-    app['local_db_table_name'] = local_db_table_name
-    app['redis_pool'] = aioredis.ConnectionPool.from_url(redis_dsn, password=redis_pass, max_connections=3)
-    app['time_between_reload_stat'] = time_between_reload_stat
+    app['remote_server'] = asyncpg.create_pool(dsn=config.get("server", "remote_server_dsn"), min_size=1, max_size=3)
+    app['local_server'] = asyncpg.create_pool(dsn=config.get("server", "local_server_dsn"), min_size=1, max_size=3)
+    app['local_db_table_name'] = config.get("server", "local_db_table_name")
+    app['redis_pool'] = aioredis.ConnectionPool.from_url(config.get("server", "redis_dsn"), password=config.get("server", "redis_pass"), max_connections=3)
+    app['time_between_reload_stat'] = int(config.get("server", "time_between_reload_stat"))
 
 
 async def create_pool(app):
