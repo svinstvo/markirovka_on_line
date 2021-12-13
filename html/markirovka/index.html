@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>markirovka</title>
+    <link rel="icon" type="image/png" sizes="107x98" href="assets/img/174492-piskarievskii-molochnyi-zavod-1280x768.png">
+    <link rel="icon" type="image/png" sizes="107x98" href="assets/img/174492-piskarievskii-molochnyi-zavod-1280x768.png">
+    <link rel="icon" type="image/png" sizes="107x98" href="assets/img/174492-piskarievskii-molochnyi-zavod-1280x768.png">
+    <link rel="icon" type="image/png" sizes="107x98" href="assets/img/174492-piskarievskii-molochnyi-zavod-1280x768.png">
+    <link rel="icon" type="image/png" sizes="107x98" href="assets/img/174492-piskarievskii-molochnyi-zavod-1280x768.png">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/Header.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/Toggle-Switches.css">
+    <link rel="stylesheet" href="assets/css/x-dropdown.css">
+</head>
+
+<body style="background: url(&quot;assets/img/2021Animals.jpeg&quot;) top / auto;">
+    <nav class="navbar navbar-dark navbar-expand-md navigation-clean-search">
+        <div class="container"><a class="navbar-brand" id="logo" style="color: #21a9af;"><img class="d-sm-flex" src="assets/img/174492-piskarievskii-molochnyi-zavod-BIG.png"></a>
+            <div class="collapse navbar-collapse float-end d-inline-flex flex-row justify-content-end align-items-end" id="navcol-1"><a class="btn btn-light shadow action-button" role="button" style="width:120px;font-size:14px;background-color:#01a982;border:1px solid #01a982;font-family:'Source Sans Pro', sans-serif;font-weight:400;" onclick="window.location.reload();"><strong>ОБНОВИТЬ</strong></a></div>
+        </div>
+    </nav>
+    <div id="main_content" style="display: block;height: 580px;">
+        <div class="container">
+            <div class="row" style="height: 80px;"></div>
+            <div class="row" style="height: 70px;width: 100%;">
+                <div class="col-2 col-lg-4" style="text-align: right;"><button class="btn btn-primary btn-lg" id="button_left" type="button" onclick="function()"><i class="fa fa-arrow-left" style="font-size: 40px;"></i></button></div>
+                <div class="col-8 col-sm-8 col-lg-4 col-xl-4 offset-sm-0">
+                    <h1 id="current_date" style="text-align: center;font-size: 40px;" onclick="">2021-12-00<br></h1>
+                </div>
+                <div class="col-2 col-lg-4"><button class="btn btn-primary btn-lg" id="button_right" type="button" onclick="function()"><i class="fa fa-arrow-right" style="font-size: 40px;"></i></button></div>
+            </div>
+            <div class="row" style="height: 100px;">
+                <div class="col-12 col-md-12 col-lg-12">
+                    <div id="floating-label-1" class="form-floating mb-3"><select class="shadow form-select" for="floatinginput" placeholder="HGsOFT" style="font-size: 20px;height: 67px;">
+                            <optgroup label="Продукты">
+                                <option value="1">Молоко</option>
+                                <option value="2">Сметана</option>
+                                <option value="3">Творог</option>
+                            </optgroup>
+                        </select><label class="form-label" id="floating-label-2" for="floatinginput">Выберите продукт:</label></div>
+                </div>
+            </div>
+        </div>
+        <div class="container"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-xl-4 align-self-center status_ok" style="text-align: center;">
+                    <div class="row">
+                        <div class="col">
+                            <h1>СТАТУС</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 text-center align-self-center" style="text-align: right;"><span id="status_bar" class="status_ok"><strong>ВСЕ</strong>&nbsp;<strong>ХОРОШО</strong></span></div>
+                    </div>
+                </div>
+                <div class="col-10 col-sm-8 col-md-9 col-lg-7 col-xl-5">
+                    <div class="row">
+                        <div class="col-lg-12" style="text-align: right;">
+                            <h1 class="logging1">произведено всего:</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="text-align: right;">
+                            <h1 class="logging2">прочитанных кодов:</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12" style="text-align: right;">
+                            <h1 class="logging3">отбракованных кодов:</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 col-sm-4 col-md-3 col-lg-2 col-xl-2">
+                    <div class="row">
+                        <div class="col">
+                            <h1>0</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h1>0</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h1>0</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="service_content" style="display: none;height: 580px;">
+        <h1 class="d-sm-flex" style="height: 435px;text-align: center;">Сервисный режим</h1>
+    </div>
+    <div class="container" id="servce_toggle">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4 col-lg-4"></div>
+            <div class="col-md-4">
+                <fieldset>
+                    <legend></legend>
+                    <div class="shadow toggle"><input type="radio" id="cond_new" name="bike_cond" checked="checked"><label class="form-label noservice_red" id="noservice" for="cond_new">Обычный режим</label><input type="radio" id="cond_used" name="bike_cond"><label class="form-label" id="service" for="cond_used" onclick="function()">Сервисный режим</label></div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/func.js"></script>
+</body>
+
+</html>

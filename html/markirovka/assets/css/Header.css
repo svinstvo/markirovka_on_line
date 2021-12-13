@@ -1,0 +1,99 @@
+.header-blue .navbar {
+  background: transparent;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+  color: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+}
+
+@media (min-width:768px) {
+  .header-blue .navbar {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+.header-blue .navbar .navbar-brand {
+  font-weight: bold;
+  color: inherit;
+}
+
+.header-blue .navbar .navbar-brand:hover {
+  color: #f0f0f0;
+}
+
+.header-blue .navbar .navbar-collapse {
+  border-top: 1px solid rgba(255,255,255,0.3);
+  margin-top: .5rem;
+}
+
+@media (min-width:768px) {
+  .header-blue .navbar .navbar-collapse {
+    border-color: transparent;
+    margin: 0;
+  }
+}
+
+.header-blue .navbar .navbar-toggler {
+  border-color: rgba(255,255,255,0.3);
+}
+
+.header-blue .navbar .navbar-toggler:hover, .header-blue .navbar-toggler:focus {
+  background: none;
+}
+
+@media (min-width: 768px) {
+  .header-blue .navbar-nav .nav-link {
+    padding-left: .7rem;
+    padding-right: .7rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .header-blue .navbar-nav .nav-link {
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+  }
+}
+
+.header-blue .action-button, .header-blue .action-button:not(.disabled):active {
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 4px;
+  color: #eef4f7;
+  background: white;
+  box-shadow: none;
+  text-shadow: none;
+  padding: .4rem .9rem;
+  background: transparent;
+  transition: background-color 0.25s;
+  outline: none;
+  font-weight: 400;
+}
+
+.header-blue .action-button:hover {
+  color: #fff;
+}
+
+#status {
+}
+
+.status_ok {
+  background-color: #01a982;
+}
+
+.status_bad {
+  background-color: crimson;
+}
+
+#servce_toggle {
+  position: fixed;
+  bottom: 1%;
+  width: 100%;
+}
+
+.noservice_red {
+  background-color: #dc143c;
+}
+
