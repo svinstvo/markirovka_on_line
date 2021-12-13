@@ -23,16 +23,18 @@ async def get_statistic(request):
     prepared_dict = {}
     prepared_dict.update(request.app["counters"])
     prepared_dict.update({"current_gtin": request.app['current_gtin']})
+    prepared_dict.update({"current_product_name": request.app['current_product_name']})
     prepared_dict.update({"current_batch_date": request.app['current_batch_date'].strftime("%Y-%m-%d")})
     json_responce = json.dumps(prepared_dict)
     return web.Response(text=json_responce, content_type="application/json")
 
 
 async def set_current_gtin(request):
-    request.app['current_gtin'] = request.match_info['gtin']
+    #request.app['current_gtin'] = request.match_info['gtin']
+    request.app['current_gtin'] = request.rel_url.query['gtin']
     request.app['current_product_name'] = "Тут будет Название продукта"
     asyncio.create_task(work_with_db.load_counters_from_db(request.app, loop=False))
-    await work_with_db.load_counters_from_db(request.app, False)
+    await work_with_db.load_counters_from_db(request.app, loop=False)
     asyncio.create_task(ws_send_update(request.app))
     return web.Response(text="ok")
 
@@ -49,12 +51,13 @@ async def get_available_product_list(request):
 
 
 async def set_current_batch_date(request):
-    raw_date = request.match_info['date']
+    #raw_date = request.match_info['date']
+    raw_date=request.rel_url.query['date']
     print(raw_date)
     try:
         date = datetime.strptime(raw_date, '%Y-%m-%d')
         request.app['current_batch_date'] = date
-        await work_with_db.load_counters_from_db(request.app, False)
+        await work_with_db.load_counters_from_db(request.app, loop=False)
         asyncio.create_task(ws_send_update(request.app))
         responce_text = "ok"
 

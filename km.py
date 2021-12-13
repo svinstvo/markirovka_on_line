@@ -7,7 +7,8 @@ import work_with_db
 
 async def km_add(request):
     redis = aioredis.Redis(connection_pool=request.app['redis_pool'])
-    km = request.match_info['km']
+    # km = request.match_info['km']
+    km = request.rel_url.query['km']
     gtin = request.app["current_gtin"]
     batch_date = request.app['current_batch_date']
     if gtin == "":

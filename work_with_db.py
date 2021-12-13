@@ -31,6 +31,8 @@ async def load_counters_from_db(app, loop):
                         app['counters']=json
                 if not loop:
                     return
+            if not loop:
+                return
         except Exception as e:
             print(e)
         await asyncio.sleep(time_between_reload_stat)
