@@ -16,6 +16,16 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/Toggle-Switches.css">
     <link rel="stylesheet" href="assets/css/x-dropdown.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="assets/js/my_function.js"></script>
+    <script>
+        window.onload = onload()
+
+        function onload() {
+            startup()
+        }
+    </script>
+
 </head>
 
 <body style="background: url(&quot;assets/img/2021Animals.jpeg&quot;) top / auto;">
@@ -79,17 +89,17 @@
                 <div class="col-2 col-sm-4 col-md-3 col-lg-2 col-xl-2">
                     <div class="row">
                         <div class="col">
-                            <h1>0</h1>
+                            <h1 id="count_total">0</h1>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <h1>0</h1>
+                            <h1 id="count_good">0</h1>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <h1>0</h1>
+                            <h1 id="count_bad">0</h1>
                         </div>
                     </div>
                 </div>
