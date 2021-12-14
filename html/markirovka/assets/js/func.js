@@ -15,6 +15,20 @@ document.getElementById('noservice').onclick = function()
 };
 
 
+function subscribe_on_select() {
+    document.getElementById("product_selector").addEventListener('change',function(){
+        url=new URL(window.location.origin +"/line/web_interface/set_gtin");
+        url.searchParams.append('gtin',this.value);
+        console.log(url.toString());
+        $.ajax({
+            url:url.toString(),
+            dataType: 'text',
+            success:function (result) {
+                console.log("set gtin: "+result);
+            }
+        });
+    })
+}
 
 window.onload = function()
 {
@@ -27,6 +41,7 @@ window.onload = function()
     document.getElementById('current_date').innerHTML = today;
     fill_product_selector();
     subscribe_ws();
+    subscribe_on_select();
     setInterval(check_ws,5000)
 };
 
@@ -110,7 +125,12 @@ async function load_json() {
                     console.log(JSONObject['current_batch_date']);
                    document.getElementById('current_date').innerText=JSONObject['current_batch_date']
                 }
-                if (JSONObject['current_product_name']==="") {
+
+
+                //console.log(JSONObject['current_gtin']);
+                //console.log(document.getElementById("product_selector").value);
+                if (JSONObject['current_gtin'] !== document.getElementById("product_selector").value) {
+                  console.log("не равно ")
                 }
             }
         });
@@ -125,15 +145,12 @@ function fill_product_selector() {
                 JSONObject = JSON.parse(result);
                 selector=document.getElementById("product_selector")
                 for (var k in JSONObject) {
-                    console.log(k +" " + JSONObject[k])
+                    //console.log(k +" " + JSONObject[k])
                     var opt = document.createElement('option');
                     opt.value = k;
                     opt.innerHTML = JSONObject[k];
                     selector.add(opt,null)
-
                 }
             }
         });
-
-
 }
