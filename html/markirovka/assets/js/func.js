@@ -4,6 +4,8 @@ document.getElementById('service').onclick = function()
     let s = document.getElementById('service_content');
     m.style.display = "none";
     s.style.display = "block"
+    let service = document.getElementById('service');
+    service.classList.add('service_red');
 };
 
 document.getElementById('noservice').onclick = function() 
@@ -12,6 +14,8 @@ document.getElementById('noservice').onclick = function()
     let s = document.getElementById('service_content');
     m.style.display = "block";
     s.style.display = "none"
+    let service = document.getElementById('service');
+    service.classList.remove('service_red');
 };
 
 

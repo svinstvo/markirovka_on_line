@@ -97,3 +97,16 @@
   background-color: #dc143c;
 }
 
+.service_red {
+  background-color: #dc143c!important;
+  border-color: red!important;
+  user-select: none;
+}
+
+#service {
+}
+
+#switch_toggle {
+  user-select: none;
+}
+
