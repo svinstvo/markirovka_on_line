@@ -29,7 +29,7 @@ async def start_server(app):
     print(app['local_server'])
     app['current_gtin'] = ""
     app['current_product_name'] = ""
-    app['current_batch_date'] = datetime.date(1, 1, 1)
+    app['current_batch_date'] = datetime.date(2022, 1, 1)
     app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО"}
     app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0}
     app['ws'] = []

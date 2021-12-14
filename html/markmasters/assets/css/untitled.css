@@ -1,0 +1,10 @@
+@media (min-width: 768px) {
+  #logo-new {
+    width: 200px;
+  }
+}
+
+.sidebar-brand {
+  width: 50%;
+}
+
