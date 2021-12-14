@@ -14,7 +14,9 @@ document.getElementById('noservice').onclick = function()
     s.style.display = "none"
 };
 
-window.onload = function() 
+
+
+window.onload = function()
 {
     let today = new Date();
     let dd = today.getDate();
@@ -23,7 +25,7 @@ window.onload = function()
     let yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date').innerHTML = today;
-
+    fill_product_selector();
     subscribe_ws();
     setInterval(check_ws,5000)
 };
@@ -39,6 +41,7 @@ document.getElementById('button_right').onclick = function()
     let yyyy = tomorrow.getFullYear();
     tomorrow = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date').innerHTML = tomorrow;
+    set_date_on_server()
 };
 
 document.getElementById('button_left').onclick = function()
@@ -52,6 +55,7 @@ document.getElementById('button_left').onclick = function()
     let yyyy = yesterday.getFullYear();
     yesterday = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date').innerHTML = yesterday;
+    set_date_on_server()
 };
 
 
@@ -74,17 +78,62 @@ document.getElementById('button_left').onclick = function()
     }
 
 
-    async function load_json() {
+function set_date_on_server() {
+        current_date=document.getElementById('current_date').innerText;
+        url=new URL(window.location.origin +"/line/web_interface/set_current_batch_date");
+        url.searchParams.append('date',current_date);
+        console.log(url.toString());
+        $.ajax({
+            url:url.toString(),
+            dataType: 'text',
+            success:function (result) {
+                console.log("set date: "+result);
+            }
+        });
+}
+
+async function load_json() {
         let url = window.location.origin +"/line/statistic";
-            $.ajax({
-                url:url.toString(),
-                dataType: 'text',
-                success:function (result) {
-                    //console.log(result);
-                    JSONObject = JSON.parse(result);
-                    document.getElementById('count_total').innerText=JSONObject['total_codes']
-                    document.getElementById('count_good').innerText=JSONObject['good_codes']
-                    document.getElementById('count_bad').innerText=JSONObject['defect_codes']
+        $.ajax({
+            url:url.toString(),
+            dataType: 'text',
+            success:function (result) {
+                //console.log(result);
+                JSONObject = JSON.parse(result);
+                document.getElementById('count_total').innerText=JSONObject['total_codes'];
+                document.getElementById('count_good').innerText=JSONObject['good_codes'];
+                document.getElementById('count_bad').innerText=JSONObject['defect_codes'];
+                if (JSONObject['current_batch_date']==='1-01-01') {
+                    console.log("empty date");
+                    set_date_on_server()
+                } else {
+                    console.log(JSONObject['current_batch_date']);
+                   document.getElementById('current_date').innerText=JSONObject['current_batch_date']
                 }
-            });
-        }
+                if (JSONObject['current_product_name']==="") {
+                }
+            }
+        });
+}
+
+function fill_product_selector() {
+        url=new URL(window.location.origin +"/line/web_interface/get_available_product_list");
+        $.ajax({
+            url:url.toString(),
+            dataType: 'text',
+            success:function (result) {
+                JSONObject = JSON.parse(result);
+                selector=document.getElementById("product_selector")
+                for (var k in JSONObject) {
+                    console.log(k +" " + JSONObject[k])
+                    var opt = document.createElement('option');
+                    opt.value = k;
+                    opt.innerHTML = JSONObject[k];
+                    selector.add(opt,null)
+
+                }
+            }
+        });
+
+
+}
