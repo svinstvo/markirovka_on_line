@@ -37,12 +37,14 @@ function subscribe_on_select() {
 window.onload = function()
 {
     let today = new Date();
-    let dd = today.getDate();
+    let dd = today.getDate() + 1;
     dd = (dd < 10) ? '0' + dd : dd;
     let mm = today.getMonth() + 1;
     let yyyy = today.getFullYear();
     today = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date').innerHTML = today;
+    theday = document.getElementById('current_date').innerHTML
+    document.getElementById('current_date2').innerHTML = theday;
     fill_product_selector();
     subscribe_ws();
     subscribe_on_select();
@@ -60,6 +62,7 @@ document.getElementById('button_right').onclick = function()
     let yyyy = tomorrow.getFullYear();
     tomorrow = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date').innerHTML = tomorrow;
+    document.getElementById('current_date2').innerHTML = tomorrow;
     set_date_on_server()
 };
 
@@ -74,9 +77,27 @@ document.getElementById('button_left').onclick = function()
     let yyyy = yesterday.getFullYear();
     yesterday = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date').innerHTML = yesterday;
+    document.getElementById('current_date2').innerHTML = yesterday;
     set_date_on_server()
 };
 
+document.getElementById('modal_close').onclick = function()
+{
+    let m = document.getElementById('modal-1');
+    m.style.display = "none"
+}
+
+document.getElementById('modal_close2').onclick = function()
+{
+    let m = document.getElementById('modal-1');
+    m.style.display = "none"
+}
+
+document.getElementById('product_selector').onchange = function()
+{
+    let m = document.getElementById('modal-1');
+    m.style.display = "block"
+}
 
     function check_ws(){
         console.log(ws);
