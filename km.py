@@ -13,7 +13,7 @@ async def km_add(request):
     batch_date = request.app['current_batch_date']
     if gtin == "":
         asyncio.create_task(web_interface.show_error("Не выбран продукт"))
-        return web.Response(text="Не выбран продукт")
+        return web.Response(text="no selected product")
     if batch_date == "":
         asyncio.create_task(web_interface.show_error("Не выбрана дата производства"))
         return web.Response(text="Не выбрана дата производства")

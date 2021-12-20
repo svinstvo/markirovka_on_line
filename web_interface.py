@@ -30,7 +30,7 @@ async def get_statistic(request):
 
 
 async def set_current_gtin(request):
-    #request.app['current_gtin'] = request.match_info['gtin']
+    # request.app['current_gtin'] = request.match_info['gtin']
     request.app['current_gtin'] = request.rel_url.query['gtin']
     request.app['current_product_name'] = "Тут будет Название продукта"
     asyncio.create_task(work_with_db.load_counters_from_db(request.app, loop=False))
@@ -51,8 +51,8 @@ async def get_available_product_list(request):
 
 
 async def set_current_batch_date(request):
-    #raw_date = request.match_info['date']
-    raw_date=request.rel_url.query['date']
+    # raw_date = request.match_info['date']
+    raw_date = request.rel_url.query['date']
     print(raw_date)
     try:
         date = datetime.strptime(raw_date, '%Y-%m-%d')
@@ -82,3 +82,15 @@ async def websocket_handler(request):
         print("removed")
         print(request.app['ws'])
     return
+
+
+def get_controller_settings(requets):
+    json='''{
+   "time_break_no_read":100000,
+   "time_break_no_gap":100000,
+   "time_impulse":100000,
+   "bebug_mode":1,
+   "time_imp_uakov":1000000,
+   "fail_to_brake_count":3
+    }'''
+    return web.Response(text=json, content_type="application/json")

@@ -13,7 +13,6 @@ async def save_into_db(request, km, gtin, batch_date):
 
 async def load_counters_from_db(app, loop):
     time_between_reload_stat = app['time_between_reload_stat']
-    print(time_between_reload_stat)
     pool = app['local_server']
     table_name = app['local_db_table_name']
     while True:
