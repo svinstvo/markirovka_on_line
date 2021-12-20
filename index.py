@@ -16,7 +16,7 @@ async def readconfig(app):
                                                      max_size=3)
     app['local_server'] = await asyncpg.create_pool(dsn=config.get("server", "local_server_dsn"), min_size=1,
                                                     max_size=3)
-    app['local_db_table_name'] = config.get("server", "local_db_table_name")
+    app['markstation_id'] = config.get("server", "markstation_id")
     app['redis_pool'] = aioredis.ConnectionPool.from_url(config.get("server", "redis_dsn"),
                                                          password=config.get("server", "redis_pass"), max_connections=3)
     app['time_between_reload_stat'] = int(config.get("server", "time_between_reload_stat"))

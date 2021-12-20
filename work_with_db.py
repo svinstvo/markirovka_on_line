@@ -3,7 +3,7 @@ import asyncio
 
 async def save_into_db(request, km, gtin, batch_date):
     pool = request.app['local_server']
-    local_db_table_name = request.app['local_db_table_name']
+    local_db_table_name = f"line_{request.app['markstation_id']}"
     async with pool.acquire() as connection:
         async with connection.transaction():
             result = await connection.fetch(
@@ -14,7 +14,7 @@ async def save_into_db(request, km, gtin, batch_date):
 async def load_counters_from_db(app, loop):
     time_between_reload_stat = app['time_between_reload_stat']
     pool = app['local_server']
-    table_name = app['local_db_table_name']
+    table_name = f"line_{app['markstation_id']}"
     while True:
         try:
             if app['current_gtin'] != "" and app["current_batch_date"] != "":
