@@ -98,7 +98,7 @@
 }
 
 .service_red {
-  background-color: #dc143c!important;
+  background-color: #dc143c !important;
   border-color: red!important;
   user-select: none;
 }

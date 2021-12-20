@@ -29,17 +29,33 @@
     </nav>
     <div id="main_content" style="display: block;height: 580px;">
         <div class="container">
-            <div class="row" style="height: 80px;"></div>
-            <div class="row" style="height: 70px;width: 100%;">
-                <div class="col-2 col-lg-4" style="text-align: right;"><button class="btn btn-primary btn-lg" id="button_left" type="button" onclick="function()"><i class="fa fa-arrow-left" style="font-size: 40px;"></i></button></div>
-                <div class="col-8 col-sm-8 col-lg-4 col-xl-4 offset-sm-0">
-                    <h1 id="current_date" style="text-align: center;font-size: 40px;" onclick="">2021-12-00<br></h1>
+            <div class="row" style="height: 80px;">
+                <div class="col">
+                    <h1 id="current_date2" style="text-align: center;font-size: 40px;" onclick="">2021-12-00<br></h1>
                 </div>
-                <div class="col-2 col-lg-4"><button class="btn btn-primary btn-lg" id="button_right" type="button" onclick="function()"><i class="fa fa-arrow-right" style="font-size: 40px;"></i></button></div>
+            </div>
+            <div class="modal" role="dialog" tabindex="-1" id="modal-1" style="display: none;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Подтвердите дату!</h4><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="modal_close2"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" id="date" style="height: 70px;width: 100%;display:flex;">
+                                <div class="col-2 col-lg-4 col-xl-3" style="text-align: right;"><button class="btn btn-primary btn-lg" id="button_left" type="button" onclick="function()"><i class="fa fa-arrow-left" style="font-size: 40px;"></i></button></div>
+                                <div class="col-8 col-sm-8 col-lg-4 col-xl-6 offset-sm-0">
+                                    <h1 id="current_date" style="text-align: center;font-size: 40px;" onclick="function()">2021-12-00<br></h1>
+                                </div>
+                                <div class="col-2 col-lg-4 col-xl-3"><button class="btn btn-primary btn-lg" id="button_right" type="button" onclick="function()"><i class="fa fa-arrow-right" style="font-size: 40px;"></i></button></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer"><button class="btn btn-light" id="modal_close" type="button" data-bs-dismiss="modal" onclick="function()">Закрыть</button></div>
+                    </div>
+                </div>
             </div>
             <div class="row" style="height: 100px;">
                 <div class="col-12 col-md-12 col-lg-12">
-                    <div id="floating-label-1" class="form-floating mb-3"><select class="shadow form-select" for="floatinginput" placeholder="HGsOFT" style="font-size: 20px;height: 67px;" id="product_selector">
+                    <div id="floating-label-1" class="form-floating mb-3"><select class="shadow form-select" for="floatinginput" placeholder="HGsOFT" style="font-size: 20px;height: 67px;" id="product_selector" onchange="function()">
                         <!--
                         <option value="0">Не выбран продукт</option>
                         <optgroup label="Продукты" id="product_selector_option">
