@@ -8,6 +8,8 @@ async def handle_km(reader, writer):
         data = await reader.read(100)
         message = data.decode()
         print(f"->{message}<-")
+
+        #Если прилетает 1 символ значит это тест канала
         if len(message) == 1:
             writer.write(data)
             await writer.drain()

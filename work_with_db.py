@@ -26,8 +26,9 @@ async def load_counters_from_db(app, loop):
     (select count(gtin) total from {table_name} where batch_date=$1 and gtin=$2) as n3;''',
                                                            app["current_batch_date"], app['current_gtin'])
                         print(result)
-                        json = {"good_codes": result['good'], "defect_codes": result['defect'],"total_codes": result['total']}
-                        app['counters']=json
+                        json = {"good_codes": result['good'], "defect_codes": result['defect'],
+                                "total_codes": result['total']}
+                        app['counters'] = json
                 if not loop:
                     return
             if not loop:
@@ -35,3 +36,16 @@ async def load_counters_from_db(app, loop):
         except Exception as e:
             print(e)
         await asyncio.sleep(time_between_reload_stat)
+
+
+async def load_settings_from_db(app):
+    pool = app['local_server']
+    table_name = f"settings_line_{app['markstation_id']}"
+    async with pool.acquire() as connection:
+        async with connection.transaction():
+            record = await connection.fetchrow(
+                f''' select time_brak_no_read,time_brak_no_zazor,time_impulse,time_imp_upakov,zadanie_count_brak from settings_line_1;''')
+            result = {}
+            for key in record.keys():
+                result[key] = record[key]
+    return result
