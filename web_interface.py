@@ -84,13 +84,7 @@ async def websocket_handler(request):
     return
 
 
-def get_controller_settings(requets):
-    json='''{
-   "time_break_no_read":100000,
-   "time_break_no_gap":100000,
-   "time_impulse":100000,
-   "debug_mode":1,
-   "time_imp_uakov":1000000,
-   "fail_to_brake_count":3
-    }'''
-    return web.Response(text=json, content_type="application/json")
+async def get_controller_settings(request):
+    raw = await work_with_db.load_settings_from_db(request.app)
+    resp_json = json.dumps(raw)
+    return web.Response(text=resp_json, content_type="application/json")
