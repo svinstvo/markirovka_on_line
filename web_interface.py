@@ -89,7 +89,7 @@ def get_controller_settings(requets):
    "time_break_no_read":100000,
    "time_break_no_gap":100000,
    "time_impulse":100000,
-   "bebug_mode":1,
+   "debug_mode":1,
    "time_imp_uakov":1000000,
    "fail_to_brake_count":3
     }'''

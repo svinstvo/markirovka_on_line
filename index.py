@@ -35,6 +35,7 @@ async def start_server(app):
     app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО"}
     app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0}
     app['ws'] = []
+    app['debug_mode'] = {"debug_mode": 0}
 
     # app['remote_server'] = await asyncpg.create_pool(dsn="postgresql://postgres:111111@10.10.3.105:5432/markirovka",
     #                                           min_size=1, max_size=3)

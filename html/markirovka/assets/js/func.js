@@ -6,6 +6,7 @@ document.getElementById('service').onclick = function()
     s.style.display = "block"
     let service = document.getElementById('service');
     service.classList.add('service_red');
+    debug_mode(0);
 };
 
 document.getElementById('noservice').onclick = function() 
@@ -16,6 +17,7 @@ document.getElementById('noservice').onclick = function()
     s.style.display = "none"
     let service = document.getElementById('service');
     service.classList.remove('service_red');
+    debug_mode(1);
 };
 
 
@@ -49,6 +51,7 @@ window.onload = function()
     subscribe_ws();
     subscribe_on_select();
     setInterval(check_ws,5000)
+
 };
 
 document.getElementById('button_right').onclick = function()
@@ -178,4 +181,17 @@ function fill_product_selector() {
                 }
             }
         });
+}
+
+async function debug_mode(boolean) {
+    url=new URL(window.location.origin +"/line/web_interface/get_controller_settings");
+    $.ajax({
+        url:url.toString(),
+        dataType: 'text',
+        success:function (result) {
+            JSONObject = JSON.parse(result);
+            JSONObject['debug_mode'] = boolean
+            console.log("debug mode = " + JSONObject["debug_mode"]);
+        }
+    })
 }
