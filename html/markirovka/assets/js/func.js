@@ -51,7 +51,7 @@ window.onload = function()
     subscribe_ws();
     subscribe_on_select();
     setInterval(check_ws,5000)
-
+    fill_controller_settings()
 };
 
 document.getElementById('button_right').onclick = function()
@@ -194,4 +194,30 @@ async function debug_mode(boolean) {
             console.log("debug mode = " + JSONObject["debug_mode"]);
         }
     })
+}
+
+function fill_controller_settings() {
+    url=new URL(window.location.origin +"/line/web_interface/get_controller_settings");
+    $.ajax({
+        url: url.toString(),
+        dataType: 'text',
+        success: function (result) {
+            JSONObject = JSON.parse(result);
+            timebraknoread = JSONObject['time_brak_no_read'];
+            document.getElementById('time_brak_no_read').value = timebraknoread;
+            document.getElementById('time_brak_no_read1').value = timebraknoread;
+            timebraknozazor = JSONObject['time_brak_no_zazor'];
+            document.getElementById('time_brak_no_zazor').value = timebraknozazor;
+            document.getElementById('time_brak_no_zazor1').value = timebraknozazor;
+            timeimpulse = JSONObject['time_impulse'];
+            document.getElementById('time_impulse').value = timeimpulse;
+            document.getElementById('time_impulse1').value = timeimpulse;
+            timeimpuakov = JSONObject['time_imp_upakov'];
+            document.getElementById('time_imp_upakov').value = timeimpuakov;
+            document.getElementById('time_imp_upakov1').value = timeimpuakov;
+            failtobrakecount = JSONObject['zadanie_count_brak'];
+            document.getElementById('zadanie_count_brak').value = failtobrakecount;
+            document.getElementById('zadanie_count_brak1').value = failtobrakecount;
+        }
+    });
 }
