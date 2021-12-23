@@ -86,5 +86,7 @@ async def websocket_handler(request):
 
 async def get_controller_settings(request):
     raw = await work_with_db.load_settings_from_db(request.app)
+    raw['gtin']=request.app['current_gtin']
+    raw["status"]=request.app['status']
     resp_json = json.dumps(raw)
     return web.Response(text=resp_json, content_type="application/json")

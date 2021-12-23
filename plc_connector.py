@@ -1,5 +1,9 @@
 import asyncio
+import datetime
+
 import aiohttp
+import sys
+import json
 
 
 async def handle_km(reader, writer):
@@ -40,15 +44,17 @@ async def handle_km(reader, writer):
     await writer.wait_closed()
     print(writer.is_closing())
 
-#Метки приходят в ответ 1 или 0
+
+# Метки приходят в ответ 1 или 0
 async def handle_port2000(reader, writer):
+    print("new connect 2000")
     while True:
         try:
             data = await reader.read(100)
-            #print(f"->{data}<- raw receive om 2000")
+            # print(f"->{data}<- raw receive om 2000")
             message = data.decode()
-            print(f"->{message}<- receive on 2000")
-            writer.write(b"1 ")
+            print(f"receive on 2000 ->{message}<-")
+            writer.write(b"\x00\x00\x00\x01")
             await writer.drain()
         except Exception as e:
             print(e)
@@ -56,14 +62,16 @@ async def handle_port2000(reader, writer):
             print("send 1 on 2000 port")
             await writer.drain()
 
-#пинг контроллера что слышим то и передаем
+
+# пинг контроллера что слышим то и передаем
 async def handle_port2001(reader, writer):
+    print("new connect 2001")
     while True:
         try:
             data = await reader.read(100)
-            #print(f"->{data}<- raw receive om 2001")
+            # print(f"->{data}<- raw receive om 2001")
             message = data.decode()
-            print(f"->{message}<- receive on 2001")
+            print(f"receive on 2001 ->{message}<- ")
             writer.write(data)
             await writer.drain()
         except Exception as e:
@@ -72,27 +80,54 @@ async def handle_port2001(reader, writer):
             print("send 1 on 2001 port")
             await writer.drain()
 
-#принимаем два инта, в ответ настройки
+
+# принимаем два инта, и строку в ответ настройки
 async def handle_port2002(reader, writer):
+    print("new connect 2002")
     while True:
         try:
+
             data = await reader.read(100)
-            #print(f"->{data}<- raw receive om 2002")
-            message = data.decode()
-            print(f"->{message}<- receive on 2002")
-            writer.write(data)
+            time_start = datetime.datetime.now()
+            print(f"receive on 2002 ->{data}<- (RAW)")
+            # message = data.decode()
+            # print(f"receive on 2002 ->{message}<-")
+
+            alarm_no_scanner = int.from_bytes(data[0:4], byteorder="big")
+            time_imp_upakovki = int.from_bytes(data[4:8], byteorder="big")
+            message_from_plc = data[8:39]
+
+            async with aiohttp.ClientSession() as session:
+                async with session.get("http://127.0.0.1:8090/line/web_interface/get_controller_settings") as resp:
+                    resp_status = resp.status
+                    resp_text = await resp.text()
+            settings = json.loads(resp_text)
+            plc_jtin = (settings['gtin'].rjust(13)).encode('utf-8')
+            tbrak_no_read = int(settings["time_brak_no_read"]).to_bytes(4, byteorder="big")
+            tbrak_no_zazor =  int(settings["time_brak_no_zazor"]).to_bytes(4, byteorder="big")
+            timpulse=int(settings["time_impulse"]).to_bytes(4, byteorder="big")
+            naladka=int(settings["status"]["debug_mode"]).to_bytes(4, byteorder="big")
+            timp_upakov=int(settings["time_imp_upakov"]).to_bytes(4, byteorder="big")
+            zadanie_count_brak=int(settings["zadanie_count_brak"]).to_bytes(4, byteorder="big")
+
+            to_plc=tbrak_no_read+tbrak_no_zazor+timpulse+naladka+timp_upakov+zadanie_count_brak+plc_jtin + b"\x00"
+            print(f"sending on 2002 ->{to_plc}<- (RAW)")
+            writer.write(to_plc)
             await writer.drain()
+            time_stop = datetime.datetime.now()
+            print(time_stop-time_start)
         except Exception as e:
-            print(e)
+            print(f"error   on 2002 {e}")
 
 
 async def handle_port2004(reader, writer):
+    print("new connect 2004")
     while True:
         try:
             data = await reader.read(100)
-            print(f"->{data}<- raw receive on 2004")
+            print(f"receive on 2004 raw ->{data}<-")
             message = data.decode()
-            print(f"->{message}<- receive on 2004")
+            print(f"receive on 2004 ->{message}<-")
             writer.write(data)
             await writer.drain()
         except Exception as e:
