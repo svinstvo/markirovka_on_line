@@ -51,7 +51,7 @@ async def load_settings_from_db(app):
     return result
 
 
-async def get_available_product_list(app):
+async def get_available_procutc_list(app):
     pool = app['local_server']
     table_name = "available_products "
 

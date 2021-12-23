@@ -40,7 +40,7 @@ async def set_current_gtin(request):
 
 
 async def get_available_product_list(request):
-    text = await work_with_db.get_available_product_list(request.app)
+    text = await work_with_db.get_available_procutc_list(request.app)
     text = json.dumps(text)
     return web.Response(text=text, content_type="application/json")
 
