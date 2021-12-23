@@ -121,16 +121,16 @@
         </div>
         <div class="container" id="settings" style="padding: 0px;margin-top: -300px;">
             <div class="row">
-                <div class="col-xl-6 offset-xl-0"><span style="font-size: 22px;">Задержка по несчитанной метке&nbsp;</span></div>
-                <div class="col-xl-6"><form>
-                    <input id="time_brak_no_read" style="overflow-scrolling: auto" type="range" name="amountRange" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountInput.value=this.value" />
+                <div class="col"><span style="font-size: 22px;">Задержка по несчитанной метке&nbsp;</span></div>
+                <div class="col"><form>
+                    <input id="time_brak_no_read" type="range" name="amountRange" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountInput.value=this.value" />
                     <input id="time_brak_no_read1" type="number" name="amountInput" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Задержка по отсутствию зазора между упаковкой&nbsp;&nbsp;</span></div>
-                <div class="col-xl-6"><form>
+                <div class="col"><form>
                     <input id="time_brak_no_zazor" type="range" name="amountRange" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountInput.value=this.value" />
                     <input id="time_brak_no_zazor1" type="number" name="amountInput" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
@@ -138,7 +138,7 @@
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Время включения отбраковщика&nbsp;</span></div>
-                <div class="col-xl-6"><form>
+                <div class="col"><form>
                     <input id="time_impulse" type="range" name="amountRange" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountInput.value=this.value" />
                     <input id="time_impulse1" type="number" name="amountInput" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
@@ -146,7 +146,7 @@
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Заданное при наладке время импульса&nbsp;</span></div>
-                <div class="col-xl-6"><form>
+                <div class="col"><form>
                     <input id="time_imp_upakov" type="range" name="amountRange" min="0" max="5000000" step="100000" value="1000000" oninput="this.form.amountInput.value=this.value" />
                     <input id="time_imp_upakov1" type="number" name="amountInput" min="0" max="5000000" step="100000" value="1000000" oninput="this.form.amountRange.value=this.value" />
                     </form>
@@ -154,12 +154,13 @@
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Брак подряд до остановки&nbsp;</span></div>
-                <div class="col-xl-6"><form>
+                <div class="col"><form>
                     <input id="zadanie_count_brak" type="range" name="amountRange" min="0" max="10" step="1" value="3" oninput="this.form.amountInput.value=this.value" />
                     <input id="zadanie_count_brak1" type="number" name="amountInput" min="0" max="10" step="1" value="3" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
+            <button class="btn btn-primary" type="button" style="margin: 20px;">Сохранить</button>
         </div>
     </div>
     <div class="container" id="servce_toggle">

@@ -1,4 +1,5 @@
-document.getElementById('service').onclick = function() 
+// Показ сервисного режима
+document.getElementById('service').onclick = function()
 {
     let m = document.getElementById('main_content');
     let s = document.getElementById('service_content');
@@ -9,6 +10,7 @@ document.getElementById('service').onclick = function()
     debug_mode(0);
 };
 
+// Показ основного режима
 document.getElementById('noservice').onclick = function() 
 {
     let m = document.getElementById('main_content');
@@ -36,17 +38,11 @@ function subscribe_on_select() {
     })
 }
 
+// Запуск функций при загрузке
 window.onload = function()
 {
-    let today = new Date();
-    let dd = today.getDate() + 1;
-    dd = (dd < 10) ? '0' + dd : dd;
-    let mm = today.getMonth() + 1;
-    let yyyy = today.getFullYear();
-    today = yyyy + '-' + mm + '-' + dd;
-    document.getElementById('current_date').innerHTML = today;
-    theday = document.getElementById('current_date').innerHTML
-    document.getElementById('current_date2').innerHTML = theday;
+    //get_date_from_user();
+    get_date_from_json();
     fill_product_selector();
     subscribe_ws();
     subscribe_on_select();
@@ -54,6 +50,23 @@ window.onload = function()
     fill_controller_settings()
 };
 
+// Функция получения и отображения даты из JSON
+function get_date_from_json() {
+    let url = window.location.origin +"/line/statistic";
+        $.ajax({
+            url: url.toString(),
+            dataType: 'text',
+            success: function (result) {
+                console.log(result);
+                JSONObject = JSON.parse(result);
+                console.log("JSONObject['current_batch_date'] = " + JSONObject['current_batch_date']);
+                document.getElementById('current_date').innerText=JSONObject['current_batch_date']
+                document.getElementById('current_date2').innerText=JSONObject['current_batch_date']
+            }
+        })
+};
+
+// кнопка переключения даты на день вперед
 document.getElementById('button_right').onclick = function()
 {
     let currdate = document.getElementById('current_date').innerHTML
@@ -69,6 +82,7 @@ document.getElementById('button_right').onclick = function()
     set_date_on_server()
 };
 
+// кнопка переключения даты на день назад
 document.getElementById('button_left').onclick = function()
 {
     let currdate = document.getElementById('current_date').innerHTML
@@ -84,18 +98,21 @@ document.getElementById('button_left').onclick = function()
     set_date_on_server()
 };
 
+// кнопка закрытия всплывающего окна с датой
 document.getElementById('modal_close').onclick = function()
 {
     let m = document.getElementById('modal-1');
     m.style.display = "none"
 }
 
+// вторая кнопка закрытия всплывающего окна с датой
 document.getElementById('modal_close2').onclick = function()
 {
     let m = document.getElementById('modal-1');
     m.style.display = "none"
 }
 
+// Всплывающее окно с датой по смене продукта
 document.getElementById('product_selector').onchange = function()
 {
     let m = document.getElementById('modal-1');
@@ -120,7 +137,7 @@ document.getElementById('product_selector').onchange = function()
         load_json()
     }
 
-
+// функция переключения даты на сервере
 function set_date_on_server() {
         current_date=document.getElementById('current_date').innerText;
         url=new URL(window.location.origin +"/line/web_interface/set_current_batch_date");
@@ -164,6 +181,7 @@ async function load_json() {
         });
 }
 
+// функция заполнения продуктами для выбора из селектора
 function fill_product_selector() {
         url=new URL(window.location.origin +"/line/web_interface/get_available_product_list");
         $.ajax({
@@ -183,6 +201,7 @@ function fill_product_selector() {
         });
 }
 
+// переключение в debug_mode
 async function debug_mode(boolean) {
     url=new URL(window.location.origin +"/line/web_interface/get_controller_settings");
     $.ajax({
@@ -190,12 +209,14 @@ async function debug_mode(boolean) {
         dataType: 'text',
         success:function (result) {
             JSONObject = JSON.parse(result);
+            console.log("debug mode до = " + JSONObject["debug_mode"]);
             JSONObject['debug_mode'] = boolean
-            console.log("debug mode = " + JSONObject["debug_mode"]);
+            console.log("debug mode после = " + JSONObject["debug_mode"]);
         }
     })
 }
 
+// загрузка настроек из JSON и заполнение
 function fill_controller_settings() {
     url=new URL(window.location.origin +"/line/web_interface/get_controller_settings");
     $.ajax({
@@ -205,7 +226,7 @@ function fill_controller_settings() {
             JSONObject = JSON.parse(result);
             option = document.getElementById("settings")
                 for (var k in JSONObject) {
-                    console.log(k + " " + JSONObject[k])
+                    //console.log(k + " " + JSONObject[k])
                     if(JSONObject.hasOwnProperty(k))
                         obj = JSONObject[k];
                         $('input[id=' +k +']').val(obj);

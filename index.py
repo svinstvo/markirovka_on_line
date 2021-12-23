@@ -9,6 +9,7 @@ import work_with_db
 import plc_connector
 import os
 
+
 async def readconfig(app):
     config = configparser.ConfigParser()
     config.read("settings.conf")
@@ -25,14 +26,13 @@ async def readconfig(app):
 
 async def start_server(app):
     await readconfig(app)
-    #print(app['remote_server'])
-    #print(app['local_server'])
+    # print(app['remote_server'])
+    # print(app['local_server'])
 
-
-    app['current_gtin'] = ""
+    app['current_gtin'] = "4602547000169"
     app['current_product_name'] = ""
-    app['current_batch_date'] = datetime.date(2022, 1, 1)
-    app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО"}
+    app['current_batch_date'] = datetime.datetime.today()+datetime.timedelta(days=1)
+    app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0}
     app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0}
     app['ws'] = []
 
@@ -43,7 +43,6 @@ async def start_server(app):
 
     asyncio.create_task(work_with_db.load_counters_from_db(app, loop=True))
     asyncio.create_task(plc_connector.start_servers(app))
-
 
 
 async def close_pool(app):
@@ -62,9 +61,9 @@ app.add_routes([
     web.get('/line/web_interface/get_available_product_list', web_interface.get_available_product_list),
     web.get('/line/web_interface/get_controller_settings', web_interface.get_controller_settings),
     web.get('/line/ws', web_interface.websocket_handler),
-    web.static('/line/static_files/',os.path.abspath(os.getcwd()),show_index=True)
+    web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
 ])
-#print(os.path.abspath(os.getcwd()))
+# print(os.path.abspath(os.getcwd()))
 app.on_startup.append(start_server)
 # app.on_cleanup.append(close_pool)
 config = configparser.ConfigParser()
