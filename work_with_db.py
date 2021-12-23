@@ -49,3 +49,21 @@ async def load_settings_from_db(app):
             for key in record.keys():
                 result[key] = record[key]
     return result
+
+
+async def get_available_procutc_list(app):
+    pool = app['local_server']
+    table_name = "available_products "
+
+    async with pool.acquire() as connection:
+        async with connection.transaction():
+            record = await connection.fetch('select gtin,name from available_products where line = $1;',
+                                            app['markstation_id'])
+
+    result = {}
+    for line in record:
+        print(line[0])
+        print(line[1])
+        result[line[0]] = line[1]
+
+    return result

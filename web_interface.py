@@ -40,13 +40,8 @@ async def set_current_gtin(request):
 
 
 async def get_available_product_list(request):
-    text = '''{
-   "55555":"Тестовая фигня",
-   "4602547000169":"УЛЬТРАПАСТЕРИЗОВАННОЕ КЛЕВЕРОК 2,5% 0,5Л",
-   "4602547000695":"Ультрапастеризованное Топлёное Клевер 4,0% 1л.",
-   "4602547000015":"УЛЬТРАПАСТЕРИЗОВАННОЕ КЛЕВЕР 3,5% 1Л",
-   "4602547000022":"СЛИВКИ УЛЬТРАПАСТЕРИЗОВАННЫЕ КЛЕВЕР 10% 500Г"
-    }'''
+    text = await work_with_db.get_available_procutc_list(request.app)
+    text = json.dumps(text)
     return web.Response(text=text, content_type="application/json")
 
 
@@ -86,7 +81,7 @@ async def websocket_handler(request):
 
 async def get_controller_settings(request):
     raw = await work_with_db.load_settings_from_db(request.app)
-    raw['gtin']=request.app['current_gtin']
-    raw["status"]=request.app['status']
+    raw['gtin'] = request.app['current_gtin']
+    raw["status"] = request.app['status']
     resp_json = json.dumps(raw)
     return web.Response(text=resp_json, content_type="application/json")
