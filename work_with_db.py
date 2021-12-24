@@ -1,13 +1,14 @@
 import asyncio
 
 
-async def save_into_db(request, km, gtin, batch_date):
+async def save_into_db(request, km, gtin, batch_date, status):
     pool = request.app['local_server']
     local_db_table_name = f"line_{request.app['markstation_id']}"
     async with pool.acquire() as connection:
         async with connection.transaction():
             result = await connection.fetch(
-                f'insert into {local_db_table_name} (km,gtin,batch_date) values ($1,$2,$3)', km, gtin, batch_date)
+                f'insert into {local_db_table_name} (km,gtin,batch_date,verified_status) values ($1,$2,$3,$4)', km,
+                gtin, batch_date, status)
             print(result)
 
 
@@ -21,13 +22,14 @@ async def load_counters_from_db(app, loop):
                 async with pool.acquire() as connection:
                     async with connection.transaction():
                         result = await connection.fetchrow(f'''select n1.good,n2.defect,n3.total from
-    (select count(gtin) good from {table_name} where batch_date=$1 and gtin=$2 and km!='') as n1 ,
-    (select count(gtin) defect from {table_name} where batch_date=$1 and gtin=$2 and km ='') as n2,
-    (select count(gtin) total from {table_name} where batch_date=$1 and gtin=$2) as n3;''',
+    (select count(gtin) good from {table_name} where batch_date=$1 and gtin=$2 and verified_status like 'verified') as n1 ,
+    (select count(gtin) defect from {table_name} where batch_date=$1 and gtin=$2 and verified_status like 'noread') as n2,
+    (select count(gtin) total from {table_name} where batch_date=$1 and gtin=$2) as n3,
+    (select count(gtin) duplicate from {table_name} where batch_date=$1 and gtin=$2 and verified_status like 'duplicate') as n4;''',
                                                            app["current_batch_date"], app['current_gtin'])
                         print(result)
                         json = {"good_codes": result['good'], "defect_codes": result['defect'],
-                                "total_codes": result['total']}
+                                "total_codes": result['total'], "duplicates_codes": result['duplicate']}
                         app['counters'] = json
                 if not loop:
                     return
@@ -43,11 +45,11 @@ async def load_settings_from_db(app):
     table_name = f"settings_line_{app['markstation_id']}"
     async with pool.acquire() as connection:
         async with connection.transaction():
-            record = await connection.fetchrow(
-                f''' select time_brak_no_read,time_brak_no_zazor,time_impulse,time_imp_upakov,zadanie_count_brak from settings_line_1;''')
+            records = await connection.fetch(
+                f''' select param_name,param_value from settings_plc where line_number=$1;''', app['markstation_id'])
             result = {}
-            for key in record.keys():
-                result[key] = record[key]
+            for record in records:
+                result[record[0]] = record[1]
     return result
 
 
