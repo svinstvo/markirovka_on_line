@@ -19,10 +19,11 @@ async def km_add(request):
         return web.Response(text="Не выбрана дата производства")
 
     request.app['last_10_codes'] = request.app['last_10_codes'][-9:]
-    if km == "NOREAD":
-        print("noread")
+    if km[:6].upper() == "NOREAD":
+        km=km[:6]
         status = "noread"
         response_text = "noread"
+        request.app['last_10_codes'].append(km)
         request.app['counters']['defect_codes'] += 1
         request.app['status'] = {"state": 1, "message": "Код не прочелся","debug_mode": 0}
     else:
