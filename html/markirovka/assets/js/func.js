@@ -163,7 +163,7 @@ async function load_json() {
                 document.getElementById('count_total').innerText=JSONObject['total_codes'];
                 document.getElementById('count_good').innerText=JSONObject['good_codes'];
                 document.getElementById('count_bad').innerText=JSONObject['defect_codes'];
-                document.getElementById('status_bar').innerHTML = "<strong>" + JSONObject['status']['message'] + "</strong>";
+                get_status()
                 if (JSONObject['current_batch_date']==='1-01-01') {
                     console.log("empty date");
                     set_date_on_server()
@@ -236,6 +236,7 @@ function fill_controller_settings() {
     })
 }
 
+// Функция получения статуса чтения кода из JSON
 async function get_status(){
      url=new URL(window.location.origin +"/line/statistic");
      $.ajax({
@@ -243,10 +244,18 @@ async function get_status(){
          dataType: 'text',
          success: function (result){
              JSONObject = JSON.parse(result);
-             status_text = JSONObject[status][Message];
-             status = JSONObject[state];
+             status_text = JSONObject['status']['message'];
+             document.getElementById('status_bar').innerHTML = status_text;
+             status = JSONObject['status']['state'];
+             if (status===1) {
+                 document.getElementById("status_id").classList.add("status_bad");
+                 document.getElementById("status_id").classList.remove("status_ok");
+             } else{
+                 document.getElementById("status_id").classList.add("status_ok");
+                 document.getElementById("status_id").classList.remove("status_bad");
+             }
              console.log("status_text = " + status_text);
-             console.log("status_text = " + status);
+             console.log("status = " + status);
          }
      })
 }
