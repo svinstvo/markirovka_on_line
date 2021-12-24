@@ -27,6 +27,8 @@ async def km_add(request):
         asyncio.create_task(work_with_db.save_into_db(request, km, gtin, batch_date))  # Записываем в локальную бд
         request.app['counters']['good_codes'] += 1
         request.app['counters']['total_codes'] += 1
+        request.app['last_10_codes']=request.app['last_10_codes'][-9:]
+        request.app['last_10_codes'].append(km)
         asyncio.create_task(web_interface.ws_send_update(request.app))
         response_text = "ok"
     else:
