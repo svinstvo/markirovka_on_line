@@ -163,6 +163,7 @@ async function load_json() {
                 document.getElementById('count_total').innerText=JSONObject['total_codes'];
                 document.getElementById('count_good').innerText=JSONObject['good_codes'];
                 document.getElementById('count_bad').innerText=JSONObject['defect_codes'];
+                document.getElementById('status_bar').innerText = JSONObject['status']['Message'];
                 if (JSONObject['current_batch_date']==='1-01-01') {
                     console.log("empty date");
                     set_date_on_server()
@@ -209,9 +210,8 @@ async function debug_mode(boolean) {
         dataType: 'text',
         success:function (result) {
             JSONObject = JSON.parse(result);
-            console.log("debug mode до = " + JSONObject["debug_mode"]);
-            JSONObject['debug_mode'] = boolean
-            console.log("debug mode после = " + JSONObject["debug_mode"]);
+            console.log("debug mode = " + JSONObject["status"]["debug_mode"]);
+            //JSONObject['debug_mode'] = boolean
         }
     })
 }
@@ -234,4 +234,19 @@ function fill_controller_settings() {
                 }
         }
     })
+}
+
+async function get_status(){
+     url=new URL(window.location.origin +"/line/statistic");
+     $.ajax({
+         url: url.toString(),
+         dataType: 'text',
+         success: function (result){
+             JSONObject = JSON.parse(result);
+             status_text = JSONObject[status][Message];
+             status = JSONObject[state];
+             console.log("status_text = " + status_text);
+             console.log("status_text = " + status);
+         }
+     })
 }
