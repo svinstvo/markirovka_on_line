@@ -163,7 +163,7 @@ async function load_json() {
                 document.getElementById('count_total').innerText=JSONObject['total_codes'];
                 document.getElementById('count_good').innerText=JSONObject['good_codes'];
                 document.getElementById('count_bad').innerText=JSONObject['defect_codes'];
-                document.getElementById('status_bar').innerText = JSONObject['status']['Message'];
+                document.getElementById('status_bar').innerHTML = "<strong>" + JSONObject['status']['message'] + "</strong>";
                 if (JSONObject['current_batch_date']==='1-01-01') {
                     console.log("empty date");
                     set_date_on_server()
