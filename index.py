@@ -33,7 +33,7 @@ async def start_server(app):
     app['current_product_name'] = ""
     app['current_batch_date'] = datetime.datetime.today() + datetime.timedelta(days=1)
     app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0}
-    app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0}
+    app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0,"duplicates_codes":0}
     app['last_10_codes'] = []
     app['ws'] = []
 
