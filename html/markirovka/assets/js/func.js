@@ -163,7 +163,18 @@ async function load_json() {
                 document.getElementById('count_total').innerText=JSONObject['total_codes'];
                 document.getElementById('count_good').innerText=JSONObject['good_codes'];
                 document.getElementById('count_bad').innerText=JSONObject['defect_codes'];
-                get_status()
+                status_text = JSONObject['status']['message'];
+                document.getElementById('status_bar').innerHTML = status_text;
+                status = JSONObject['status']['state'];
+                if (status===1) {
+                    document.getElementById("status_id").classList.add("status_bad");
+                    document.getElementById("status_id").classList.remove("status_ok");
+                } else {
+                    document.getElementById("status_id").classList.add("status_ok");
+                    document.getElementById("status_id").classList.remove("status_bad");
+                }
+                console.log("status_text = " + status_text);
+                console.log("status = " + status);
                 if (JSONObject['current_batch_date']==='1-01-01') {
                     console.log("empty date");
                     set_date_on_server()
@@ -247,15 +258,15 @@ async function get_status(){
              status_text = JSONObject['status']['message'];
              document.getElementById('status_bar').innerHTML = status_text;
              status = JSONObject['status']['state'];
-             if (status===1) {
-                 document.getElementById("status_id").classList.add("status_bad");
+             console.log("status = " + status);
+             if (status === 1) {
                  document.getElementById("status_id").classList.remove("status_ok");
-             } else{
-                 document.getElementById("status_id").classList.add("status_ok");
+                 document.getElementById("status_id").classList.add("status_bad");
+             } else {
                  document.getElementById("status_id").classList.remove("status_bad");
+                 document.getElementById("status_id").classList.add("status_ok");
              }
              console.log("status_text = " + status_text);
-             console.log("status = " + status);
          }
      })
 }
