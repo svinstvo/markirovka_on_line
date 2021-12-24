@@ -25,6 +25,9 @@ async def get_statistic(request):
     prepared_dict.update({"current_gtin": request.app['current_gtin']})
     prepared_dict.update({"current_product_name": request.app['current_product_name']})
     prepared_dict.update({"current_batch_date": request.app['current_batch_date'].strftime("%Y-%m-%d")})
+    prepared_dict["status"] = request.app['status']
+    prepared_dict["last_10_codes"]=request.app['last_10_codes']
+
     json_responce = json.dumps(prepared_dict)
     return web.Response(text=json_responce, content_type="application/json")
 
@@ -40,7 +43,7 @@ async def set_current_gtin(request):
 
 
 async def get_available_product_list(request):
-    text = await work_with_db.get_available_procutc_list(request.app)
+    text = await work_with_db.get_available_product_list(request.app)
     text = json.dumps(text)
     return web.Response(text=text, content_type="application/json")
 

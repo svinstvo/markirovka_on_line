@@ -31,9 +31,10 @@ async def start_server(app):
 
     app['current_gtin'] = "4602547000169"
     app['current_product_name'] = ""
-    app['current_batch_date'] = datetime.datetime.today()+datetime.timedelta(days=1)
+    app['current_batch_date'] = datetime.datetime.today() + datetime.timedelta(days=1)
     app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0}
     app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0}
+    app['last_10_codes'] = []
     app['ws'] = []
 
     # app['remote_server'] = await asyncpg.create_pool(dsn="postgresql://postgres:111111@10.10.3.105:5432/markirovka",
