@@ -21,7 +21,7 @@ async def load_counters_from_db(app, loop):
             if app['current_gtin'] != "" and app["current_batch_date"] != "":
                 async with pool.acquire() as connection:
                     async with connection.transaction():
-                        result = await connection.fetchrow(f'''select n1.good,n2.defect,n3.total from
+                        result = await connection.fetchrow(f'''select n1.good,n2.defect,n3.total,n4.duplicate from
     (select count(gtin) good from {table_name} where batch_date=$1 and gtin=$2 and verified_status like 'verified') as n1 ,
     (select count(gtin) defect from {table_name} where batch_date=$1 and gtin=$2 and verified_status like 'noread') as n2,
     (select count(gtin) total from {table_name} where batch_date=$1 and gtin=$2) as n3,

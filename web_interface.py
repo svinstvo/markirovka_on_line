@@ -36,7 +36,6 @@ async def set_current_gtin(request):
     # request.app['current_gtin'] = request.match_info['gtin']
     request.app['current_gtin'] = request.rel_url.query['gtin']
     request.app['current_product_name'] = "Тут будет Название продукта"
-    asyncio.create_task(work_with_db.load_counters_from_db(request.app, loop=False))
     await work_with_db.load_counters_from_db(request.app, loop=False)
     asyncio.create_task(ws_send_update(request.app))
     return web.Response(text="ok")
