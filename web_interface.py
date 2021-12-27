@@ -11,15 +11,15 @@ async def show_error(message):
 
 
 async def ws_send_update(app):
-    print("ws send")
-    print(app['ws'])
+    #print("ws send")
+    #print(app['ws'])
     for ws in app['ws']:
         await ws.send_str("update")
     return
 
 
 async def get_statistic(request):
-    print(request.app["counters"])
+    #print(request.app["counters"])
     prepared_dict = {}
     prepared_dict.update(request.app["counters"])
     prepared_dict.update({"current_gtin": request.app['current_gtin']})
@@ -27,6 +27,8 @@ async def get_statistic(request):
     prepared_dict.update({"current_batch_date": request.app['current_batch_date'].strftime("%Y-%m-%d")})
     prepared_dict["status"] = request.app['status']
     prepared_dict["last_10_codes"]=request.app['last_10_codes']
+    prepared_dict["plc_state"] = request.app['plc_state']
+
 
     json_responce = json.dumps(prepared_dict)
     return web.Response(text=json_responce, content_type="application/json")
@@ -82,8 +84,22 @@ async def websocket_handler(request):
 
 
 async def get_controller_settings(request):
+    try:
+        request.app['plc_state']['alarm_no_scanner'] = request.rel_url.query['alarm_no_scanner']
+        request.app['plc_state']['time_imp_upakovki'] = request.rel_url.query['time_imp_upakovki']
+        request.app['plc_state']['count_noread_from_plc'] = request.rel_url.query['count_noread_from_plc']
+        request.app['plc_state']['count_total_from_plc'] = request.rel_url.query['count_total_from_plc']
+        request.app['plc_state']['message_from_plc'] = request.rel_url.query['message_from_plc']
+    except Exception as e:
+        print(e)
+
     raw = await work_with_db.load_settings_from_db(request.app)
     raw['gtin'] = request.app['current_gtin']
     raw["status"] = request.app['status']
     resp_json = json.dumps(raw)
     return web.Response(text=resp_json, content_type="application/json")
+
+
+async def plc_set_status(request):
+
+    return web.Response(text="ok",content_type="text/plain")

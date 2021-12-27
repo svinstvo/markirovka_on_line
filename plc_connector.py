@@ -59,7 +59,7 @@ async def handle_port2000(reader, writer):
                 async with session.get("http://127.0.0.1:8090/line/km/add", params=params) as resp:
                     resp_status = resp.status
                     resp_text = await resp.text()
-            print(resp_text)
+            #print(resp_text)
             if resp_text =="ok":
                 writer.write(b"\x00\x00\x00\x01")
             else:
@@ -101,15 +101,15 @@ async def handle_port2002(reader, writer):
             print(f"receive on 2002 ->{data}<- (RAW)")
             # message = data.decode()
             # print(f"receive on 2002 ->{message}<-")
+            stat_from_plc={}
+            stat_from_plc['alarm_no_scanner'] = int.from_bytes(data[0:4], byteorder="big")
+            stat_from_plc['time_imp_upakovki'] = int.from_bytes(data[4:8], byteorder="big")
+            stat_from_plc['count_noread_from_plc']=int.from_bytes(data[8:12],byteorder="big")
+            stat_from_plc['count_total_from_plc']=int.from_bytes(data[12:16],byteorder="big")
+            stat_from_plc['message_from_plc'] = data[16:48].decode('utf-8')
 
-            alarm_no_scanner = int.from_bytes(data[0:4], byteorder="big")
-            time_imp_upakovki = int.from_bytes(data[4:8], byteorder="big")
-            count_noread_from_plc=int.from_bytes(data[8:12],byteorder="big")
-            count_total_from_plc=int.from_bytes(data[12:16],byteorder="big")
-            message_from_plc = data[16:48]
-            print(f"------{count_noread_from_plc}--------{count_total_from_plc}")
             async with aiohttp.ClientSession() as session:
-                async with session.get("http://127.0.0.1:8090/line/web_interface/get_controller_settings") as resp:
+                async with session.get("http://127.0.0.1:8090/line/web_interface/get_controller_settings",params=stat_from_plc) as resp:
                     resp_status = resp.status
                     resp_text = await resp.text()
             settings = json.loads(resp_text)
