@@ -99,7 +99,3 @@ async def get_controller_settings(request):
     resp_json = json.dumps(raw)
     return web.Response(text=resp_json, content_type="application/json")
 
-
-async def plc_set_status(request):
-
-    return web.Response(text="ok",content_type="text/plain")

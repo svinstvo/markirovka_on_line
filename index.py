@@ -63,7 +63,6 @@ app.add_routes([
     web.get('/line/web_interface/set_current_batch_date', web_interface.set_current_batch_date),
     web.get('/line/web_interface/get_available_product_list', web_interface.get_available_product_list),
     web.get('/line/web_interface/get_controller_settings', web_interface.get_controller_settings),
-    web.get('/line/web_interface/plc_set_status', web_interface.plc_set_status),
     web.get('/line/ws', web_interface.websocket_handler),
     web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
 ])
