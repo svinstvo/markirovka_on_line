@@ -28,6 +28,8 @@ async def get_statistic(request):
     prepared_dict["status"] = request.app['status']
     prepared_dict["last_10_codes"]=request.app['last_10_codes']
     prepared_dict["plc_state"] = request.app['plc_state']
+    prepared_dict["plc_last seen"]=(datetime.now()-request.app['plc_last seen']).total_seconds()
+
 
 
     json_responce = json.dumps(prepared_dict)
@@ -99,3 +101,7 @@ async def get_controller_settings(request):
     resp_json = json.dumps(raw)
     return web.Response(text=resp_json, content_type="application/json")
 
+
+async def update_plc_last_seen(request):
+    request.app['plc_last seen']=datetime.now()
+    return web.Response(text="ok",content_type="plain/text")

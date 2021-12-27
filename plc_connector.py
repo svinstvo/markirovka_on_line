@@ -78,11 +78,16 @@ async def handle_port2001(reader, writer):
     while True:
         try:
             data = await reader.read(100)
-            # print(f"->{data}<- raw receive om 2001")
+            #print(f"->{data}<- raw receive om 2001")
             message = data.decode()
             # print(f"receive on 2001 ->{message}<- ")
             writer.write(data)
             await writer.drain()
+
+            async with aiohttp.ClientSession() as session:
+                async with session.get("http://127.0.0.1:8090/line/web_interface/update_plc_last_seen") as resp:
+                    resp_status = resp.status
+                    resp_text = await resp.text()
         except Exception as e:
             print(e)
             writer.write(b'1 ')
@@ -126,7 +131,7 @@ async def handle_port2002(reader, writer):
             writer.write(to_plc)
             await writer.drain()
             time_stop = datetime.datetime.now()
-            print(time_stop-time_start)
+            #print(time_stop-time_start)
         except Exception as e:
             print(f"error   on 2002 {e}")
 

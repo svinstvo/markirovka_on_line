@@ -9,7 +9,7 @@ async def save_into_db(request, km, gtin, batch_date, status):
             result = await connection.fetch(
                 f'insert into {local_db_table_name} (km,gtin,batch_date,verified_status) values ($1,$2,$3,$4)', km,
                 gtin, batch_date, status)
-            print(result)
+            #print(result)
 
 
 async def load_counters_from_db(app, loop):
