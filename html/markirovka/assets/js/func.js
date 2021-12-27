@@ -160,24 +160,26 @@ async function load_json() {
             success:function (result) {
                 //console.log(result);
                 JSONObject = JSON.parse(result);
+                selected_gtin = JSONObject['current_gtin'];                       
+                document.getElementById("product_selector").value = selected_gtin;
                 document.getElementById('count_total').innerText=JSONObject['total_codes'];
-                document.getElementById('count_good').innerText=JSONObject['good_codes'];
                 document.getElementById('count_bad').innerText=JSONObject['defect_codes'];
+                document.getElementById('count_good').innerText=JSONObject['good_codes'];
                 document.getElementById('count_duplicates').innerText=JSONObject['duplicates_codes'];
                 status_text = JSONObject['status']['message'];
                 document.getElementById('status_bar').innerHTML = status_text;
                 status = JSONObject['status']['state'];
-                console.log("status = " + status);
+                // console.log("status = " + status);
                 if (String(status) === "1") {
-                    console.log("status if = " + status);
+                    // console.log("status if = " + status);
                     document.getElementById("status_id").classList.remove("status_ok");
                     document.getElementById("status_id").classList.add("status_bad");
                 } else {
-                    console.log("status else = " + status);
+                    // console.log("status else = " + status);
                     document.getElementById("status_id").classList.remove("status_bad");
                     document.getElementById("status_id").classList.add("status_ok");
                 }
-                console.log("status_text = " + status_text);
+                // console.log("status_text = " + status_text);
                 if (JSONObject['current_batch_date']==='1-01-01') {
                     console.log("empty date");
                     set_date_on_server()
@@ -209,6 +211,7 @@ function fill_product_selector() {
                     //console.log(k +" " + JSONObject[k])
                     var opt = document.createElement('option');
                     opt.value = k;
+                    opt.id = "id_" + k;
                     opt.innerHTML = JSONObject[k];
                     selector.add(opt,null)
                 }
