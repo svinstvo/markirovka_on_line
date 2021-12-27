@@ -57,11 +57,11 @@ function get_date_from_json() {
             url: url.toString(),
             dataType: 'text',
             success: function (result) {
-                console.log(result);
+                //console.log(result);
                 JSONObject = JSON.parse(result);
                 console.log("JSONObject['current_batch_date'] = " + JSONObject['current_batch_date']);
-                document.getElementById('current_date').innerText=JSONObject['current_batch_date']
-                document.getElementById('current_date2').innerText=JSONObject['current_batch_date']
+                document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
+                document.getElementById('current_date_modal').innerText=JSONObject['current_batch_date']
             }
         })
 };
@@ -69,7 +69,7 @@ function get_date_from_json() {
 // кнопка переключения даты на день вперед
 document.getElementById('button_right').onclick = function()
 {
-    let currdate = document.getElementById('current_date').innerHTML
+    let currdate = document.getElementById('current_date_modal').innerHTML
     let tomorrow = new Date(currdate);
     tomorrow.setDate(tomorrow.getDate() + 1);
     let dd = tomorrow.getDate();
@@ -77,15 +77,13 @@ document.getElementById('button_right').onclick = function()
     let mm = tomorrow.getMonth() + 1;
     let yyyy = tomorrow.getFullYear();
     tomorrow = yyyy + '-' + mm + '-' + dd;
-    document.getElementById('current_date').innerHTML = tomorrow;
-    document.getElementById('current_date2').innerHTML = tomorrow;
-    set_date_on_server()
+    document.getElementById('current_date_modal').innerHTML = tomorrow;
 };
 
 // кнопка переключения даты на день назад
 document.getElementById('button_left').onclick = function()
 {
-    let currdate = document.getElementById('current_date').innerHTML
+    let currdate = document.getElementById('current_date_modal').innerHTML
     let yesterday = new Date(currdate);
     yesterday.setDate(yesterday.getDate() - 1);
     let dd = yesterday.getDate();
@@ -93,24 +91,24 @@ document.getElementById('button_left').onclick = function()
     let mm = yesterday.getMonth() + 1;
     let yyyy = yesterday.getFullYear();
     yesterday = yyyy + '-' + mm + '-' + dd;
-    document.getElementById('current_date').innerHTML = yesterday;
-    document.getElementById('current_date2').innerHTML = yesterday;
-    set_date_on_server()
+    document.getElementById('current_date_modal').innerHTML = yesterday;
 };
 
-// кнопка закрытия всплывающего окна с датой
+// кнопка закрытия всплывающего окна с датой (применить)
 document.getElementById('modal_close').onclick = function()
 {
     let m = document.getElementById('modal-1');
-    m.style.display = "none"
-}
+    m.style.display = "none";
+    set_date_on_server();
+};
 
-// вторая кнопка закрытия всплывающего окна с датой
+// вторая кнопка закрытия всплывающего окна с датой (крестик)
 document.getElementById('modal_close2').onclick = function()
 {
     let m = document.getElementById('modal-1');
-    m.style.display = "none"
-}
+    m.style.display = "none";
+    get_date_from_json();
+};
 
 // Всплывающее окно с датой по смене продукта
 document.getElementById('product_selector').onchange = function()
@@ -118,6 +116,7 @@ document.getElementById('product_selector').onchange = function()
     let m = document.getElementById('modal-1');
     m.style.display = "block"
 }
+
 
     function check_ws(){
         console.log(ws);
@@ -139,7 +138,7 @@ document.getElementById('product_selector').onchange = function()
 
 // функция переключения даты на сервере
 function set_date_on_server() {
-        current_date=document.getElementById('current_date').innerText;
+        current_date=document.getElementById('current_date_modal').innerText;
         url=new URL(window.location.origin +"/line/web_interface/set_current_batch_date");
         url.searchParams.append('date',current_date);
         console.log(url.toString());
@@ -185,7 +184,7 @@ async function load_json() {
                     set_date_on_server()
                 } else {
                     console.log(JSONObject['current_batch_date']);
-                   document.getElementById('current_date').innerText=JSONObject['current_batch_date']
+                   document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
                 }
 
 
