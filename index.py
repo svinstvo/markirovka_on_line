@@ -21,6 +21,7 @@ async def readconfig(app):
     app['redis_pool'] = aioredis.ConnectionPool.from_url(config.get("server", "redis_dsn"),
                                                          password=config.get("server", "redis_pass"), max_connections=3)
     app['time_between_reload_stat'] = int(config.get("server", "time_between_reload_stat"))
+    app['redis_connect_timeout'] = float(config.get("server", "redis_connect_timeout"))
     return
 
 
@@ -33,9 +34,11 @@ async def start_server(app):
     app['current_product_name'] = ""
     app['current_batch_date'] = datetime.datetime.today() + datetime.timedelta(days=1)
     app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0}
-    app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0,"duplicates_codes":0}
+    app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0, "duplicates_codes": 0}
     app['last_10_codes'] = []
     app['ws'] = []
+    app['plc_last seen'] = datetime.datetime.now()
+    app['plc_state'] = {}
 
     # app['remote_server'] = await asyncpg.create_pool(dsn="postgresql://postgres:111111@10.10.3.105:5432/markirovka",
     #                                           min_size=1, max_size=3)
@@ -61,6 +64,7 @@ app.add_routes([
     web.get('/line/web_interface/set_current_batch_date', web_interface.set_current_batch_date),
     web.get('/line/web_interface/get_available_product_list', web_interface.get_available_product_list),
     web.get('/line/web_interface/get_controller_settings', web_interface.get_controller_settings),
+    web.get('/line/web_interface/update_plc_last_seen', web_interface.update_plc_last_seen),
     web.get('/line/ws', web_interface.websocket_handler),
     web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
 ])

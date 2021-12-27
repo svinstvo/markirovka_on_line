@@ -28,24 +28,24 @@ async def km_add(request):
         request.app['status'] = {"state": 1, "message": "Код не прочелся","debug_mode": 0}
     else:
         inserted_rows = await redis.sadd("km", km)
-        print(inserted_rows)
-        print(km)
+        #print(inserted_rows)
+        #print(km)
         if inserted_rows == 1:
-            print('add')
+            #print('add')
             status = "verified"
             request.app['counters']['good_codes'] += 1
             response_text = "ok"
             request.app['last_10_codes'].append(km)
             request.app['status'] = {"state": 0, "message": "Все хорошо","debug_mode": 0}
         else:
-            print(request.app['counters'])
+            #print(request.app['counters'])
             request.app['counters']['duplicates_codes'] += 1
             status = "duplicate"
             response_text = "duplicate"
             request.app['last_10_codes'].append("Повторный "+ km)
             request.app['status'] = {"state": 1, "message": "Дублирование кода","debug_mode": 0}
 
-    print(request.app['status'])
+    #print(request.app['status'])
     request.app['counters']['total_codes'] += 1
     asyncio.create_task(web_interface.ws_send_update(request.app))
     asyncio.create_task(work_with_db.save_into_db(request, km, gtin, batch_date, status))  # Записываем в локальную бд
