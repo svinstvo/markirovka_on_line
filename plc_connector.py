@@ -59,9 +59,11 @@ async def handle_port2000(reader, writer):
                 async with session.get("http://127.0.0.1:8090/line/km/add", params=params) as resp:
                     resp_status = resp.status
                     resp_text = await resp.text()
-            #print(resp_text)
+            print(resp_text)
             if resp_text =="ok":
                 writer.write(b"\x00\x00\x00\x01")
+            elif resp_text=="noread":
+                continue
             else:
                 writer.write(b"\x00\x00\x00\x00")
             await writer.drain()
