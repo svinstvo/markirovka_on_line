@@ -9,7 +9,7 @@ async def save_into_db(request, km, gtin, batch_date, status):
             result = await connection.fetch(
                 f'insert into {local_db_table_name} (km,gtin,batch_date,verified_status) values ($1,$2,$3,$4)', km,
                 gtin, batch_date, status)
-            #print(result)
+            # print(result)
 
 
 async def load_counters_from_db(app, loop):
@@ -42,7 +42,6 @@ async def load_counters_from_db(app, loop):
 
 async def load_settings_from_db(app):
     pool = app['local_server']
-    table_name = f"settings_line_{app['markstation_id']}"
     async with pool.acquire() as connection:
         async with connection.transaction():
             records = await connection.fetch(
@@ -69,3 +68,15 @@ async def get_available_product_list(app):
         result[line[0]] = line[1]
 
     return result
+
+
+async def save_settings_into_db(app, plc_settings):
+    pool = app['local_server']
+    async with pool.acquire() as connection:
+        async with connection.transaction():
+            for element in plc_settings:
+                await connection.execute("update settings_plc set param_value=$1 where param_name=$2 and line_number=$3",
+                                       plc_settings[element],element, app['markstation_id'])
+
+
+    return
