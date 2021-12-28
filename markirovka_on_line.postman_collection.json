@@ -1,0 +1,263 @@
+{
+	"info": {
+		"_postman_id": "9fd3ddd3-26a7-453d-b50f-58e9bd49c0c1",
+		"name": "Маркировка на линии",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Выбор текущего gtin 127.0.0.1:8080/line/web_interface/set_gtin/55555",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "nginx.klever.ru:8090/line/web_interface/set_gtin?gtin=55555",
+					"host": [
+						"nginx",
+						"klever",
+						"ru"
+					],
+					"port": "8090",
+					"path": [
+						"line",
+						"web_interface",
+						"set_gtin"
+					],
+					"query": [
+						{
+							"key": "gtin",
+							"value": "55555"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Добавление KM 127.0.0.1:8080/line/km/add/23543453453535",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "nginx.klever.ru/line/km/add?km=1311111112312111122222111",
+					"host": [
+						"nginx",
+						"klever",
+						"ru"
+					],
+					"path": [
+						"line",
+						"km",
+						"add"
+					],
+					"query": [
+						{
+							"key": "km",
+							"value": "1311111112312111122222111"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Выбора даты производства 127.0.0.1:8080/line/web_interface/set_current_batch_date/2021-12-06",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "nginx.klever.ru/line/web_interface/set_current_batch_date?date=2021-12-30",
+					"host": [
+						"nginx",
+						"klever",
+						"ru"
+					],
+					"path": [
+						"line",
+						"web_interface",
+						"set_current_batch_date"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2021-12-30"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cчетчики и все такое 127.0.0.1:8080/line/statistic",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "nginx.klever.ru/line/statistic",
+					"host": [
+						"nginx",
+						"klever",
+						"ru"
+					],
+					"path": [
+						"line",
+						"statistic"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Список продуктов для линии 127.0.0.1:8080/line/web_interface/get_available_product_list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "nginx.klever.ru/line/web_interface/get_available_product_list",
+					"host": [
+						"nginx",
+						"klever",
+						"ru"
+					],
+					"path": [
+						"line",
+						"web_interface",
+						"get_available_product_list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Получение настроек контроллера",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "192.168.241.2:8090/line/web_interface/get_controller_settings",
+					"host": [
+						"192",
+						"168",
+						"241",
+						"2"
+					],
+					"port": "8090",
+					"path": [
+						"line",
+						"web_interface",
+						"get_controller_settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Обновление последнего появления контроллера",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "192.168.241.2:8090/line/web_interface/update_plc_last_seen",
+					"host": [
+						"192",
+						"168",
+						"241",
+						"2"
+					],
+					"port": "8090",
+					"path": [
+						"line",
+						"web_interface",
+						"update_plc_last_seen"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Сохраненеие настроек контроллера ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://192.168.241.2:8090/line/web_interface/set_controller_settings?time_brak_no_read=2000&time_brak_no_zazor=2500&time_imp_upakov=100&time_impulse=0&zadanie_count_brak=3",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"241",
+						"2"
+					],
+					"port": "8090",
+					"path": [
+						"line",
+						"web_interface",
+						"set_controller_settings"
+					],
+					"query": [
+						{
+							"key": "time_brak_no_read",
+							"value": "2000"
+						},
+						{
+							"key": "time_brak_no_zazor",
+							"value": "2500"
+						},
+						{
+							"key": "time_imp_upakov",
+							"value": "100"
+						},
+						{
+							"key": "time_impulse",
+							"value": "0"
+						},
+						{
+							"key": "zadanie_count_brak",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
