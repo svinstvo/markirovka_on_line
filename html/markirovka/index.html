@@ -49,7 +49,7 @@
                                 <div class="col-2 col-lg-3 col-xl-3"><button class="btn btn-primary btn-lg" id="button_right" type="button" onclick="function()"><i class="fa fa-arrow-right" style="font-size: 40px;"></i></button></div>
                             </div>
                         </div>
-                        <div class="modal-footer"><button class="btn btn-light" id="modal_close" type="button" data-bs-dismiss="modal" onclick="function()">Закрыть</button></div>
+                        <div class="modal-footer"><button class="btn btn-success" id="modal_close" type="button" data-bs-dismiss="modal" onclick="function()">Выбрать</button></div>
                     </div>
                 </div>
             </div>
@@ -129,48 +129,50 @@
         <div class="container">
             <h1 class="d-sm-flex" style="height: 435px;text-align: center;">Сервисный режим</h1>
         </div>
-        <div class="container" id="settings" style="padding: 0px;margin-top: -300px;">
+        <div class="container" id="plc_settings" style="padding: 0px;margin-top: -300px;">
+            <form>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Задержка по несчитанной метке&nbsp;</span></div>
                 <div class="col"><form>
-                    <input id="time_brak_no_read" type="range" name="amountRange" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input id="time_brak_no_read1" type="number" name="amountInput" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountRange.value=this.value" />
+                    <input class="plc_settings" id="time_brak_no_read" type="range" name="amountRange" min="0" max="500000" step="500" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input id="time_brak_no_read1" type="number" name="amountInput" min="0" max="500000" step="500" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Задержка по отсутствию зазора между упаковкой&nbsp;&nbsp;</span></div>
                 <div class="col"><form>
-                    <input id="time_brak_no_zazor" type="range" name="amountRange" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input id="time_brak_no_zazor1" type="number" name="amountInput" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountRange.value=this.value" />
+                    <input class="plc_settings" id="time_brak_no_zazor" type="range" name="amountRange" min="0" max="500000" step="500" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input id="time_brak_no_zazor1" type="number" name="amountInput" min="0" max="500000" step="500" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Время включения отбраковщика&nbsp;</span></div>
                 <div class="col"><form>
-                    <input id="time_impulse" type="range" name="amountRange" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input id="time_impulse1" type="number" name="amountInput" min="0" max="500000000" step="50000000" value="0" oninput="this.form.amountRange.value=this.value" />
+                    <input class="plc_settings" id="time_impulse" type="range" name="amountRange" min="0" max="500000" step="500" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input id="time_impulse1" type="number" name="amountInput" min="0" max="500000" step="500" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Заданное при наладке время импульса&nbsp;</span></div>
                 <div class="col"><form>
-                    <input id="time_imp_upakov" type="range" name="amountRange" min="0" max="5000000" step="100000" value="1000000" oninput="this.form.amountInput.value=this.value" />
-                    <input id="time_imp_upakov1" type="number" name="amountInput" min="0" max="5000000" step="100000" value="1000000" oninput="this.form.amountRange.value=this.value" />
+                    <input class="plc_settings" id="time_imp_upakov" type="range" name="amountRange" min="0" max="50000" step="100" value="1000000" oninput="this.form.amountInput.value=this.value" />
+                    <input id="time_imp_upakov1" type="number" name="amountInput" min="0" max="50000" step="100" value="1000000" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Брак подряд до остановки&nbsp;</span></div>
                 <div class="col"><form>
-                    <input id="zadanie_count_brak" type="range" name="amountRange" min="0" max="10" step="1" value="3" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="zadanie_count_brak" type="range" name="amountRange" min="0" max="10" step="1" value="3" oninput="this.form.amountInput.value=this.value" />
                     <input id="zadanie_count_brak1" type="number" name="amountInput" min="0" max="10" step="1" value="3" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
-            <button class="btn btn-primary" type="button" style="margin: 20px;">Сохранить</button>
+            <button class="btn btn-primary" id="save_button" onclick="send_settings()" type="button" style="margin: 20px;">Сохранить</button>
+            </form>
         </div>
     </div>
     <div class="container" id="servce_toggle">

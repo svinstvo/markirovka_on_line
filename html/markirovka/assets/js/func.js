@@ -250,28 +250,26 @@ function fill_controller_settings() {
                 }
         }
     })
-}
+};
 
-// Функция получения статуса чтения кода из JSON
-async function get_status(){
-     url=new URL(window.location.origin +"/line/statistic");
-     $.ajax({
-         url: url.toString(),
-         dataType: 'text',
-         success: function (result){
-             JSONObject = JSON.parse(result);
-             status_text = JSONObject['status']['message'];
-             document.getElementById('status_bar').innerHTML = status_text;
-             status = JSONObject['status']['state'];
-             console.log("status = " + status);
-             if (status === 1) {
-                 document.getElementById("status_id").classList.remove("status_ok");
-                 document.getElementById("status_id").classList.add("status_bad");
-             } else {
-                 document.getElementById("status_id").classList.remove("status_bad");
-                 document.getElementById("status_id").classList.add("status_ok");
-             }
-             console.log("status_text = " + status_text);
-         }
-     })
+function send_settings() {
+    let settings = {};
+    var inputs = document.getElementById("plc_settings").getElementsByClassName("plc_settings");
+    //console.log(inputs);
+        for (var i = 0, len = inputs.length; i < len; ++i){
+            if(inputs.hasOwnProperty(i))
+                row = inputs[i];
+                settings[row.id] = row.value;
+        }
+    url=new URL(window.location.origin +"/line/web_interface/set_controller_settings");
+    $.ajax({
+        url:url,
+        data:settings,
+        success:function (response){
+            console.log(response)
+        },
+        error:function (xhr){
+            console.log(xhr)
+        }
+    })
 }
