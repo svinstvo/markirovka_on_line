@@ -25,7 +25,8 @@ async def km_add(request):
         response_text = "noread"
         request.app['last_10_codes'].append(km)
         request.app['counters']['defect_codes'] += 1
-        request.app['status'] = {"state": 1, "message": "Код не прочелся","debug_mode": 0}
+        request.app['status']["state"] = 1
+        request.app['status']["message"] = "Код не прочелся"
     else:
         inserted_rows = await redis.sadd("km", km)
         #print(inserted_rows)
