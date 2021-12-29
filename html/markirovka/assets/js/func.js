@@ -211,9 +211,16 @@ async function load_json() {
                         last_10_codes.innerHTML+="<div class='status_ok'>"+ element+"</div>"
                     }
                 })
-                
 
-
+                // статус в шапке
+                let scanner_status = JSONObject["plc_state"]["alarm_no_scanner"];
+                green_red_status("scanner_status", scanner_status);
+                let controller_status = JSONObject["plc_last seen"];
+                if(controller_status<1.5){
+                    green_red_status("controller_status", 1)
+                } else {
+                    green_red_status("controller_status", 0)
+                }
             }
         });
 }
@@ -272,6 +279,7 @@ function fill_controller_settings() {
     })
 };
 
+// функция собирает настройки со страницы и отправляет на сервер
 function send_settings() {
     let settings = {};
     var inputs = document.getElementById("plc_settings").getElementsByClassName("plc_settings");
@@ -293,3 +301,19 @@ function send_settings() {
         }
     })
 }
+
+function set_debug_mode() {
+
+}
+
+// функция для определения статуса (id: элемент, который красим;
+//                                  Value: 1 - зеленый, 0 и другие - красный)
+function green_red_status(id, value){
+    if (String(value)==="1"){
+        document.getElementById(String(id)).classList.remove("status_bad");
+        document.getElementById(String(id)).classList.add("status_ok");
+    } else {
+        document.getElementById(String(id)).classList.remove("status_ok");
+        document.getElementById(String(id)).classList.add("status_bad");
+    }
+};

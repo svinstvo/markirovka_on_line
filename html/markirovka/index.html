@@ -24,8 +24,22 @@
 <body style="background: url(&quot;assets/img/2021Animals.jpeg&quot;) top / auto;">
     <nav class="navbar navbar-dark navbar-expand-md navigation-clean-search">
         <div class="container"><a class="navbar-brand" id="logo" style="color: #21a9af;"><img class="d-sm-flex" src="assets/img/174492-piskarievskii-molochnyi-zavod-BIG.png"></a>
-            <div class="collapse navbar-collapse float-end d-inline-flex flex-row justify-content-end align-items-end" id="navcol-1"><a class="btn btn-light shadow action-button" role="button" style="width:120px;font-size:14px;background-color:#01a982;border:1px solid #01a982;font-family:'Source Sans Pro', sans-serif;font-weight:400;" onclick="reload_button();"><strong>ОБНОВИТЬ</strong></a></div>
-        </div>
+            <nav class="navbar navbar-light navbar-expand-md">
+                <div class="container-fluid">
+                    <ul class="navbar-nav text-center" id="header_status">
+                        <li class="nav-item" style="border-style: solid;"><a class="nav-link active status_bad" id="scanner_status" style="font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус сканера</a></li>
+                        <li class="nav-item" style="border-style: solid;margin-left: 11px;"><a class="nav-link active status_bad" id="controller_status" style="font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус контроллера</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div id="buttons" class="float-end d-inline-flex flex-row justify-content-end align-items-end">
+                <button class="btn btn-light" type="button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;">
+		            <strong>ПАУЗА</strong>
+	            </button>
+	            <button class="btn btn-light shadow action-button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;margin-left: 3px;" type="button" onclick="reload_button();">
+	                <strong>ОБНОВИТЬ</strong>
+	            </button>
+            </div>
     </nav>
     <div id="main_content" style="display: block;height: 580px;">
         <div class="container">
