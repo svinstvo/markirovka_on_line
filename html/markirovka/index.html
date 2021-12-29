@@ -24,7 +24,7 @@
 <body style="background: url(&quot;assets/img/2021Animals.jpeg&quot;) top / auto;">
     <nav class="navbar navbar-dark navbar-expand-md navigation-clean-search">
         <div class="container"><a class="navbar-brand" id="logo" style="color: #21a9af;"><img class="d-sm-flex" src="assets/img/174492-piskarievskii-molochnyi-zavod-BIG.png"></a>
-            <div class="collapse navbar-collapse float-end d-inline-flex flex-row justify-content-end align-items-end" id="navcol-1"><a class="btn btn-light shadow action-button" role="button" style="width:120px;font-size:14px;background-color:#01a982;border:1px solid #01a982;font-family:'Source Sans Pro', sans-serif;font-weight:400;" onclick="window.location.reload();"><strong>ОБНОВИТЬ</strong></a></div>
+            <div class="collapse navbar-collapse float-end d-inline-flex flex-row justify-content-end align-items-end" id="navcol-1"><a class="btn btn-light shadow action-button" role="button" style="width:120px;font-size:14px;background-color:#01a982;border:1px solid #01a982;font-family:'Source Sans Pro', sans-serif;font-weight:400;" onclick="reload_button();"><strong>ОБНОВИТЬ</strong></a></div>
         </div>
     </nav>
     <div id="main_content" style="display: block;height: 580px;">
@@ -134,40 +134,40 @@
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Задержка по несчитанной метке&nbsp;</span></div>
                 <div class="col"><form>
-                    <input class="plc_settings" id="time_brak_no_read" type="range" name="amountRange" min="0" max="500000" step="500" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input id="time_brak_no_read1" type="number" name="amountInput" min="0" max="500000" step="500" value="0" oninput="this.form.amountRange.value=this.value" />
+                    <input id="time_brak_no_read1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="time_brak_no_read" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Задержка по отсутствию зазора между упаковкой&nbsp;&nbsp;</span></div>
                 <div class="col"><form>
-                    <input class="plc_settings" id="time_brak_no_zazor" type="range" name="amountRange" min="0" max="500000" step="500" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input id="time_brak_no_zazor1" type="number" name="amountInput" min="0" max="500000" step="500" value="0" oninput="this.form.amountRange.value=this.value" />
+                    <input id="time_brak_no_zazor1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="time_brak_no_zazor" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Время включения отбраковщика&nbsp;</span></div>
                 <div class="col"><form>
-                    <input class="plc_settings" id="time_impulse" type="range" name="amountRange" min="0" max="500000" step="500" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input id="time_impulse1" type="number" name="amountInput" min="0" max="500000" step="500" value="0" oninput="this.form.amountRange.value=this.value" />
+                    <input id="time_impulse1" type="range" name="amountRange" min="0" max="3000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="time_impulse" type="number" name="amountInput" min="0" max="3000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Заданное при наладке время импульса&nbsp;</span></div>
                 <div class="col"><form>
-                    <input class="plc_settings" id="time_imp_upakov" type="range" name="amountRange" min="0" max="50000" step="100" value="1000000" oninput="this.form.amountInput.value=this.value" />
-                    <input id="time_imp_upakov1" type="number" name="amountInput" min="0" max="50000" step="100" value="1000000" oninput="this.form.amountRange.value=this.value" />
+                    <input id="time_imp_upakov1" type="range" name="amountRange" min="0" max="2000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="time_imp_upakov" type="number" name="amountInput" min="0" max="2000" step="1" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
                 <div class="col"><span style="font-size: 22px;">Брак подряд до остановки&nbsp;</span></div>
                 <div class="col"><form>
-                    <input class="plc_settings" id="zadanie_count_brak" type="range" name="amountRange" min="0" max="10" step="1" value="3" oninput="this.form.amountInput.value=this.value" />
-                    <input id="zadanie_count_brak1" type="number" name="amountInput" min="0" max="10" step="1" value="3" oninput="this.form.amountRange.value=this.value" />
+                    <input id="zadanie_count_brak1" type="range" name="amountRange" min="0" max="10" step="1" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="zadanie_count_brak" type="number" name="amountInput" min="0" max="10" step="1" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>

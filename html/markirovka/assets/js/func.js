@@ -46,8 +46,15 @@ window.onload = function()
     fill_product_selector();
     subscribe_ws();
     subscribe_on_select();
-    setInterval(check_ws,5000)
-    fill_controller_settings()
+    setInterval(check_ws,5000);
+    fill_controller_settings();
+};
+
+// функция для кнопки перезагрузки
+function reload_button(){
+    get_date_from_json();
+    fill_product_selector();
+    fill_controller_settings();
 };
 
 // Функция получения и отображения даты из JSON
