@@ -258,6 +258,39 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Установка режима наладки, когда сканированые коды идут не в партию",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "192.168.241.2:8090/line/web_interface/set_debug_mode?debug_mode=0",
+					"host": [
+						"192",
+						"168",
+						"241",
+						"2"
+					],
+					"port": "8090",
+					"path": [
+						"line",
+						"web_interface",
+						"set_debug_mode"
+					],
+					"query": [
+						{
+							"key": "debug_mode",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
