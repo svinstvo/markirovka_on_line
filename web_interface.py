@@ -106,17 +106,17 @@ async def update_plc_last_seen(request):
 
 
 async def set_controller_settings(request):
-    try:
-        plc_settings = {}
-        plc_settings['time_brak_no_read'] = request.rel_url.query['time_brak_no_read']
-        plc_settings['time_brak_no_zazor'] = request.rel_url.query['time_brak_no_zazor']
-        plc_settings['time_imp_upakov'] = request.rel_url.query['time_imp_upakov']
-        plc_settings['time_impulse'] = request.rel_url.query['time_impulse']
-        plc_settings['zadanie_count_brak'] = request.rel_url.query['zadanie_count_brak']
-        await work_with_db.save_settings_into_db(request.app, plc_settings)
+    #try:
+    plc_settings = {}
+    plc_settings['time_brak_no_read'] = request.rel_url.query['time_brak_no_read']
+    plc_settings['time_brak_no_zazor'] = request.rel_url.query['time_brak_no_zazor']
+    plc_settings['time_imp_upakov'] = request.rel_url.query['time_imp_upakov']
+    plc_settings['time_impulse'] = request.rel_url.query['time_impulse']
+    plc_settings['zadanie_count_brak'] = request.rel_url.query['zadanie_count_brak']
+    await work_with_db.save_settings_into_db(request.app, plc_settings)
 
-    except Exception as e:
-        print(f"set_controller_settings    {e}")
+    #except Exception as e:
+    #print(f"set_controller_settings    {e}")
     return web.Response(text="ok", content_type="plain/text")
 
 
