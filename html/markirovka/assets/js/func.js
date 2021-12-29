@@ -193,8 +193,6 @@ async function load_json() {
                     console.log(JSONObject['current_batch_date']);
                    document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
                 }
-
-
                 //console.log(JSONObject['current_gtin']);
                 //console.log(document.getElementById("product_selector").value);
                 if (JSONObject['current_gtin'] !== document.getElementById("product_selector").value) {
@@ -221,9 +219,40 @@ async function load_json() {
                 } else {
                     green_red_status("controller_status", 0)
                 }
+
+                // определение debug_mode из JSON
+                let debug_mode_value = JSONObject["status"]["debug_mode"];
+                console.log("debug mode = " + debug_mode_value);
+                if(String(debug_mode_value)==="0"){
+                    document.getElementById("debug_switch_id").checked=true;
+                    document.getElementById("debug_status_name").innerText = "запись";
+                } else {
+                    document.getElementById("debug_switch_id").checked=false;
+                    document.getElementById("debug_status_name").innerText = "пауза";
+                }
             }
         });
 }
+
+// Функция записи значения debug_mode
+function set_debug_mode() {
+    console.log("debug_switch_id = " +document.getElementById("debug_switch_id").checked)
+    let debugSwitchId = document.getElementById("debug_switch_id").checked;
+    let url = new URL(window.location.origin + "/line/web_interface/set_debug_mode");
+    url.searchParams.append('debug_mode', +!debugSwitchId);
+    console.log(url.toString());
+    $.ajax({
+        url:url.toString(),
+        dataType: 'text',
+        success:function (response){
+            console.log(response)
+        },
+        error:function (xhr){
+            console.log(xhr)
+        }
+    })
+}
+
 // функция заполнения продуктами для выбора из селектора
 function fill_product_selector() {
         url=new URL(window.location.origin +"/line/web_interface/get_available_product_list");
@@ -245,19 +274,6 @@ function fill_product_selector() {
         });
 }
 
-// переключение в debug_mode
-async function debug_mode(boolean) {
-    url=new URL(window.location.origin +"/line/web_interface/get_controller_settings");
-    $.ajax({
-        url:url.toString(),
-        dataType: 'text',
-        success:function (result) {
-            JSONObject = JSON.parse(result);
-            console.log("debug mode = " + JSONObject["status"]["debug_mode"]);
-            //JSONObject['debug_mode'] = boolean
-        }
-    })
-}
 
 // загрузка настроек из JSON и заполнение
 function fill_controller_settings() {
@@ -300,10 +316,6 @@ function send_settings() {
             console.log(xhr)
         }
     })
-}
-
-function set_debug_mode() {
-
 }
 
 // функция для определения статуса (id: элемент, который красим;

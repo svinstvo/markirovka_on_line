@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/Header.css">
     <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/Toggle-Switch.css">
     <link rel="stylesheet" href="assets/css/Toggle-Switches.css">
     <link rel="stylesheet" href="assets/css/x-dropdown.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -27,19 +28,24 @@
             <nav class="navbar navbar-light navbar-expand-md">
                 <div class="container-fluid">
                     <ul class="navbar-nav text-center" id="header_status">
-                        <li class="nav-item" style="border-style: solid;"><a class="nav-link active status_bad" id="scanner_status" style="font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус сканера</a></li>
-                        <li class="nav-item" style="border-style: solid;margin-left: 11px;"><a class="nav-link active status_bad" id="controller_status" style="font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус контроллера</a></li>
+                        <li class="nav-item" ><a class="nav-link active status_bad" id="scanner_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус сканера</a></li>
+                        <li class="nav-item" style="margin-left: 10px; margin-right: 10px;"><a class="nav-link active status_bad" id="controller_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус контроллера</a></li>
+                        <li class="nav-item" style="margin-right: 10px; margin-top: -13px;">
+                            <h3 id="debug_status_name">status</h3>
+                            <label class="switch">
+                                <input id="debug_switch_id" onchange=set_debug_mode() type="checkbox"/>
+                                <span class="slider round"></span>
+                            </label>
+                        </li>
+                        <li class="nav-item" style="margin-top: 10px;"><a>
+                            <button class="btn btn-light shadow action-button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;margin-left: 3px;" type="button" onclick="reload_button();">
+	                            <strong>ОБНОВИТЬ</strong>
+                            </button></a>
+                        </li>
                     </ul>
                 </div>
             </nav>
-            <div id="buttons" class="float-end d-inline-flex flex-row justify-content-end align-items-end">
-                <button class="btn btn-light" type="button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;">
-		            <strong>ПАУЗА</strong>
-	            </button>
-	            <button class="btn btn-light shadow action-button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;margin-left: 3px;" type="button" onclick="reload_button();">
-	                <strong>ОБНОВИТЬ</strong>
-	            </button>
-            </div>
+        </div>
     </nav>
     <div id="main_content" style="display: block;height: 580px;">
         <div class="container">
@@ -138,9 +144,11 @@
                 </div>
             </div>
             <div class="row">
-                <span id="last_10_codes">
-                    aaaa
-                </span>
+                <div class="col-lg-3 col-xl-4 align-self-center">
+                    <span id="last_10_codes">
+                        aaaa
+                    </span>
+                </div>
             </div>
 
         </div>
@@ -148,6 +156,9 @@
     <div id="service_content" style="display: none;height: 580px;opacity: 70;">
         <div class="container">
             <h1 class="d-sm-flex" style="height: 435px;text-align: center;">Сервисный режим</h1>
+        </div>
+        <div id="plc_state" class="container">
+            <span></span>
         </div>
         <div class="container" id="plc_settings" style="padding: 0px;margin-top: -300px;">
             <form>
