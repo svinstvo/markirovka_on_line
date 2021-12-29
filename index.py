@@ -65,7 +65,7 @@ app.add_routes([
     web.get('/line/web_interface/get_available_product_list', web_interface.get_available_product_list),
     web.get('/line/web_interface/get_controller_settings', web_interface.get_controller_settings),
     web.get('/line/web_interface/set_controller_settings', web_interface.set_controller_settings),
-
+    web.get('/line/web_interface/set_debug_mode', web_interface.set_debug_mode),
     web.get('/line/web_interface/update_plc_last_seen', web_interface.update_plc_last_seen),
     web.get('/line/ws', web_interface.websocket_handler),
     web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
