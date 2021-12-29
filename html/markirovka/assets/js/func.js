@@ -193,10 +193,23 @@ async function load_json() {
                 if (JSONObject['current_gtin'] !== document.getElementById("product_selector").value) {
                   console.log("не равно ")
                 }
+
+                //Заполенение последний 10 сканированных кодов
+                let last_10_codes = document.getElementById("last_10_codes");
+                last_10_codes.innerHTML="";
+                JSONObject['last_10_codes'].reverse().forEach(function (element){
+                    if (isNaN(element.charAt(0))) {
+                        last_10_codes.innerHTML+="<div class='status_bad'>"+ element+"</div>"
+                    } else  {
+                        last_10_codes.innerHTML+="<div class='status_ok'>"+ element+"</div>"
+                    }
+                })
+                
+
+
             }
         });
 }
-
 // функция заполнения продуктами для выбора из селектора
 function fill_product_selector() {
         url=new URL(window.location.origin +"/line/web_interface/get_available_product_list");
