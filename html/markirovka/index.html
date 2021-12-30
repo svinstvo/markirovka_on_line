@@ -30,7 +30,7 @@
                     <ul class="navbar-nav text-center" id="header_status">
                         <li class="nav-item" ><a class="nav-link active status_bad" id="scanner_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус сканера</a></li>
                         <li class="nav-item" style="margin-left: 10px; margin-right: 10px;"><a class="nav-link active status_bad" id="controller_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус контроллера</a></li>
-                        <li class="nav-item" style="margin-right: 10px; margin-top: -13px;">
+                        <li class="nav-item" style="margin-right: 10px; margin-top: -13px; width: 100px;">
                             <h3 id="debug_status_name">status</h3>
                             <label class="switch">
                                 <input id="debug_switch_id" onchange=set_debug_mode() type="checkbox"/>
@@ -206,8 +206,13 @@
     </div>
     <div class="container" id="servce_toggle">
         <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4 col-lg-4"></div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-5 col-lg-5 text-end" style="margin-top: 36px;">
+                <button id="manageButtonReset" class="btn btn-primary btn-lg" style="display: none;" onclick=plc_manage("reset")>СБРОС</button>
+                <button id="manageButton" class="btn btn-primary btn-lg" style="display: initial;" onclick=plc_manage("start")>СТАРТ</button>
+                <button id="manageButton2" class="btn btn-primary btn-lg" style="display: initial;" onclick=plc_manage("stop")>СТОП</button>
+            </div>
             <div class="col-md-4">
                 <fieldset>
                     <legend></legend>
