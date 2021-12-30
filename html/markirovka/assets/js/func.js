@@ -7,7 +7,6 @@ document.getElementById('service').onclick = function()
     s.style.display = "block"
     let service = document.getElementById('service');
     service.classList.add('service_red');
-    debug_mode(0);
 };
 
 // Показ основного режима
@@ -19,7 +18,6 @@ document.getElementById('noservice').onclick = function()
     s.style.display = "none"
     let service = document.getElementById('service');
     service.classList.remove('service_red');
-    debug_mode(1);
 };
 
 
@@ -190,7 +188,7 @@ async function load_json() {
                     console.log("empty date");
                     set_date_on_server()
                 } else {
-                    console.log(JSONObject['current_batch_date']);
+                    //console.log(JSONObject['current_batch_date']);
                    document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
                 }
                 //console.log(JSONObject['current_gtin']);
@@ -222,13 +220,31 @@ async function load_json() {
 
                 // определение debug_mode из JSON
                 let debug_mode_value = JSONObject["status"]["debug_mode"];
-                console.log("debug mode = " + debug_mode_value);
+                //console.log("debug mode = " + debug_mode_value);
                 if(String(debug_mode_value)==="0"){
                     document.getElementById("debug_switch_id").checked=true;
                     document.getElementById("debug_status_name").innerText = "запись";
                 } else {
                     document.getElementById("debug_switch_id").checked=false;
                     document.getElementById("debug_status_name").innerText = "пауза";
+                }
+
+                // статусы PLC для кипа на сервисной странице
+                let plc_state = document.getElementById("plc_state");
+                let obj = JSONObject['plc_state'];
+                for(let key in obj) {
+                    if(document.getElementById("id_"+key)) {
+                        console.log("true");
+                        document.getElementById("id_"+key).innerHTML = key + " " +obj[key];
+                    } else {
+                        console.log("false")
+                        let dateSpan = document.createElement('span');
+                        dateSpan.innerHTML = key + " " + obj[key];
+                        dateSpan.id = "id_"+ key;
+                        let li = document.createElement('li');
+                        li.appendChild(dateSpan);
+                        plc_state.appendChild(li);
+                    }
                 }
             }
         });
