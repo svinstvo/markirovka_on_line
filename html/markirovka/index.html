@@ -199,6 +199,14 @@
                     </form>
                 </div>
             </div>
+            <div class="row">
+                <div class="col"><span style="font-size: 22px;">time_continuous_brak&nbsp;</span></div>
+                <div class="col"><form>
+                    <input id="time_continuous_brak1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="time_continuous_brak" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
+                    </form>
+                </div>
+            </div>
             <button class="btn btn-primary" id="save_button" onclick="send_settings()" type="button" style="margin: 20px;">Сохранить</button>
             </form>
         </div>
