@@ -22,6 +22,7 @@ async def readconfig(app):
                                                          password=config.get("server", "redis_pass"), max_connections=3)
     app['time_between_reload_stat'] = int(config.get("server", "time_between_reload_stat"))
     app['redis_connect_timeout'] = float(config.get("server", "redis_connect_timeout"))
+    app['button_pressed_time_duration']=int(config.get("server", "button_pressed_time_duration"))
     return
 
 
@@ -33,7 +34,7 @@ async def start_server(app):
     app['current_gtin'] = "4602547000169"
     app['current_product_name'] = ""
     app['current_batch_date'] = datetime.datetime.today() + datetime.timedelta(days=1)
-    app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0}
+    app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0,"button_start_pressed":0,"button_stop_pressed":0,"button_reset_pressed":0}
     app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0, "duplicates_codes": 0}
     app['last_10_codes'] = []
     app['ws'] = []
@@ -67,6 +68,7 @@ app.add_routes([
     web.get('/line/web_interface/set_controller_settings', web_interface.set_controller_settings),
     web.get('/line/web_interface/set_debug_mode', web_interface.set_debug_mode),
     web.get('/line/web_interface/update_plc_last_seen', web_interface.update_plc_last_seen),
+    web.get('/line/web_interface/button_pressed', web_interface.button_pressed),
     web.get('/line/ws', web_interface.websocket_handler),
     web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
 ])

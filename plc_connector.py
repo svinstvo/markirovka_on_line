@@ -60,10 +60,10 @@ async def handle_port2000(reader, writer):
                     resp_status = resp.status
                     resp_text = await resp.text()
             print(resp_text)
-            if resp_text =="ok":
+            if resp_text == "ok":
                 writer.write(b"\x00\x00\x00\x01")
 
-            elif resp_text=="noread":
+            elif resp_text == "noread":
                 continue
             else:
                 writer.write(b"\x00\x00\x00\x00")
@@ -81,7 +81,7 @@ async def handle_port2001(reader, writer):
     while True:
         try:
             data = await reader.read(100)
-            #print(f"->{data}<- raw receive om 2001")
+            # print(f"->{data}<- raw receive om 2001")
             message = data.decode()
             # print(f"receive on 2001 ->{message}<- ")
             writer.write(data)
@@ -109,34 +109,44 @@ async def handle_port2002(reader, writer):
             print(f"receive on 2002 ->{data}<- (RAW)")
             # message = data.decode()
             # print(f"receive on 2002 ->{message}<-")
-            stat_from_plc={}
+            stat_from_plc = {}
             stat_from_plc['alarm_no_scanner'] = int.from_bytes(data[0:4], byteorder="big")
             stat_from_plc['time_imp_upakovki'] = int.from_bytes(data[4:8], byteorder="big")
-            stat_from_plc['count_noread_from_plc']=int.from_bytes(data[8:12],byteorder="big")
-            stat_from_plc['count_total_from_plc']=int.from_bytes(data[12:16],byteorder="big")
+            stat_from_plc['count_noread_from_plc'] = int.from_bytes(data[8:12], byteorder="big")
+            stat_from_plc['count_total_from_plc'] = int.from_bytes(data[12:16], byteorder="big")
             stat_from_plc['message_from_plc'] = data[16:48].decode('utf-8')
 
             async with aiohttp.ClientSession() as session:
-                async with session.get("http://127.0.0.1:8090/line/web_interface/get_controller_settings",params=stat_from_plc) as resp:
+                async with session.get("http://127.0.0.1:8090/line/web_interface/get_controller_settings",
+                                       params=stat_from_plc) as resp:
                     resp_status = resp.status
                     resp_text = await resp.text()
             settings = json.loads(resp_text)
             plc_jtin = (settings['gtin'].rjust(13)).encode('utf-8')
             tbrak_no_read = int(settings["time_brak_no_read"]).to_bytes(4, byteorder="big")
-            tbrak_no_zazor =  int(settings["time_brak_no_zazor"]).to_bytes(4, byteorder="big")
-            timpulse=int(settings["time_impulse"]).to_bytes(4, byteorder="big")
-            naladka=int(settings["status"]["debug_mode"]).to_bytes(4, byteorder="big")
-            timp_upakov=int(settings["time_imp_upakov"]).to_bytes(4, byteorder="big")
-            zadanie_count_brak=int(settings["zadanie_count_brak"]).to_bytes(4, byteorder="big")
+            tbrak_no_zazor = int(settings["time_brak_no_zazor"]).to_bytes(4, byteorder="big")
+            timpulse = int(settings["time_impulse"]).to_bytes(4, byteorder="big")
+            naladka = int(settings["status"]["debug_mode"]).to_bytes(4, byteorder="big")
+            timp_upakov = int(settings["time_imp_upakov"]).to_bytes(4, byteorder="big")
+            zadanie_count_brak = int(settings["zadanie_count_brak"]).to_bytes(4, byteorder="big")
+            t_continuous_brak = int(settings["time_continuous_brak"]).to_bytes(4, byteorder="big")
+            button_start = int(settings["status"]["button_start_pressed"]).to_bytes(4, byteorder="big")
+            button_stop = int(settings["status"]["button_stop_pressed"]).to_bytes(4, byteorder="big")
+            button_reset = int(settings["status"]["button_reset_pressed"]).to_bytes(4, byteorder="big")
 
-            to_plc=tbrak_no_read+tbrak_no_zazor+timpulse+naladka+timp_upakov+zadanie_count_brak+plc_jtin + b"\x00"
+
+
+            to_plc = tbrak_no_read + tbrak_no_zazor + timpulse + naladka + timp_upakov + zadanie_count_brak + \
+                     t_continuous_brak + button_start + button_stop + button_reset + plc_jtin + b"\x00"
             print(f"sending on 2002 ->{to_plc}<- (RAW)")
             writer.write(to_plc)
             await writer.drain()
             time_stop = datetime.datetime.now()
-            #print(time_stop-time_start)
+            # print(time_stop-time_start)
         except Exception as e:
             print(f"error   on 2002 {e}")
+            writer.close()
+            await writer.wait_closed()
 
 
 async def handle_port2004(reader, writer):
