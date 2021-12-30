@@ -63,8 +63,8 @@ async def get_available_product_list(app):
 
     result = {}
     for line in record:
-        print(line[0])
-        print(line[1])
+        #print(line[0])
+        #print(line[1])
         result[line[0]] = line[1]
 
     return result

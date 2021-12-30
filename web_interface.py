@@ -106,7 +106,7 @@ async def update_plc_last_seen(request):
 
 
 async def set_controller_settings(request):
-    #try:
+    # try:
     plc_settings = {}
     plc_settings['time_brak_no_read'] = request.rel_url.query['time_brak_no_read']
     plc_settings['time_brak_no_zazor'] = request.rel_url.query['time_brak_no_zazor']
@@ -115,13 +115,28 @@ async def set_controller_settings(request):
     plc_settings['zadanie_count_brak'] = request.rel_url.query['zadanie_count_brak']
     await work_with_db.save_settings_into_db(request.app, plc_settings)
 
-    #except Exception as e:
-    #print(f"set_controller_settings    {e}")
+    # except Exception as e:
+    # print(f"set_controller_settings    {e}")
     return web.Response(text="ok", content_type="plain/text")
 
 
 async def set_debug_mode(request):
-    debug_mode=request.rel_url.query['debug_mode']
-    request.app['status']['debug_mode']=debug_mode
+    debug_mode = request.rel_url.query['debug_mode']
+    request.app['status']['debug_mode'] = debug_mode
     asyncio.create_task(ws_send_update(request.app))
     return web.Response(text="ok", content_type="plain/text")
+
+
+async def set_and_unset(app,button, duration):
+    print(button)
+    app["status"][f"button_{button}_pressed"] = 1
+    await asyncio.sleep(duration)
+    app["status"][f"button_{button}_pressed"] = 0
+    print("end button")
+    return
+
+
+async def button_pressed(request):
+    button = request.rel_url.query['button']
+    asyncio.create_task(set_and_unset(request.app,button,request.app['button_pressed_time_duration']))
+    return web.Response(text="ok", content_type="text/plain")
