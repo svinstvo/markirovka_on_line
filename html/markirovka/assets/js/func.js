@@ -367,6 +367,18 @@ function send_settings() {
     })
 }
 
+// функция отображения кнопки сброса настроек на те что сейчас в базе
+function reset_settings() {
+    let button = document.getElementById("reset_button");
+    button.style.display = "initial"
+}
+
+// функция скрытия кнопки сброса настроек
+function hide_reset_button() {
+    let button = document.getElementById("reset_button");
+    button.style.display = "none"
+}
+
 // функция для определения статуса (id: элемент, который красим;
 //                                  Value: 1 - зеленый, 0 и другие - красный)
 function green_red_status(id, value){
