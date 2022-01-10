@@ -45,7 +45,7 @@ async def load_settings_from_db(app):
     async with pool.acquire() as connection:
         async with connection.transaction():
             records = await connection.fetch(
-                f''' select param_name,param_value from settings_plc where line_number=$1;''', app['markstation_id'])
+                f''' select param_name,param_value from settings_plc where line_number=$1 order by param_name;''', app['markstation_id'])
             result = {}
             for record in records:
                 result[record[0]] = record[1]

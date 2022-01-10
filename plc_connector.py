@@ -114,7 +114,10 @@ async def handle_port2002(reader, writer):
             stat_from_plc['time_imp_upakovki'] = int.from_bytes(data[4:8], byteorder="big")
             stat_from_plc['count_noread_from_plc'] = int.from_bytes(data[8:12], byteorder="big")
             stat_from_plc['count_total_from_plc'] = int.from_bytes(data[12:16], byteorder="big")
-            stat_from_plc['message_from_plc'] = data[16:48].decode('utf-8')
+            stat_from_plc['time_imp_upakovki2'] = int.from_bytes(data[16:20], byteorder="big")
+            stat_from_plc['count_noread_from_2_plc'] = int.from_bytes(data[20:24], byteorder="big")
+            stat_from_plc['count_total_from_2_plc2'] = int.from_bytes(data[24:28], byteorder="big")
+            stat_from_plc['message_from_plc'] = data[28:60].decode('utf-8')
 
             async with aiohttp.ClientSession() as session:
                 async with session.get("http://127.0.0.1:8090/line/web_interface/get_controller_settings",
@@ -123,21 +126,27 @@ async def handle_port2002(reader, writer):
                     resp_text = await resp.text()
             settings = json.loads(resp_text)
             plc_jtin = (settings['gtin'].rjust(13)).encode('utf-8')
-            tbrak_no_read = int(settings["time_brak_no_read"]).to_bytes(4, byteorder="big")
-            tbrak_no_zazor = int(settings["time_brak_no_zazor"]).to_bytes(4, byteorder="big")
-            timpulse = int(settings["time_impulse"]).to_bytes(4, byteorder="big")
             naladka = int(settings["status"]["debug_mode"]).to_bytes(4, byteorder="big")
             timp_upakov = int(settings["time_imp_upakov"]).to_bytes(4, byteorder="big")
             zadanie_count_brak = int(settings["zadanie_count_brak"]).to_bytes(4, byteorder="big")
-            t_continuous_brak = int(settings["time_continuous_brak"]).to_bytes(4, byteorder="big")
+
+            tbrak_no_read_1 = int(settings["1_time_brak_no_read"]).to_bytes(4, byteorder="big")
+            tbrak_no_zazor_1 = int(settings["1_time_brak_no_zazor"]).to_bytes(4, byteorder="big")
+            timpulse_1 = int(settings["1_time_impulse"]).to_bytes(4, byteorder="big")
+            t_continuous_brak_1 = int(settings["1_time_continuous_brak"]).to_bytes(4, byteorder="big")
+
+            tbrak_no_read_2 = int(settings["2_time_brak_no_read"]).to_bytes(4, byteorder="big")
+            tbrak_no_zazor_2 = int(settings["2_time_brak_no_zazor"]).to_bytes(4, byteorder="big")
+            timpulse_2 = int(settings["2_time_impulse"]).to_bytes(4, byteorder="big")
+            t_continuous_brak2 = int(settings["2_time_continuous_brak"]).to_bytes(4, byteorder="big")
+
             button_start = int(settings["status"]["button_start_pressed"]).to_bytes(4, byteorder="big")
             button_stop = int(settings["status"]["button_stop_pressed"]).to_bytes(4, byteorder="big")
             button_reset = int(settings["status"]["button_reset_pressed"]).to_bytes(4, byteorder="big")
 
-
-
-            to_plc = tbrak_no_read + tbrak_no_zazor + timpulse + naladka + timp_upakov + zadanie_count_brak + \
-                     t_continuous_brak + button_start + button_stop + button_reset + plc_jtin + b"\x00"
+            to_plc = tbrak_no_read_1 + tbrak_no_zazor_1 + timpulse_1 + naladka + timp_upakov + zadanie_count_brak + \
+                     t_continuous_brak_1 + button_start + button_stop + button_reset + tbrak_no_read_2 + \
+                     tbrak_no_zazor_2 + t_continuous_brak2 + timpulse_2+plc_jtin + b"\x00"
             print(f"sending on 2002 ->{to_plc}<- (RAW)")
             writer.write(to_plc)
             await writer.drain()
@@ -149,18 +158,6 @@ async def handle_port2002(reader, writer):
             await writer.wait_closed()
 
 
-async def handle_port2004(reader, writer):
-    print("new connect 2004")
-    while True:
-        try:
-            data = await reader.read(100)
-            print(f"receive on 2004 raw ->{data}<-")
-            message = data.decode()
-            print(f"receive on 2004 ->{message}<-")
-            writer.write(data)
-            await writer.drain()
-        except Exception as e:
-            print(e)
 
 
 async def start_servers(app):
@@ -173,7 +170,7 @@ async def start_servers(app):
     await asyncio.start_server(handle_port2000, '0.0.0.0', 2000, loop=loop, start_serving=True)
     await asyncio.start_server(handle_port2001, '0.0.0.0', 2001, loop=loop, start_serving=True)
     await asyncio.start_server(handle_port2002, '0.0.0.0', 2002, loop=loop, start_serving=True)
-    await asyncio.start_server(handle_port2004, '0.0.0.0', 2004, loop=loop, start_serving=True)
+    await asyncio.start_server(handle_port2000, '0.0.0.0', 2003, loop=loop, start_serving=True)
 
     # async with server:
     #    await server.serve_forever()
