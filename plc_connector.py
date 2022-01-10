@@ -127,14 +127,13 @@ async def handle_port2002(reader, writer):
             settings = json.loads(resp_text)
             plc_jtin = (settings['gtin'].rjust(13)).encode('utf-8')
             naladka = int(settings["status"]["debug_mode"]).to_bytes(4, byteorder="big")
+
             timp_upakov = int(settings["time_imp_upakov"]).to_bytes(4, byteorder="big")
             zadanie_count_brak = int(settings["zadanie_count_brak"]).to_bytes(4, byteorder="big")
-
             tbrak_no_read_1 = int(settings["1_time_brak_no_read"]).to_bytes(4, byteorder="big")
             tbrak_no_zazor_1 = int(settings["1_time_brak_no_zazor"]).to_bytes(4, byteorder="big")
             timpulse_1 = int(settings["1_time_impulse"]).to_bytes(4, byteorder="big")
             t_continuous_brak_1 = int(settings["1_time_continuous_brak"]).to_bytes(4, byteorder="big")
-
             tbrak_no_read_2 = int(settings["2_time_brak_no_read"]).to_bytes(4, byteorder="big")
             tbrak_no_zazor_2 = int(settings["2_time_brak_no_zazor"]).to_bytes(4, byteorder="big")
             timpulse_2 = int(settings["2_time_impulse"]).to_bytes(4, byteorder="big")
