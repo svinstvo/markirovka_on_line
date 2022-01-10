@@ -145,7 +145,7 @@ async def handle_port2002(reader, writer):
 
             to_plc = tbrak_no_read_1 + tbrak_no_zazor_1 + timpulse_1 + naladka + timp_upakov + zadanie_count_brak + \
                      t_continuous_brak_1 + button_start + button_stop + button_reset + tbrak_no_read_2 + \
-                     tbrak_no_zazor_2 + t_continuous_brak2 + timpulse_2+plc_jtin + b"\x00"
+                     tbrak_no_zazor_2 + timpulse_2+t_continuous_brak2 +plc_jtin + b"\x00"
             print(f"sending on 2002 ->{to_plc}<- (RAW)")
             writer.write(to_plc)
             await writer.drain()
