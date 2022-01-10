@@ -30,7 +30,7 @@
                     <ul class="navbar-nav text-center" id="header_status">
                         <li class="nav-item" ><a class="nav-link active status_bad" id="scanner_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус сканера</a></li>
                         <li class="nav-item" style="margin-left: 10px; margin-right: 10px;"><a class="nav-link active status_bad" id="controller_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус контроллера</a></li>
-                        <li class="nav-item" style="margin-right: 10px; margin-top: -13px;">
+                        <li class="nav-item" style="margin-right: 10px; margin-top: -13px; width: 100px;">
                             <h3 id="debug_status_name">status</h3>
                             <label class="switch">
                                 <input id="debug_switch_id" onchange=set_debug_mode() type="checkbox"/>
@@ -160,42 +160,82 @@
         <div class="container" id="plc_settings" style="padding: 0px;margin-top: -300px;">
             <form>
             <div class="row">
-                <div class="col"><span style="font-size: 22px;">Задержка по несчитанной метке&nbsp;</span></div>
-                <div class="col"><form>
-                    <input id="time_brak_no_read1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input class="plc_settings" id="time_brak_no_read" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Задержка по несчитанной метке&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
+                    <input id="1_time_brak_no_read1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="1_time_brak_no_read" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
-                <div class="col"><span style="font-size: 22px;">Задержка по отсутствию зазора между упаковкой&nbsp;&nbsp;</span></div>
-                <div class="col"><form>
-                    <input id="time_brak_no_zazor1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input class="plc_settings" id="time_brak_no_zazor" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Задержка по отсутствию зазора между упаковкой&nbsp;&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
+                    <input id="1_time_brak_no_zazor1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="1_time_brak_no_zazor" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
-                <div class="col"><span style="font-size: 22px;">Время включения отбраковщика&nbsp;</span></div>
-                <div class="col"><form>
-                    <input id="time_impulse1" type="range" name="amountRange" min="0" max="3000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
-                    <input class="plc_settings" id="time_impulse" type="number" name="amountInput" min="0" max="3000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Время включения отбраковщика&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
+                    <input id="1_time_impulse1" type="range" name="amountRange" min="0" max="3000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="1_time_impulse" type="number" name="amountInput" min="0" max="3000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
-                <div class="col"><span style="font-size: 22px;">Заданное при наладке время импульса&nbsp;</span></div>
-                <div class="col"><form>
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Заданное при наладке время импульса&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
                     <input id="time_imp_upakov1" type="range" name="amountRange" min="0" max="2000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
                     <input class="plc_settings" id="time_imp_upakov" type="number" name="amountInput" min="0" max="2000" step="1" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
             <div class="row">
-                <div class="col"><span style="font-size: 22px;">Брак подряд до остановки&nbsp;</span></div>
-                <div class="col"><form>
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Брак подряд до остановки&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
                     <input id="zadanie_count_brak1" type="range" name="amountRange" min="0" max="10" step="1" value="0" oninput="this.form.amountInput.value=this.value" />
                     <input class="plc_settings" id="zadanie_count_brak" type="number" name="amountInput" min="0" max="10" step="1" value="0" oninput="this.form.amountRange.value=this.value" />
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">time_continuous_brak&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
+                    <input id="1_time_continuous_brak1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="1_time_continuous_brak" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Задержка по несчитанной метке (сканер 2)&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
+                    <input id="2_time_brak_no_read1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="2_time_brak_no_read" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Задержка по отсутствию зазора между упаковкой (сканер 2)&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
+                    <input id="2_time_brak_no_zazor1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="2_time_brak_no_zazor" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">time_continuous_brak_2&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
+                    <input id="2_time_continuous_brak1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="2_time_continuous_brak" type="number" name="amountInput" min="0" max="10000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
+                    </form>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Время включения отбраковщика (сканер 2)&nbsp;</span></div>
+                <div class="col-lg-4 col-xl-5"><form>
+                    <input id="2_time_impulse1" type="range" name="amountRange" min="0" max="3000" step="10" value="0" oninput="this.form.amountInput.value=this.value" />
+                    <input class="plc_settings" id="2_time_impulse" type="number" name="amountInput" min="0" max="3000" step="10" value="0" oninput="this.form.amountRange.value=this.value" />
                     </form>
                 </div>
             </div>
@@ -206,8 +246,13 @@
     </div>
     <div class="container" id="servce_toggle">
         <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4 col-lg-4"></div>
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-5 col-lg-5 text-end" style="margin-top: 36px;">
+                <button id="manageButtonReset" class="btn btn-primary btn-lg" style="display: none;" onclick=plc_manage("reset")>СБРОС</button>
+                <button id="manageButton" class="btn btn-primary btn-lg" style="display: initial;" onclick=plc_manage("start")>СТАРТ</button>
+                <button id="manageButton2" class="btn btn-primary btn-lg" style="display: initial;" onclick=plc_manage("stop")>СТОП</button>
+            </div>
             <div class="col-md-4">
                 <fieldset>
                     <legend></legend>

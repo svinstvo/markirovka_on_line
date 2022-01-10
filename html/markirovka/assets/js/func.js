@@ -7,6 +7,8 @@ document.getElementById('service').onclick = function()
     s.style.display = "block"
     let service = document.getElementById('service');
     service.classList.add('service_red');
+    let resetButton = document.getElementById('manageButtonReset');
+    resetButton.style.display = "initial";
 };
 
 // Показ основного режима
@@ -18,6 +20,8 @@ document.getElementById('noservice').onclick = function()
     s.style.display = "none"
     let service = document.getElementById('service');
     service.classList.remove('service_red');
+    let resetButton = document.getElementById('manageButtonReset');
+    resetButton.style.display = "none";
 };
 
 
@@ -234,10 +238,8 @@ async function load_json() {
                 let obj = JSONObject['plc_state'];
                 for(let key in obj) {
                     if(document.getElementById("id_"+key)) {
-                        console.log("true");
                         document.getElementById("id_"+key).innerHTML = key + " " +obj[key];
                     } else {
-                        console.log("false")
                         let dateSpan = document.createElement('span');
                         dateSpan.innerHTML = key + " " + obj[key];
                         dateSpan.id = "id_"+ key;
@@ -248,6 +250,37 @@ async function load_json() {
                 }
             }
         });
+}
+
+// функция с кнопками управления plc
+function plc_manage(button){
+    let sendKey = "";
+    if(button==="reset"){
+        //console.log("reset");
+        sendKey = "reset";
+    } else if(button==="stop"){
+        //console.log("stop");
+        sendKey = "stop";
+    } else if(button==="start"){
+        //console.log("start");
+        sendKey = "start";
+    } else {
+        console.log("error")
+    }
+
+    console.log(sendKey);
+
+    url=new URL(window.location.origin +"/line/web_interface/button_pressed");
+    $.ajax({
+        url: url,
+        data: "button=" + sendKey,
+        success: function (response) {
+            console.log(response)
+        },
+        error: function (xhr) {
+            console.log(xhr)
+        }
+    });
 }
 
 // Функция записи значения debug_mode
