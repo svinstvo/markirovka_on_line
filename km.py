@@ -28,7 +28,11 @@ async def km_add(request):
         request.app['status']["state"] = 1
         request.app['status']["message"] = "Неудачная попытка чтения 2D кода"
     else:
-        inserted_rows = await redis.sadd("km", km)
+        if request.app["enable_unique_check"] == 1:
+            inserted_rows = await redis.sadd("km", km)
+        else:
+            inserted_rows = 1
+
         # print(inserted_rows)
         # print(km)
         if inserted_rows == 1:
