@@ -94,6 +94,7 @@ async def get_controller_settings(request):
             previous_message_from_plc=request.app['plc_state']['message_from_plc'].split(';')[1]
             if previous_message_from_plc != message_from_plc:
                 request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{message_from_plc}"
+                asyncio.create_task(ws_send_update(request.app))
 
         except Exception as e:
             request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{request.rel_url.query['message_from_plc']} "
