@@ -89,7 +89,17 @@ async def get_controller_settings(request):
         request.app['plc_state']['time_imp_upakovki'] = request.rel_url.query['time_imp_upakovki']
         request.app['plc_state']['count_noread_from_plc'] = request.rel_url.query['count_noread_from_plc']
         request.app['plc_state']['count_total_from_plc'] = request.rel_url.query['count_total_from_plc']
-        request.app['plc_state']['message_from_plc'] = request.rel_url.query['message_from_plc']
+        try:
+            message_from_plc=request.rel_url.query['message_from_plc']
+            previous_message_from_plc=request.app['plc_state']['message_from_plc'].split(';')[1]
+            if previous_message_from_plc != message_from_plc:
+                request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{message_from_plc}"
+                asyncio.create_task(ws_send_update(request.app))
+
+        except Exception as e:
+            request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{request.rel_url.query['message_from_plc']} "
+            print(e)
+
     except Exception as e:
         print(e)
 
