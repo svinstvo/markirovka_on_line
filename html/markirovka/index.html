@@ -155,9 +155,9 @@
     </div>
     <div id="service_content" style="display: none;height: 580px;opacity: 70;">
         <div class="container">
-            <h1 class="d-sm-flex" style="height: 435px;text-align: center;">Сервисный режим</h1>
+            <h1 class="d-sm-flex" style="text-align: center;">Сервисный режим</h1>
         </div>
-        <div class="container" id="plc_settings" style="padding: 0px;margin-top: -300px;">
+        <div class="container" id="plc_settings">
             <form>
             <div class="row">
                 <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">Задержка по несчитанной метке&nbsp;</span></div>
@@ -200,7 +200,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-8 col-xl-7"><span style="font-size: 22px;">time_continuous_brak&nbsp;</span></div>
+                <div class="col-lg-8 col-xl-7"><span title="time_continuous_brak" style="font-size: 22px;">time_continuous_brak&nbsp;</span></div>
                 <div class="col-lg-4 col-xl-5"><form>
                     <input id="1_time_continuous_brak1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" onchange="reset_settings()" oninput="this.form.amountInput.value=this.value" />
                     <input class="plc_settings" id="1_time_continuous_brak" type="number" name="amountInput" min="0" max="10000" step="10" value="0" onchange="reset_settings()" oninput="this.form.amountRange.value=this.value" />
