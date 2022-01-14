@@ -148,10 +148,10 @@ async def set_debug_mode(request):
 async def set_and_unset(app,button, duration):
     print(button)
     app["status"][f"button_{button}_pressed"] = 1
-    ws_send_update(app)
+    await ws_send_update(app)
     await asyncio.sleep(duration)
     app["status"][f"button_{button}_pressed"] = 0
-    ws_send_update(app)
+    await ws_send_update(app)
     print("end button")
     return
 
