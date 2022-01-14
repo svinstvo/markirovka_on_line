@@ -89,6 +89,7 @@ async def get_controller_settings(request):
         request.app['plc_state']['time_imp_upakovki'] = request.rel_url.query['time_imp_upakovki']
         request.app['plc_state']['count_noread_from_plc'] = request.rel_url.query['count_noread_from_plc']
         request.app['plc_state']['count_total_from_plc'] = request.rel_url.query['count_total_from_plc']
+        request.app['plc_state']['machine_status'] = request.rel_url.query['machine_status']
         try:
             message_from_plc=request.rel_url.query['message_from_plc']
             previous_message_from_plc=request.app['plc_state']['message_from_plc'].split(';')[1]
@@ -147,8 +148,10 @@ async def set_debug_mode(request):
 async def set_and_unset(app,button, duration):
     print(button)
     app["status"][f"button_{button}_pressed"] = 1
+    ws_send_update(app)
     await asyncio.sleep(duration)
     app["status"][f"button_{button}_pressed"] = 0
+    ws_send_update(app)
     print("end button")
     return
 
