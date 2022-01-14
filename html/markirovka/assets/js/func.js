@@ -206,9 +206,9 @@ async function load_json() {
                 last_10_codes.innerHTML="";
                 JSONObject['last_10_codes'].reverse().forEach(function (element){
                     if (isNaN(element.charAt(0))) {
-                        last_10_codes.innerHTML+="<div class='status_bad'>"+ element+"</div>"
+                        last_10_codes.innerHTML+="<div class='status_bad' style='border: 1px solid;'>"+ element+"</div>"
                     } else  {
-                        last_10_codes.innerHTML+="<div class='status_ok'>"+ element+"</div>"
+                        last_10_codes.innerHTML+="<div class='status_ok' style='border: 1px solid;'>"+ element+"</div>"
                     }
                 })
 
@@ -248,6 +248,14 @@ async function load_json() {
                         plc_state.appendChild(li);
                     }
                 }
+
+                // покраска кнопок старт-стоп-сброс
+                let startStatus = JSONObject["status"]["button_start_pressed"]
+                let stopStatus = JSONObject["status"]["button_stop_pressed"]
+                let resetStatus = JSONObject["status"]["button_reset_pressed"]
+                green_red_status("manageButton", startStatus + 1);
+                green_red_status("manageButton2", stopStatus + 1);
+                green_red_status("manageButtonReset",resetStatus + 1);
             }
         });
 }
@@ -365,6 +373,7 @@ function send_settings() {
             console.log(xhr)
         }
     })
+    hide_reset_button()
 }
 
 // функция отображения кнопки сброса настроек на те что сейчас в базе
@@ -382,6 +391,7 @@ function hide_reset_button() {
 // функция для определения статуса (id: элемент, который красим;
 //                                  Value: 1 - зеленый, 0 и другие - красный)
 function green_red_status(id, value){
+    console.log(id, value);
     if (String(value)==="1"){
         document.getElementById(String(id)).classList.remove("status_bad");
         document.getElementById(String(id)).classList.add("status_ok");

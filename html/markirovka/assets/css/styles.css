@@ -58,3 +58,11 @@
   }
 }
 
+div#plc_state {
+  list-style: none;
+  -webkit-text-stroke: thin;
+}
+
+.btn-primary1 {
+  color: white;
+}
