@@ -149,6 +149,11 @@
                         aaaa
                     </span>
                 </div>
+                <div class="col">
+                    <span id="messageFromPlcMain">
+                        message_from_plc
+                    </span>
+                </div>
             </div>
 
         </div>
@@ -247,14 +252,14 @@
     </div>
     <div class="container" id="servce_toggle">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-5">
             </div>
-            <div class="col-md-5 col-lg-5 text-end" style="margin-top: 36px;">
-                <button id="manageButtonReset" class="btn btn-primary1 btn-lg" style="display: none;" onclick=plc_manage("reset")>СБРОС</button>
+            <div class="col-md-3 col-lg-4 text-end" style="margin-top: 36px;">
+                <button id="manageButtonReset" class="btn btn-primary1 btn-lg" style="display: initial;" onclick=plc_manage("reset")>СБРОС</button>
                 <button id="manageButton" class="btn btn-primary1 btn-lg" style="display: initial;" onclick=plc_manage("start")>СТАРТ</button>
                 <button id="manageButton2" class="btn btn-primary1 btn-lg" style="display: initial;" onclick=plc_manage("stop")>СТОП</button>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <fieldset style="margin-top: 10px;">
                     <legend></legend>
                     <div id="switch_toggle" class="shadow toggle"><input type="radio" id="cond_new" name="bike_cond" checked="checked"><label class="form-label" id="noservice" for="cond_new">Обычный режим</label><input type="radio" id="cond_used" name="bike_cond"><label class="form-label" id="service" for="cond_used" onclick="function()">Сервисный режим</label></div>

@@ -7,8 +7,6 @@ document.getElementById('service').onclick = function()
     s.style.display = "block"
     let service = document.getElementById('service');
     service.classList.add('service_red');
-    let resetButton = document.getElementById('manageButtonReset');
-    resetButton.style.display = "initial";
 };
 
 // Показ основного режима
@@ -20,8 +18,6 @@ document.getElementById('noservice').onclick = function()
     s.style.display = "none"
     let service = document.getElementById('service');
     service.classList.remove('service_red');
-    let resetButton = document.getElementById('manageButtonReset');
-    resetButton.style.display = "none";
 };
 
 
@@ -55,7 +51,6 @@ window.onload = function()
 // функция для кнопки перезагрузки
 function reload_button(){
     get_date_from_json();
-    fill_product_selector();
     fill_controller_settings();
 };
 
@@ -233,6 +228,8 @@ async function load_json() {
                     document.getElementById("debug_status_name").innerText = "пауза";
                 }
 
+                // отображение message_from_plc на главной странице
+                document.getElementById("messageFromPlcMain").innerHTML = JSONObject['plc_state']['message_from_plc'];
                 // статусы PLC для кипа на сервисной странице
                 let plc_state = document.getElementById("plc_state");
                 let obj = JSONObject['plc_state'];
