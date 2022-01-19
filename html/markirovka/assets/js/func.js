@@ -388,7 +388,7 @@ function hide_reset_button() {
 // функция для определения статуса (id: элемент, который красим;
 //                                  Value: 1 - зеленый, 0 и другие - красный)
 function green_red_status(id, value){
-    console.log(id, value);
+    // console.log(id, value);
     if (String(value)==="1"){
         document.getElementById(String(id)).classList.remove("status_bad");
         document.getElementById(String(id)).classList.add("status_ok");
