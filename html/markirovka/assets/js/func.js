@@ -115,11 +115,10 @@ document.getElementById('modal_close2').onclick = function()
 };
 
 // Всплывающее окно с датой по смене продукта
-document.getElementById('product_selector').onchange = function()
-{
+async function open_modal_with_date() {
     let m = document.getElementById('modal-1');
     m.style.display = "block"
-}
+};
 
 
     function check_ws(){
@@ -200,10 +199,12 @@ async function load_json() {
                 let last_10_codes = document.getElementById("last_10_codes");
                 last_10_codes.innerHTML="";
                 JSONObject['last_10_codes'].reverse().forEach(function (element){
+                    stringel = element.replace(/</g, "&lt;");
+                    //stringel = element.replace(/>/g, "&gt;");
                     if (isNaN(element.charAt(0))) {
-                        last_10_codes.innerHTML+="<div class='status_bad' style='border: 1px solid;'>"+ element+"</div>"
+                        last_10_codes.innerHTML+="<div class='status_bad' style='border: 1px solid;'>"+ stringel+"</div>"
                     } else  {
-                        last_10_codes.innerHTML+="<div class='status_ok' style='border: 1px solid;'>"+ element+"</div>"
+                        last_10_codes.innerHTML+="<div class='status_ok' style='border: 1px solid;'>"+ stringel+"</div>"
                     }
                 })
 
