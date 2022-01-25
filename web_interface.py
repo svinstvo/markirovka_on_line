@@ -90,6 +90,9 @@ async def get_controller_settings(request):
         request.app['plc_state']['count_noread_from_plc'] = request.rel_url.query['count_noread_from_plc']
         request.app['plc_state']['count_total_from_plc'] = request.rel_url.query['count_total_from_plc']
         request.app['plc_state']['machine_status'] = request.rel_url.query['machine_status']
+        request.app['plc_state']['count_no_zapusk_scaner'] = request.rel_url.query['machine_status']
+        request.app['plc_state']['count_no_trans_metka'] = request.rel_url.query['machine_status']
+        request.app['plc_state']['count_brak_no_zazor'] = request.rel_url.query['machine_status']
         try:
             message_from_plc=request.rel_url.query['message_from_plc']
             previous_message_from_plc=request.app['plc_state']['message_from_plc'].split(';')[1]
