@@ -51,7 +51,7 @@
         <div class="container">
             <div class="row" style="height: 80px;">
                 <div class="col">
-                    <h1 id="current_date_main" style="text-align: center;font-size: 40px;" onclick="">2021-12-00<br></h1>
+                    <h1 id="current_date_main" style="text-align: center;font-size: 40px;" onclick=open_modal_with_date()>2021-12-00<br></h1>
                 </div>
             </div>
             <div class="modal" role="dialog" tabindex="-1" id="modal-1" style="display: none;">
@@ -75,13 +75,14 @@
             </div>
             <div class="row" style="height: 100px;">
                 <div class="col-12 col-md-12 col-lg-12">
-                    <div id="floating-label-1" class="form-floating mb-3"><select class="shadow form-select" for="floatinginput" placeholder="HGsOFT" style="font-size: 20px;height: 67px;" id="product_selector" onchange="function()">
+                    <div id="floating-label-1" class="form-floating mb-3"><select class="shadow form-select" for="floatinginput" placeholder="HGsOFT" style="font-size: 20px;height: 67px;" id="product_selector" onchange=open_modal_with_date()>
                         <!--
                         <option value="0">Не выбран продукт</option>
                         <optgroup label="Продукты" id="product_selector_option">
                                 <option value="0">Не выбран продукт</option>
                         </optgroup> -->
-                        </select><label class="form-label" id="floating-label-2" for="floatinginput">Выберите продукт:</label></div>
+                        </select><label class="form-label" id="floating-label-2" for="floatinginput">Выберите продукт:</label>
+                    </div>
                 </div>
             </div>
         </div>
