@@ -53,7 +53,7 @@ async def handle_port2000(reader, writer):
             data = await reader.read(100)
             # print(f"->{data}<- raw receive om 2000")
             message = data.decode()
-            print(f"receive on 2000 ->{message}<-")
+            print(f"receive on 2000 ->{message}<- {datetime.datetime.now()}" )
             params = {'km': message}
             async with aiohttp.ClientSession() as session:
                 async with session.get("http://127.0.0.1:8090/line/km/add", params=params) as resp:
@@ -62,11 +62,13 @@ async def handle_port2000(reader, writer):
             print(resp_text)
             if resp_text == "ok":
                 writer.write(b"\x00\x00\x00\x01")
-
+                print(f"send on 2000 -> x00 x00 x00 x01<- {datetime.datetime.now()}")
             elif resp_text == "noread":
                 continue
+                print(f"send on 2000 ->noread - no responce<- {datetime.datetime.now()}")
             else:
                 writer.write(b"\x00\x00\x00\x00")
+                print(f"send on 2000 ->x00 x00 x00 x00<- {datetime.datetime.now()}")
             await writer.drain()
         except Exception as e:
             print(e)
@@ -106,7 +108,7 @@ async def handle_port2002(reader, writer):
 
             data = await reader.read(100)
             time_start = datetime.datetime.now()
-            print(f"receive on 2002 ->{data}<- (RAW)")
+            #print(f"receive on 2002 ->{data}<- (RAW)")
             # message = data.decode()
             # print(f"receive on 2002 ->{message}<-")
             stat_from_plc = {}
@@ -150,7 +152,7 @@ async def handle_port2002(reader, writer):
             to_plc = tbrak_no_read_1 + tbrak_no_zazor_1 + timpulse_1 + naladka + timp_upakov + zadanie_count_brak + \
                      t_continuous_brak_1 + button_start + button_stop + button_reset + tbrak_no_read_2 + \
                      tbrak_no_zazor_2 + timpulse_2+t_continuous_brak2 +plc_jtin + b"\x00"
-            print(f"sending on 2002 ->{to_plc}<- (RAW)")
+            #print(f"sending on 2002 ->{to_plc}<- (RAW)")
             writer.write(to_plc)
             await writer.drain()
             time_stop = datetime.datetime.now()

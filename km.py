@@ -23,6 +23,8 @@ async def km_add(request):
         km = raw_km[:6]
         status = "noread"
         response_text = "noread"
+        getting_gtin = gtin
+        getting_tail, getting_crypto_tail = "", ""
         request.app['last_10_codes'].append(km)
         request.app['counters']['defect_codes'] += 1
         request.app['status']["state"] = 1
@@ -32,11 +34,10 @@ async def km_add(request):
             print(f'->{raw_km}<-')
             getting_gtin = raw_km[3:16]
             getting_tail = raw_km[18:24]
-            getting_crypto_tail = raw_km[26:30]
+            getting_crypto_tail = raw_km[27:31]
         except Exception as e:
             print(e)
             print('ne razobrat')
-
 
         if request.app["enable_unique_check"] == 1:
             inserted_rows = await redis.sadd(getting_gtin, getting_tail)

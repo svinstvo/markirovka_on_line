@@ -33,7 +33,7 @@ async def start_server(app):
     # print(app['remote_server'])
     # print(app['local_server'])
 
-    app['current_gtin'] = "4602547000169"
+    app['current_gtin'] = "4602547000886"
     app['current_product_name'] = ""
     app['current_batch_date'] = datetime.datetime.today() + datetime.timedelta(days=1)
     app['current_cod_gp']=''
