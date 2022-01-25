@@ -1,31 +1,30 @@
 import asyncio
 
 
-async def save_into_db(request, km, gtin, batch_date, status):
+async def save_into_db(request,gtin, tail, crypto_tail, batch_date, status):
     pool = request.app['local_server']
-    local_db_table_name = f"line_{request.app['markstation_id']}"
+    markstation_id = request.app['markstation_id']
     async with pool.acquire() as connection:
         async with connection.transaction():
             result = await connection.fetch(
-                f'insert into {local_db_table_name} (km,gtin,batch_date,verified_status) values ($1,$2,$3,$4)', km,
-                gtin, batch_date, status)
+                f'insert into line (gtin, tail, crypto_tail, batch_date,verified_status,line) values ($1,$2,$3,$4,$5,$6)', gtin, tail,crypto_tail,batch_date, status,markstation_id)
             # print(result)
 
 
 async def load_counters_from_db(app, loop):
     time_between_reload_stat = app['time_between_reload_stat']
     pool = app['local_server']
-    table_name = f"line_{app['markstation_id']}"
+    markstation_id = app['markstation_id']
     while True:
         try:
             if app['current_gtin'] != "" and app["current_batch_date"] != "":
                 async with pool.acquire() as connection:
                     async with connection.transaction():
                         result = await connection.fetchrow(f'''select n1.good,n2.defect,n3.total,n4.duplicate from
-    (select count(gtin) good from {table_name} where batch_date=$1 and gtin=$2 and verified_status like 'verified') as n1 ,
-    (select count(gtin) defect from {table_name} where batch_date=$1 and gtin=$2 and verified_status like 'noread') as n2,
-    (select count(gtin) total from {table_name} where batch_date=$1 and gtin=$2) as n3,
-    (select count(gtin) duplicate from {table_name} where batch_date=$1 and gtin=$2 and verified_status like 'duplicate') as n4;''',
+    (select count(gtin) good from line where batch_date=$1 and gtin=$2 and verified_status like 'verified') as n1 ,
+    (select count(gtin) defect from line where batch_date=$1 and gtin=$2 and verified_status like 'noread') as n2,
+    (select count(gtin) total from line where batch_date=$1 and gtin=$2) as n3,
+    (select count(gtin) duplicate from line where batch_date=$1 and gtin=$2 and verified_status like 'duplicate') as n4;''',
                                                            app["current_batch_date"], app['current_gtin'])
                         print(result)
                         json = {"good_codes": result['good'], "defect_codes": result['defect'],
