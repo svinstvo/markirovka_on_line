@@ -114,11 +114,14 @@ async def handle_port2002(reader, writer):
             stat_from_plc['time_imp_upakovki'] = int.from_bytes(data[4:8], byteorder="big")
             stat_from_plc['count_noread_from_plc'] = int.from_bytes(data[8:12], byteorder="big")
             stat_from_plc['count_total_from_plc'] = int.from_bytes(data[12:16], byteorder="big")
-            stat_from_plc['time_imp_upakovki2'] = int.from_bytes(data[16:20], byteorder="big")
-            stat_from_plc['count_noread_from_2_plc'] = int.from_bytes(data[20:24], byteorder="big")
-            stat_from_plc['count_total_from_2_plc2'] = int.from_bytes(data[24:28], byteorder="big")
-            stat_from_plc['machine_status'] = int.from_bytes(data[28:32], byteorder="big")
-            stat_from_plc['message_from_plc'] = data[32:64].decode('utf-8')
+            stat_from_plc['count_no_zapusk_scaner'] = int.from_bytes(data[16:20], byteorder="big")
+            stat_from_plc['count_no_trans_metka'] = int.from_bytes(data[20:24], byteorder="big")
+            stat_from_plc['count_brak_no_zazor'] = int.from_bytes(data[24:28], byteorder="big")
+            stat_from_plc['time_imp_upakovki2'] = int.from_bytes(data[28:32], byteorder="big")
+            stat_from_plc['count_noread_from_2_plc'] = int.from_bytes(data[32:36], byteorder="big")
+            stat_from_plc['count_total_from_2_plc2'] = int.from_bytes(data[36:40], byteorder="big")
+            stat_from_plc['machine_status'] = int.from_bytes(data[40:44], byteorder="big")
+            stat_from_plc['message_from_plc'] = data[44:76].decode('utf-8')
 
             async with aiohttp.ClientSession() as session:
                 async with session.get("http://127.0.0.1:8090/line/web_interface/get_controller_settings",
