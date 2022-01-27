@@ -13,8 +13,8 @@ import os
 async def readconfig(app):
     config = configparser.ConfigParser()
     config.read("settings.conf")
-    app['remote_server'] = await asyncpg.create_pool(dsn=config.get("server", "remote_server_dsn"), min_size=1,
-                                                     max_size=3)
+    #app['remote_server'] = await asyncpg.create_pool(dsn=config.get("server", "remote_server_dsn"), min_size=1,
+    #                                                 max_size=3)
     app['local_server'] = await asyncpg.create_pool(dsn=config.get("server", "local_server_dsn"), min_size=1,
                                                     max_size=3)
     app['markstation_id'] = config.get("server", "markstation_id")
@@ -60,6 +60,17 @@ async def close_pool(app):
     await app['local_server'].wait_closed()
 
 
+async def close_ws(app):
+    for ws in app['ws']:
+        await ws.close()
+    return
+
+
+async def on_shutdown(app):
+    asyncio.create_task(close_pool(app))
+    asyncio.create_task(close_ws(app))
+    return
+
 app = web.Application()
 app.add_routes([
     web.get('/line/km/add', km_add),
@@ -75,9 +86,8 @@ app.add_routes([
     web.get('/line/ws', web_interface.websocket_handler),
     web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
 ])
-# print(os.path.abspath(os.getcwd()))
 app.on_startup.append(start_server)
-# app.on_cleanup.append(close_pool)
+app.on_shutdown.append(on_shutdown)
 config = configparser.ConfigParser()
 config.read("settings.conf")
 web.run_app(app, host=config.get("server", "listen_address"), port=int(config.get("server", "listen_port")))
