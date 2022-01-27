@@ -25,7 +25,7 @@ async def load_counters_from_db(app, loop):
     (select count(gtin) good from line where batch_date=$1 and gtin=$2 and verified_status like 'verified') as n1 ,
     (select count(gtin) defect from line where batch_date=$1 and gtin=$2 and verified_status like 'noread') as n2,
     (select count(gtin) total from line where batch_date=$1 and gtin=$2) as n3,
-    (select count(gtin) duplicate from line where batch_date=$1 and gtin=$2 and verified_status like 'duplicate') as n4;''',
+    (select count(gtin) duplicate from line where batch_date=$1 and gtin=$2 and (verified_status like 'duplicate' or verified_status like 'wrong_product')) as n4;''',
                                                            app["current_batch_date"], app['current_gtin'])
                         print(result)
                         json = {"good_codes": result['good'], "defect_codes": result['defect'],
