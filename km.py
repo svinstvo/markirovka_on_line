@@ -11,6 +11,7 @@ async def km_add(request):
     raw_km = request.rel_url.query['km']
     gtin = request.app["current_gtin"]
     batch_date = request.app['current_batch_date']
+    redis_timeout=request.app['redis_timeout']
     if gtin == "":
         asyncio.create_task(web_interface.show_error("Не выбран продукт"))
         return web.Response(text="no selected product")
@@ -38,9 +39,16 @@ async def km_add(request):
         except Exception as e:
             print(e)
             print('ne razobrat')
+            asyncio.create_task(work_with_db.save_logs(app=request.app, message=e))
 
         if request.app["enable_unique_check"] == 1:
-            inserted_rows = await redis.sadd(getting_gtin, getting_tail)
+            try:
+                inserted_rows = await asyncio.wait_for(redis.sadd(getting_gtin, getting_tail), timeout=redis_timeout)
+                # inserted_rows = await redis.sadd(getting_gtin, getting_tail)
+            except Exception as e:
+                print(e)
+                inserted_rows = 1
+                asyncio.create_task(work_with_db.save_logs(app=request.app,message=e))
         else:
             inserted_rows = 1
 

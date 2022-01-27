@@ -24,6 +24,7 @@ async def readconfig(app):
     app['redis_connect_timeout'] = float(config.get("server", "redis_connect_timeout"))
     app['button_pressed_time_duration']=int(config.get("server", "button_pressed_time_duration"))
     app['enable_unique_check'] = int(config.get("server", "enable_unique_check"))
+    app['redis_timeout']= float (config.get("server", "enable_unique_check"))
 
     return
 

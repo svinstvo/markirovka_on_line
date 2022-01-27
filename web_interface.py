@@ -99,14 +99,16 @@ async def get_controller_settings(request):
             if previous_message_from_plc != message_from_plc:
                 request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{message_from_plc}"
                 asyncio.create_task(ws_send_update(request.app))
+                asyncio.create_task(work_with_db.save_logs(app=request.app, message=request.app['plc_state']['message_from_plc']))
 
         except Exception as e:
             request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{request.rel_url.query['message_from_plc']} "
             print(e)
+            asyncio.create_task(work_with_db.save_logs(app=request.app, message=e))
 
     except Exception as e:
         print(e)
-
+        asyncio.create_task(work_with_db.save_logs(app=request.app, message=e))
     raw = await work_with_db.load_settings_from_db(request.app)
     raw['gtin'] = request.app['current_gtin']
     raw["status"] = request.app['status']

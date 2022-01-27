@@ -1,13 +1,14 @@
 import asyncio
 
 
-async def save_into_db(request,gtin, tail, crypto_tail, batch_date, status):
+async def save_into_db(request, gtin, tail, crypto_tail, batch_date, status):
     pool = request.app['local_server']
     markstation_id = request.app['markstation_id']
     async with pool.acquire() as connection:
         async with connection.transaction():
             result = await connection.fetch(
-                f'insert into line (gtin, tail, crypto_tail, batch_date,verified_status,line) values ($1,$2,$3,$4,$5,$6)', gtin, tail,crypto_tail,batch_date, status,markstation_id)
+                f'insert into line (gtin, tail, crypto_tail, batch_date,verified_status,line) values ($1,$2,$3,$4,$5,$6)',
+                gtin, tail, crypto_tail, batch_date, status, markstation_id)
             # print(result)
 
 
@@ -44,7 +45,8 @@ async def load_settings_from_db(app):
     async with pool.acquire() as connection:
         async with connection.transaction():
             records = await connection.fetch(
-                f''' select param_name,param_value from settings_plc where line_number=$1 order by param_name;''', app['markstation_id'])
+                f''' select param_name,param_value from settings_plc where line_number=$1 order by param_name;''',
+                app['markstation_id'])
             result = {}
             for record in records:
                 result[record[0]] = record[1]
@@ -62,8 +64,8 @@ async def get_available_product_list(app):
 
     result = {}
     for line in record:
-        #print(line[0])
-        #print(line[1])
+        # print(line[0])
+        # print(line[1])
         result[line[0]] = line[1]
 
     return result
@@ -74,8 +76,18 @@ async def save_settings_into_db(app, plc_settings):
     async with pool.acquire() as connection:
         async with connection.transaction():
             for element in plc_settings:
-                await connection.execute("update settings_plc set param_value=$1 where param_name=$2 and line_number=$3",
-                                       plc_settings[element],element, app['markstation_id'])
+                await connection.execute(
+                    "update settings_plc set param_value=$1 where param_name=$2 and line_number=$3",
+                    plc_settings[element], element, app['markstation_id'])
 
+    return
+
+
+async def save_logs(app, message):
+    pool = app['local_server']
+    markstation_id = app['markstation_id']
+    async with pool.acquire() as connection:
+        async with connection.transaction():
+            await connection.fetch('insert into logs (line,message) values ($1,$2)', markstation_id, str(message))
 
     return
