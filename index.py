@@ -13,7 +13,7 @@ import os
 async def readconfig(app):
     config = configparser.ConfigParser()
     config.read("settings.conf")
-    #app['remote_server'] = await asyncpg.create_pool(dsn=config.get("server", "remote_server_dsn"), min_size=1,
+    # app['remote_server'] = await asyncpg.create_pool(dsn=config.get("server", "remote_server_dsn"), min_size=1,
     #                                                 max_size=3)
     app['local_server'] = await asyncpg.create_pool(dsn=config.get("server", "local_server_dsn"), min_size=1,
                                                     max_size=3)
@@ -22,9 +22,9 @@ async def readconfig(app):
                                                          password=config.get("server", "redis_pass"), max_connections=3)
     app['time_between_reload_stat'] = int(config.get("server", "time_between_reload_stat"))
     app['redis_connect_timeout'] = float(config.get("server", "redis_connect_timeout"))
-    app['button_pressed_time_duration']=int(config.get("server", "button_pressed_time_duration"))
+    app['button_pressed_time_duration'] = int(config.get("server", "button_pressed_time_duration"))
     app['enable_unique_check'] = int(config.get("server", "enable_unique_check"))
-    app['redis_timeout']= float (config.get("server", "enable_unique_check"))
+    app['redis_timeout'] = float(config.get("server", "enable_unique_check"))
 
     return
 
@@ -36,9 +36,11 @@ async def start_server(app):
 
     app['current_gtin'] = "4602547000886"
     app['current_product_name'] = ""
+    app['current_cod_gp'] = '31117'
     app['current_batch_date'] = datetime.datetime.today() + datetime.timedelta(days=1)
-    app['current_cod_gp']=''
-    app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0,"button_start_pressed":0,"button_stop_pressed":0,"button_reset_pressed":0}
+    app['current_cod_gp'] = ''
+    app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0, "button_start_pressed": 0,
+                     "button_stop_pressed": 0, "button_reset_pressed": 0}
     app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0, "duplicates_codes": 0}
     app['last_10_codes'] = []
     app['ws'] = []
@@ -71,6 +73,7 @@ async def on_shutdown(app):
     asyncio.create_task(close_pool(app))
     asyncio.create_task(close_ws(app))
     return
+
 
 app = web.Application()
 app.add_routes([

@@ -10,12 +10,14 @@ async def km_add(request):
     # km = request.match_info['km']
     raw_km = request.rel_url.query['km']
     gtin = request.app["current_gtin"]
+    cod_gp=request.app["current_cod_gp"]
     batch_date = request.app['current_batch_date']
     redis_timeout=request.app['redis_timeout']
 
     if gtin == "":
         asyncio.create_task(web_interface.show_error("Не выбран продукт"))
         return web.Response(text="no selected product")
+
     if batch_date == "":
         asyncio.create_task(web_interface.show_error("Не выбрана дата производства"))
         return web.Response(text="Не выбрана дата производства")
@@ -41,7 +43,7 @@ async def km_add(request):
             print(e)
             print('ne razobrat')
             asyncio.create_task(work_with_db.save_logs(app=request.app, message=e))
-            getting_gtin = gtin
+            getting_gtin = ''
             getting_tail = ""
             getting_crypto_tail = ""
 
@@ -84,6 +86,6 @@ async def km_add(request):
     # print(request.app['status'])
     request.app['counters']['total_codes'] += 1
     asyncio.create_task(web_interface.ws_send_update(request.app))
-    asyncio.create_task(work_with_db.save_into_db(request, getting_gtin, getting_tail, getting_crypto_tail, batch_date,
+    asyncio.create_task(work_with_db.save_into_db(request.app, cod_gp,getting_gtin, getting_tail, getting_crypto_tail, batch_date,
                                                   status))  # Записываем в локальную бд
     return web.Response(text=response_text)

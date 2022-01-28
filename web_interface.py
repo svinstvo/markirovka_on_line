@@ -23,6 +23,7 @@ async def get_statistic(request):
     prepared_dict = {}
     prepared_dict.update(request.app["counters"])
     prepared_dict.update({"current_gtin": request.app['current_gtin']})
+    prepared_dict.update({"current_cod_gp": request.app['current_cod_gp']})
     prepared_dict.update({"current_product_name": request.app['current_product_name']})
     prepared_dict.update({"current_batch_date": request.app['current_batch_date'].strftime("%Y-%m-%d")})
     prepared_dict["status"] = request.app['status']
@@ -36,8 +37,9 @@ async def get_statistic(request):
 
 async def set_current_gtin(request):
     # request.app['current_gtin'] = request.match_info['gtin']
-    request.app['current_gtin'] = request.rel_url.query['gtin']
-    request.app['current_product_name'] = "Тут будет Название продукта"
+    # request.app['current_gtin'] = request.rel_url.query['cod_gp']
+    request.app['current_cod_gp'] = request.rel_url.query['cod_gp']
+    request.app['current_gtin'] = await work_with_db.get_gtin_by_cod_gp(request.app, request.app['current_cod_gp'])
     await work_with_db.load_counters_from_db(request.app, loop=False)
     asyncio.create_task(ws_send_update(request.app))
     return web.Response(text="ok")
@@ -94,15 +96,18 @@ async def get_controller_settings(request):
         request.app['plc_state']['count_no_trans_metka'] = request.rel_url.query['count_no_trans_metka']
         request.app['plc_state']['count_brak_no_zazor'] = request.rel_url.query['count_brak_no_zazor']
         try:
-            message_from_plc=request.rel_url.query['message_from_plc']
-            previous_message_from_plc=request.app['plc_state']['message_from_plc'].split(';')[1]
+            message_from_plc = request.rel_url.query['message_from_plc']
+            previous_message_from_plc = request.app['plc_state']['message_from_plc'].split(';')[1]
             if previous_message_from_plc != message_from_plc:
-                request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{message_from_plc}"
+                request.app['plc_state'][
+                    'message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{message_from_plc}"
                 asyncio.create_task(ws_send_update(request.app))
-                asyncio.create_task(work_with_db.save_logs(app=request.app, message=request.app['plc_state']['message_from_plc']))
+                asyncio.create_task(
+                    work_with_db.save_logs(app=request.app, message=request.app['plc_state']['message_from_plc']))
 
         except Exception as e:
-            request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{request.rel_url.query['message_from_plc']} "
+            request.app['plc_state'][
+                'message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{request.rel_url.query['message_from_plc']} "
             print(e)
             asyncio.create_task(work_with_db.save_logs(app=request.app, message=e))
 
@@ -135,7 +140,6 @@ async def set_controller_settings(request):
     plc_settings['2_time_impulse'] = request.rel_url.query['2_time_impulse']
     plc_settings['2_time_continuous_brak'] = request.rel_url.query['2_time_continuous_brak']
 
-
     await work_with_db.save_settings_into_db(request.app, plc_settings)
 
     # except Exception as e:
@@ -150,7 +154,7 @@ async def set_debug_mode(request):
     return web.Response(text="ok", content_type="plain/text")
 
 
-async def set_and_unset(app,button, duration):
+async def set_and_unset(app, button, duration):
     print(button)
     app["status"][f"button_{button}_pressed"] = 1
     await ws_send_update(app)
@@ -163,5 +167,5 @@ async def set_and_unset(app,button, duration):
 
 async def button_pressed(request):
     button = request.rel_url.query['button']
-    asyncio.create_task(set_and_unset(request.app,button,request.app['button_pressed_time_duration']))
+    asyncio.create_task(set_and_unset(request.app, button, request.app['button_pressed_time_duration']))
     return web.Response(text="ok", content_type="text/plain")

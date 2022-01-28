@@ -1,14 +1,14 @@
 import asyncio
 
 
-async def save_into_db(request, gtin, tail, crypto_tail, batch_date, status):
-    pool = request.app['local_server']
-    markstation_id = request.app['markstation_id']
+async def save_into_db(app, cod_gp,gtin, tail, crypto_tail, batch_date, status):
+    pool = app['local_server']
+    markstation_id = app['markstation_id']
     async with pool.acquire() as connection:
         async with connection.transaction():
             result = await connection.fetch(
-                f'insert into line (gtin, tail, crypto_tail, batch_date,verified_status,line) values ($1,$2,$3,$4,$5,$6)',
-                gtin, tail, crypto_tail, batch_date, status, markstation_id)
+                f'insert into line (cod_gp,gtin, tail, crypto_tail, batch_date,verified_status,line) values ($1,$2,$3,$4,$5,$6,$7)',
+                cod_gp,gtin, tail, crypto_tail, batch_date, status, markstation_id)
             # print(result)
 
 
@@ -18,15 +18,16 @@ async def load_counters_from_db(app, loop):
     markstation_id = app['markstation_id']
     while True:
         try:
-            if app['current_gtin'] != "" and app["current_batch_date"] != "":
+            #if app['current_gtin'] != "" and app["current_batch_date"] != "":
+            if app['current_cod_gp'] != "" and app["current_batch_date"] != "":
                 async with pool.acquire() as connection:
                     async with connection.transaction():
                         result = await connection.fetchrow(f'''select n1.good,n2.defect,n3.total,n4.duplicate from
-    (select count(gtin) good from line where batch_date=$1 and gtin=$2 and verified_status like 'verified') as n1 ,
-    (select count(gtin) defect from line where batch_date=$1 and gtin=$2 and verified_status like 'noread') as n2,
-    (select count(gtin) total from line where batch_date=$1 and gtin=$2) as n3,
-    (select count(gtin) duplicate from line where batch_date=$1 and gtin=$2 and (verified_status like 'duplicate' or verified_status like 'wrong_product')) as n4;''',
-                                                           app["current_batch_date"], app['current_gtin'])
+    (select count(gtin) good from line where batch_date=$1 and cod_gp=$2 and verified_status like 'verified') as n1 ,
+    (select count(gtin) defect from line where batch_date=$1 and cod_gp=$2 and verified_status like 'noread') as n2,
+    (select count(gtin) total from line where batch_date=$1 and cod_gp=$2) as n3,
+    (select count(gtin) duplicate from line where batch_date=$1 and cod_gp=$2 and (verified_status like 'duplicate' or verified_status like 'wrong_product')) as n4;''',
+                                                           app["current_batch_date"], app['current_cod_gp'])
                         print(result)
                         json = {"good_codes": result['good'], "defect_codes": result['defect'],
                                 "total_codes": result['total'], "duplicates_codes": result['duplicate']}
@@ -59,7 +60,7 @@ async def get_available_product_list(app):
 
     async with pool.acquire() as connection:
         async with connection.transaction():
-            record = await connection.fetch('select gtin,name from available_products where line = $1;',
+            record = await connection.fetch("select cod_gp,concat('(',cod_gp,')-',name) from available_products where line = $1;",
                                             app['markstation_id'])
 
     result = {}
@@ -91,3 +92,16 @@ async def save_logs(app, message):
             await connection.fetch('insert into logs (line,message) values ($1,$2)', markstation_id, str(message))
 
     return
+
+
+async def get_gtin_by_cod_gp(app, cod_gp):
+    pool = app['local_server']
+    table_name = "available_products "
+
+    async with pool.acquire() as connection:
+        async with connection.transaction():
+            record = await connection.fetch(
+                "select available_products.gtin from available_products where line = $1 and cod_gp=$2",
+                app['markstation_id'],cod_gp)
+    return(record[0]['gtin'])
+
