@@ -90,20 +90,25 @@ async def get_controller_settings(request):
         request.app['plc_state']['count_noread_from_plc'] = request.rel_url.query['count_noread_from_plc']
         request.app['plc_state']['count_total_from_plc'] = request.rel_url.query['count_total_from_plc']
         request.app['plc_state']['machine_status'] = request.rel_url.query['machine_status']
+        request.app['plc_state']['count_no_zapusk_scaner'] = request.rel_url.query['count_no_zapusk_scaner']
+        request.app['plc_state']['count_no_trans_metka'] = request.rel_url.query['count_no_trans_metka']
+        request.app['plc_state']['count_brak_no_zazor'] = request.rel_url.query['count_brak_no_zazor']
         try:
             message_from_plc=request.rel_url.query['message_from_plc']
             previous_message_from_plc=request.app['plc_state']['message_from_plc'].split(';')[1]
             if previous_message_from_plc != message_from_plc:
                 request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{message_from_plc}"
                 asyncio.create_task(ws_send_update(request.app))
+                asyncio.create_task(work_with_db.save_logs(app=request.app, message=request.app['plc_state']['message_from_plc']))
 
         except Exception as e:
             request.app['plc_state']['message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{request.rel_url.query['message_from_plc']} "
             print(e)
+            asyncio.create_task(work_with_db.save_logs(app=request.app, message=e))
 
     except Exception as e:
         print(e)
-
+        asyncio.create_task(work_with_db.save_logs(app=request.app, message=e))
     raw = await work_with_db.load_settings_from_db(request.app)
     raw['gtin'] = request.app['current_gtin']
     raw["status"] = request.app['status']

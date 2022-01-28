@@ -13,8 +13,8 @@ import os
 async def readconfig(app):
     config = configparser.ConfigParser()
     config.read("settings.conf")
-    app['remote_server'] = await asyncpg.create_pool(dsn=config.get("server", "remote_server_dsn"), min_size=1,
-                                                     max_size=3)
+    #app['remote_server'] = await asyncpg.create_pool(dsn=config.get("server", "remote_server_dsn"), min_size=1,
+    #                                                 max_size=3)
     app['local_server'] = await asyncpg.create_pool(dsn=config.get("server", "local_server_dsn"), min_size=1,
                                                     max_size=3)
     app['markstation_id'] = config.get("server", "markstation_id")
@@ -24,6 +24,7 @@ async def readconfig(app):
     app['redis_connect_timeout'] = float(config.get("server", "redis_connect_timeout"))
     app['button_pressed_time_duration']=int(config.get("server", "button_pressed_time_duration"))
     app['enable_unique_check'] = int(config.get("server", "enable_unique_check"))
+    app['redis_timeout']= float (config.get("server", "enable_unique_check"))
 
     return
 
@@ -33,9 +34,10 @@ async def start_server(app):
     # print(app['remote_server'])
     # print(app['local_server'])
 
-    app['current_gtin'] = "4602547000169"
+    app['current_gtin'] = "4602547000886"
     app['current_product_name'] = ""
     app['current_batch_date'] = datetime.datetime.today() + datetime.timedelta(days=1)
+    app['current_cod_gp']=''
     app['status'] = {"state": 0, "message": "ВСЕ ХОРОШО", "debug_mode": 0,"button_start_pressed":0,"button_stop_pressed":0,"button_reset_pressed":0}
     app['counters'] = {"total_codes": 0, "good_codes": 0, "defect_codes": 0, "duplicates_codes": 0}
     app['last_10_codes'] = []
@@ -59,6 +61,17 @@ async def close_pool(app):
     await app['local_server'].wait_closed()
 
 
+async def close_ws(app):
+    for ws in app['ws']:
+        await ws.close()
+    return
+
+
+async def on_shutdown(app):
+    asyncio.create_task(close_pool(app))
+    asyncio.create_task(close_ws(app))
+    return
+
 app = web.Application()
 app.add_routes([
     web.get('/line/km/add', km_add),
@@ -74,9 +87,8 @@ app.add_routes([
     web.get('/line/ws', web_interface.websocket_handler),
     web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
 ])
-# print(os.path.abspath(os.getcwd()))
 app.on_startup.append(start_server)
-# app.on_cleanup.append(close_pool)
+app.on_shutdown.append(on_shutdown)
 config = configparser.ConfigParser()
 config.read("settings.conf")
 web.run_app(app, host=config.get("server", "listen_address"), port=int(config.get("server", "listen_port")))
