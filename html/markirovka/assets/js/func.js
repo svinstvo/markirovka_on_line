@@ -24,13 +24,13 @@ document.getElementById('noservice').onclick = function()
 function subscribe_on_select() {
     document.getElementById("product_selector").addEventListener('change',function(){
         url=new URL(window.location.origin +"/line/web_interface/set_gtin");
-        url.searchParams.append('gtin',this.value);
+        url.searchParams.append('cod_gp',this.value);
         console.log(url.toString());
         $.ajax({
             url:url.toString(),
             dataType: 'text',
             success:function (result) {
-                console.log("set gtin: "+result);
+                console.log("cod_gp: "+result);
             }
         });
     })
