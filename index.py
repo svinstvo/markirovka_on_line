@@ -57,10 +57,10 @@ async def start_server(app):
 
 
 async def close_pool(app):
-    app['remote_server'].close()
+    #app['remote_server'].close()
     app['local_server'].close()
-    await app['remote_server'].wait_closed()
-    await app['local_server'].wait_closed()
+    #await app['remote_server'].wait_closed()
+    #await app['local_server'].wait_closed()
 
 
 async def close_ws(app):
