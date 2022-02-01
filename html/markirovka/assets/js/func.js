@@ -162,8 +162,8 @@ async function load_json() {
             success:function (result) {
                 //console.log(result);
                 JSONObject = JSON.parse(result);
-                selected_gtin = JSONObject['current_gtin'];                       
-                document.getElementById("product_selector").value = selected_gtin;
+                selected_cod_gp = JSONObject['current_cod_gp'];
+                document.getElementById("product_selector").value = selected_cod_gp;
                 document.getElementById('count_total').innerText=JSONObject['total_codes'];
                 document.getElementById('count_bad').innerText=JSONObject['defect_codes'];
                 document.getElementById('count_good').innerText=JSONObject['good_codes'];
