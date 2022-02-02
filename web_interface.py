@@ -89,12 +89,21 @@ async def get_controller_settings(request):
     try:
         request.app['plc_state']['alarm_no_scanner'] = request.rel_url.query['alarm_no_scanner']
         request.app['plc_state']['time_imp_upakovki'] = request.rel_url.query['time_imp_upakovki']
-        request.app['plc_state']['count_noread_from_plc'] = request.rel_url.query['count_noread_from_plc']
-        request.app['plc_state']['count_total_from_plc'] = request.rel_url.query['count_total_from_plc']
-        request.app['plc_state']['machine_status'] = request.rel_url.query['machine_status']
+        request.app['plc_state']['scaner_noread_counter'] = request.rel_url.query['scaner_noread_counter']
+        request.app['plc_state']['scaner_trigger_counter'] = request.rel_url.query['scaner_trigger_counter']
         request.app['plc_state']['count_no_zapusk_scaner'] = request.rel_url.query['count_no_zapusk_scaner']
         request.app['plc_state']['count_no_trans_metka'] = request.rel_url.query['count_no_trans_metka']
         request.app['plc_state']['count_brak_no_zazor'] = request.rel_url.query['count_brak_no_zazor']
+        request.app['plc_state']['time_imp_upakovki_2'] = request.rel_url.query['time_imp_upakovki_2']
+        request.app['plc_state']['scaner_noread_counter_2'] = request.rel_url.query['scaner_noread_counter_2']
+        request.app['plc_state']['scaner_trigger_counter_2'] = request.rel_url.query['scaner_trigger_counter_2']
+        request.app['plc_state']['count_no_zapusk_scaner_2'] = request.rel_url.query['count_no_zapusk_scaner_2']
+        request.app['plc_state']['count_no_trans_metka_2'] = request.rel_url.query['count_no_trans_metka_2']
+        request.app['plc_state']['count_brak_no_zazor_2'] = request.rel_url.query['count_brak_no_zazor_2']
+        request.app['plc_state']['machine_status'] = request.rel_url.query['machine_status']
+        
+
+
         try:
             message_from_plc = request.rel_url.query['message_from_plc']
             previous_message_from_plc = request.app['plc_state']['message_from_plc'].split(';')[1]
