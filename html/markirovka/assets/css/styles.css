@@ -59,10 +59,15 @@
 }
 
 div#plc_state {
-  list-style: none;
+  list-style: disc;
   -webkit-text-stroke: thin;
 }
 
 .btn-primary1 {
   color: white;
+}
+
+#plc_state > li {
+  float: left;
+  width: 25%;
 }
