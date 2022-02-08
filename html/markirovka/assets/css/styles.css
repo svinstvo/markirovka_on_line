@@ -67,7 +67,6 @@ div#plc_state {
   color: white;
 }
 
-#plc_state > li {
-  float: left;
-  width: 25%;
+.plc_settings {
+  max-width: 70px;
 }

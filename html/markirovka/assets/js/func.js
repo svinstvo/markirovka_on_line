@@ -346,6 +346,11 @@ function fill_controller_settings() {
                         $('input[id=' +k +']').val(obj);
                         $('input[id=' +k +'1]').val(obj);
                 }
+            let camera_html = document.getElementById("camera_optimization");
+            console.log("cam_html = " + camera_html.checked)
+            let cam_status = JSONObject["camera_optimization"];
+            console.log("cam_status = " + cam_status);
+            camera_html.checked = cam_status === "1";
         }
     })
 };
@@ -372,6 +377,16 @@ function send_settings() {
         }
     })
     hide_reset_button()
+}
+
+// Функция для тумблеров Checked = Value(1)
+function tumblerValue(id) {
+    let tumbler = document.getElementById(id);
+    if(tumbler.checked === true){
+        tumbler.value = 1;
+    } else {
+        tumbler.value = 0;
+    }
 }
 
 // функция отображения кнопки сброса настроек на те что сейчас в базе
