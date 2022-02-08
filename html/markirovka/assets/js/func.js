@@ -52,6 +52,7 @@ window.onload = function()
 function reload_button(){
     get_date_from_json();
     fill_controller_settings();
+    open_modal_with_password();
 };
 
 // Функция получения и отображения даты из JSON
@@ -79,6 +80,7 @@ document.getElementById('button_right').onclick = function()
     let dd = tomorrow.getDate();
     dd = (dd < 10) ? '0' + dd : dd;
     let mm = tomorrow.getMonth() + 1;
+    mm = (mm < 10) ? '0' + mm : mm;
     let yyyy = tomorrow.getFullYear();
     tomorrow = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date_modal').innerHTML = tomorrow;
@@ -93,32 +95,38 @@ document.getElementById('button_left').onclick = function()
     let dd = yesterday.getDate();
     dd = (dd < 10) ? '0' + dd : dd;
     let mm = yesterday.getMonth() + 1;
+    mm = (mm < 10) ? '0' + mm : mm;
     let yyyy = yesterday.getFullYear();
     yesterday = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date_modal').innerHTML = yesterday;
 };
 
 // кнопка закрытия всплывающего окна с датой (применить)
-document.getElementById('modal_close').onclick = function()
-{
-    let m = document.getElementById('modal-1');
-    m.style.display = "none";
+function accept_modal_with_date() {
+    $('#modal-1').modal('hide')
     set_date_on_server();
 };
 
 // вторая кнопка закрытия всплывающего окна с датой (крестик)
-document.getElementById('modal_close2').onclick = function()
-{
-    let m = document.getElementById('modal-1');
-    m.style.display = "none";
+function close_modal_with_date() {
+    $('#modal-1').modal('hide')
     get_date_from_json();
 };
 
 // Всплывающее окно с датой по смене продукта
 async function open_modal_with_date() {
-    let m = document.getElementById('modal-1');
-    m.style.display = "block"
+    $('#modal-1').modal('show')
 };
+
+// Всплывающее окно с вводом пароля
+async function open_modal_with_password() {
+    $('#modal-password').modal('show')
+};
+
+// Закрытие окно с паролем
+function close_modal_with_password() {
+    $('#modal-password').modal('hide')
+}
 
 
     function check_ws(){
