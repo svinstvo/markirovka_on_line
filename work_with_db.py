@@ -7,7 +7,7 @@ async def save_into_db(app, cod_gp,gtin, tail, crypto_tail, batch_date, status):
     async with pool.acquire() as connection:
         async with connection.transaction():
             result = await connection.fetch(
-                f'insert into line (cod_gp,gtin, tail, crypto_tail, batch_date,verified_status,line) values ($1,$2,$3,$4,$5,$6,$7)',
+                f'insert into marking.line (cod_gp,gtin, tail, crypto_tail, batch_date,verified_status,line) values ($1,$2,$3,$4,$5,$6,$7)',
                 cod_gp,gtin, tail, crypto_tail, batch_date, status, markstation_id)
             # print(result)
 
@@ -23,10 +23,10 @@ async def load_counters_from_db(app, loop):
                 async with pool.acquire() as connection:
                     async with connection.transaction():
                         result = await connection.fetchrow(f'''select n1.good,n2.defect,n3.total,n4.duplicate from
-    (select count(gtin) good from line where batch_date=$1 and cod_gp=$2 and verified_status like 'verified') as n1 ,
-    (select count(gtin) defect from line where batch_date=$1 and cod_gp=$2 and verified_status like 'noread') as n2,
-    (select count(gtin) total from line where batch_date=$1 and cod_gp=$2) as n3,
-    (select count(gtin) duplicate from line where batch_date=$1 and cod_gp=$2 and (verified_status like 'duplicate' or verified_status like 'wrong_product')) as n4;''',
+    (select count(gtin) good from marking.line where batch_date=$1 and cod_gp=$2 and verified_status like 'verified') as n1 ,
+    (select count(gtin) defect from marking.line where batch_date=$1 and cod_gp=$2 and verified_status like 'noread') as n2,
+    (select count(gtin) total from marking.line where batch_date=$1 and cod_gp=$2) as n3,
+    (select count(gtin) duplicate from marking.line where batch_date=$1 and cod_gp=$2 and (verified_status like 'duplicate' or verified_status like 'wrong_product')) as n4;''',
                                                            app["current_batch_date"], app['current_cod_gp'])
                         print(result)
                         json = {"good_codes": result['good'], "defect_codes": result['defect'],
@@ -46,7 +46,7 @@ async def load_settings_from_db(app):
     async with pool.acquire() as connection:
         async with connection.transaction():
             records = await connection.fetch(
-                f''' select param_name,param_value from settings_plc where line_number=$1 order by param_name;''',
+                f''' select param_name,param_value from marking.settings_plc where line_number=$1 order by param_name;''',
                 app['markstation_id'])
             result = {}
             for record in records:
@@ -60,7 +60,7 @@ async def get_available_product_list(app):
 
     async with pool.acquire() as connection:
         async with connection.transaction():
-            record = await connection.fetch("select cod_gp,concat('(',cod_gp,')-',name) from available_products where line = $1;",
+            record = await connection.fetch("select cod_gp,concat('(',cod_gp,')-',name) from marking.available_products where line = $1;",
                                             app['markstation_id'])
 
     result = {}
@@ -78,7 +78,7 @@ async def save_settings_into_db(app, plc_settings):
         async with connection.transaction():
             for element in plc_settings:
                 await connection.execute(
-                    "update settings_plc set param_value=$1 where param_name=$2 and line_number=$3",
+                    "update marking.settings_plc set param_value=$1 where param_name=$2 and line_number=$3",
                     plc_settings[element], element, app['markstation_id'])
 
     return
@@ -89,7 +89,7 @@ async def save_logs(app, message):
     markstation_id = app['markstation_id']
     async with pool.acquire() as connection:
         async with connection.transaction():
-            await connection.fetch('insert into logs (line,message) values ($1,$2)', markstation_id, str(message))
+            await connection.fetch('insert into marking.logs (line,message) values ($1,$2)', markstation_id, str(message))
 
     return
 
@@ -101,7 +101,7 @@ async def get_gtin_by_cod_gp(app, cod_gp):
     async with pool.acquire() as connection:
         async with connection.transaction():
             record = await connection.fetch(
-                "select available_products.gtin from available_products where line = $1 and cod_gp=$2",
+                "select gtin from marking.available_products where line = $1 and cod_gp=$2",
                 app['markstation_id'],cod_gp)
     return(record[0]['gtin'])
 

@@ -148,14 +148,17 @@ async def handle_port2002(reader, writer):
             timpulse_2 = int(settings["2_time_impulse"]).to_bytes(4, byteorder="big")
             t_continuous_brak2 = int(settings["2_time_continuous_brak"]).to_bytes(4, byteorder="big")
 
+            camera_optimization = int(settings["camera_optimization"]).to_bytes(4, byteorder="big")
+
             button_start = int(settings["status"]["button_start_pressed"]).to_bytes(4, byteorder="big")
             button_stop = int(settings["status"]["button_stop_pressed"]).to_bytes(4, byteorder="big")
             button_reset = int(settings["status"]["button_reset_pressed"]).to_bytes(4, byteorder="big")
 
             to_plc = tbrak_no_read_1 + tbrak_no_zazor_1 + timpulse_1 + naladka + timp_upakov + zadanie_count_brak + \
                      t_continuous_brak_1 + button_start + button_stop + button_reset + tbrak_no_read_2 + \
-                     tbrak_no_zazor_2 + timpulse_2+t_continuous_brak2 +plc_jtin + b"\x00"
+                     tbrak_no_zazor_2 + timpulse_2+t_continuous_brak2 +camera_optimization+ plc_jtin + b"\x00"
             #print(f"sending on 2002 ->{to_plc}<- (RAW)")
+            print(to_plc)
             writer.write(to_plc)
             await writer.drain()
             time_stop = datetime.datetime.now()

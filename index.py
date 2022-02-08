@@ -52,15 +52,15 @@ async def start_server(app):
     # app['local_server'] = await asyncpg.create_pool(dsn="postgresql://postgres:111111@10.10.3.105:5432/markirovka",
     #                                          min_size=1, max_size=3)
 
-    asyncio.create_task(work_with_db.load_counters_from_db(app, loop=True))
+    # asyncio.create_task(work_with_db.load_counters_from_db(app, loop=True))
     asyncio.create_task(plc_connector.start_servers(app))
 
 
 async def close_pool(app):
-    #app['remote_server'].close()
-    app['local_server'].close()
-    #await app['remote_server'].wait_closed()
-    #await app['local_server'].wait_closed()
+    # app['remote_server'].close()
+    await app['local_server'].close()
+    # await app['remote_server'].wait_closed()
+    # await app['local_server'].wait_closed()
 
 
 async def close_ws(app):
