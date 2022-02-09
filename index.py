@@ -54,6 +54,7 @@ async def start_server(app):
 
     # asyncio.create_task(work_with_db.load_counters_from_db(app, loop=True))
     asyncio.create_task(plc_connector.start_servers(app))
+    asyncio.create_task(web_interface.send_statistic_to_servers(app))
 
 
 async def close_pool(app):

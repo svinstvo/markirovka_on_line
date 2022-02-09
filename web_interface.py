@@ -1,8 +1,30 @@
+import aiohttp
 from aiohttp import web
 from datetime import datetime
 import asyncio
 import json
 import work_with_db
+
+
+async def send_statistic_to_servers(app):
+    while True:
+        try:
+            prepared_dict = {}
+            prepared_dict.update({"markstation_id": app['markstation_id']})
+            prepared_dict.update({"source_date": datetime.now().strftime("%Y-%m-%d")})
+            prepared_dict.update(app["counters"])
+            prepared_dict.update({"current_gtin": app['current_gtin']})
+            prepared_dict.update({"current_cod_gp": app['current_cod_gp']})
+            prepared_dict.update({"current_batch_date": app['current_batch_date'].strftime("%Y-%m-%d")})
+            prepared_dict["plc_state"] = app['plc_state']
+            stat = json.dumps(prepared_dict)
+            print(stat)
+            async with aiohttp.ClientSession() as session:
+                await session.post("http://10.10.3.18:9090/line/statistic", json=stat)
+
+        except Exception as e:
+            print(e)
+        await asyncio.sleep(60)
 
 
 async def show_error(message):
@@ -101,8 +123,6 @@ async def get_controller_settings(request):
         request.app['plc_state']['count_no_trans_metka_2'] = request.rel_url.query['count_no_trans_metka_2']
         request.app['plc_state']['count_brak_no_zazor_2'] = request.rel_url.query['count_brak_no_zazor_2']
         request.app['plc_state']['machine_status'] = request.rel_url.query['machine_status']
-        
-
 
         try:
             message_from_plc = request.rel_url.query['message_from_plc']
@@ -148,6 +168,7 @@ async def set_controller_settings(request):
     plc_settings['2_time_brak_no_zazor'] = request.rel_url.query['2_time_brak_no_zazor']
     plc_settings['2_time_impulse'] = request.rel_url.query['2_time_impulse']
     plc_settings['2_time_continuous_brak'] = request.rel_url.query['2_time_continuous_brak']
+    plc_settings['camera_optimization'] = request.rel_url.query['camera_optimization']
 
     await work_with_db.save_settings_into_db(request.app, plc_settings)
 

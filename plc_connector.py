@@ -158,7 +158,6 @@ async def handle_port2002(reader, writer):
                      t_continuous_brak_1 + button_start + button_stop + button_reset + tbrak_no_read_2 + \
                      tbrak_no_zazor_2 + timpulse_2+t_continuous_brak2 +camera_optimization+ plc_jtin + b"\x00"
             #print(f"sending on 2002 ->{to_plc}<- (RAW)")
-            print(to_plc)
             writer.write(to_plc)
             await writer.drain()
             time_stop = datetime.datetime.now()
@@ -182,6 +181,5 @@ async def start_servers(app):
     await asyncio.start_server(handle_port2001, '0.0.0.0', 2001, loop=loop, start_serving=True)
     await asyncio.start_server(handle_port2002, '0.0.0.0', 2002, loop=loop, start_serving=True)
     await asyncio.start_server(handle_port2000, '0.0.0.0', 2003, loop=loop, start_serving=True)
-
     # async with server:
     #    await server.serve_forever()
