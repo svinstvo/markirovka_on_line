@@ -125,7 +125,17 @@ async function open_modal_with_password() {
 
 // Закрытие окно с паролем
 function close_modal_with_password() {
-    $('#modal-password').modal('hide')
+    $('#modal-password').modal('hide');
+    erase_inputField();
+}
+
+// Функция для добавления цифры в поле пароля
+function addNumber(element) {
+    document.getElementById('id_password').value += element.value;
+}
+
+function erase_inputField() {
+    document.getElementById('id_password').value = ""
 }
 
 

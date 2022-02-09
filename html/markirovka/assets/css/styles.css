@@ -70,3 +70,9 @@ div#plc_state {
 .plc_settings {
   max-width: 70px;
 }
+
+.btn-calc {
+  font-size: 60px;
+  min-width: 100%;
+  margin-right: 30px;
+}
