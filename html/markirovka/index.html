@@ -38,7 +38,7 @@
                             </label>
                         </li>
                         <li class="nav-item" style="margin-top: 10px;"><a>
-                            <button class="btn btn-light shadow action-button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;margin-left: 3px;" type="button" onclick="reload_button();">
+                            <button class="btn btn-light shadow action-button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;margin-left: 3px;" type="button" onclick="open_modal_with_password();">
 	                            <strong>ОБНОВИТЬ</strong>
                             </button></a>
                         </li>
@@ -291,7 +291,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel" style="font-size: 2.25rem;">Введите пароль</h5>
-                    <input id="id_password" type="text" value="" style="margin-left: 40px;font-size: 26px;" name="password" />
+                    <input id="id_password" type="password" value="" style="margin-left: 40px;font-size: 26px;" name="password" />
                     <button type="button" class="btn-close" data-dismiss="modal" onclick="close_modal_with_password()" aria-label="Close" style="font-size: 34px;">
                     </button>
                 </div>
@@ -348,7 +348,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" style="font-size: 30px" onclick="close_modal_with_password()" data-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" style="font-size: 30px">Подтвердить</button>
+                    <button type="button" class="btn btn-primary" style="font-size: 30px" onclick="checkpassword()">Подтвердить</button>
                 </div>
             </div>
         </div>

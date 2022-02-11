@@ -52,7 +52,6 @@ window.onload = function()
 function reload_button(){
     get_date_from_json();
     fill_controller_settings();
-    open_modal_with_password();
 };
 
 // Функция получения и отображения даты из JSON
@@ -136,6 +135,17 @@ function addNumber(element) {
 
 function erase_inputField() {
     document.getElementById('id_password').value = ""
+}
+
+function checkpassword() {
+    let pass = document.getElementById('id_password').value;
+    if(String(pass)==="111111") {
+        close_modal_with_password()
+        reload_button()
+    } else {
+        alert("wrong password")
+        erase_inputField()
+    }
 }
 
 
