@@ -18,6 +18,7 @@ async def readconfig(app):
     app['local_server'] = await asyncpg.create_pool(dsn=config.get("server", "local_server_dsn"), min_size=1,
                                                     max_size=3)
     app['markstation_id'] = config.get("server", "markstation_id")
+    app['session'] = config.get("server", "session")
     app['redis_pool'] = aioredis.ConnectionPool.from_url(config.get("server", "redis_dsn"),
                                                          password=config.get("server", "redis_pass"), max_connections=3)
     app['time_between_reload_stat'] = int(config.get("server", "time_between_reload_stat"))
@@ -46,6 +47,9 @@ async def start_server(app):
     app['ws'] = []
     app['plc_last seen'] = datetime.datetime.now()
     app['plc_state'] = {}
+
+    app['stat_receive_servers'] = ['http://10.10.3.116:6000/request/marking/marking_line/MarkingLine/get_info_line',
+                                   'http://10.10.3.17:6000/request/marking/marking_line/MarkingLine/get_info_line']
 
     # app['remote_server'] = await asyncpg.create_pool(dsn="postgresql://postgres:111111@10.10.3.105:5432/markirovka",
     #                                           min_size=1, max_size=3)
