@@ -48,8 +48,8 @@ async def start_server(app):
     app['plc_last seen'] = datetime.datetime.now()
     app['plc_state'] = {}
 
-    app['stat_receive_servers'] = ['http://10.10.3.116:6000/request/marking/marking_line/MarkingLine/get_info_line',
-                                   'http://192.168.100.100/terminal/markstation/send_statistic']
+    app['stat_receive_servers'] = [{"url":'http://10.10.3.116:6000/request/marking/marking_line/MarkingLine/get_info_line', "last_counter":""},
+                                   {"url":'http://192.168.100.100/terminal/markstation/send_statistic'}]
 
     # app['remote_server'] = await asyncpg.create_pool(dsn="postgresql://postgres:111111@10.10.3.105:5432/markirovka",
     #                                           min_size=1, max_size=3)
