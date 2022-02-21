@@ -1,6 +1,5 @@
 // Показ сервисного режима
-document.getElementById('service').onclick = function()
-{
+function service_mode() {
     let m = document.getElementById('main_content');
     let s = document.getElementById('service_content');
     m.style.display = "none";
@@ -10,8 +9,7 @@ document.getElementById('service').onclick = function()
 };
 
 // Показ основного режима
-document.getElementById('noservice').onclick = function() 
-{
+function noservice_mode() {
     let m = document.getElementById('main_content');
     let s = document.getElementById('service_content');
     m.style.display = "block";
@@ -119,13 +117,19 @@ async function open_modal_with_date() {
 
 // Всплывающее окно с вводом пароля
 async function open_modal_with_password() {
-    $('#modal-password').modal('show')
+    let inputField = document.getElementById('id_password')
+    inputField.value = getWithExpiry("myKey");
+    if (inputField.value==="1234") {
+        service_mode()
+    } else {
+        $('#modal-password').modal('show')
+    }
+    erase_inputField()
 };
 
 // Закрытие окно с паролем
 function close_modal_with_password() {
     $('#modal-password').modal('hide');
-    erase_inputField();
 }
 
 // Функция для добавления цифры в поле пароля
@@ -137,17 +141,55 @@ function erase_inputField() {
     document.getElementById('id_password').value = ""
 }
 
-function checkpassword() {
-    let pass = document.getElementById('id_password').value;
-    if(String(pass)==="111111") {
-        close_modal_with_password()
-        reload_button()
-    } else {
-        alert("wrong password")
-        erase_inputField()
+// функция правильного отображения переключателя сервисного режима
+function switch_toggle(key) {
+    maincont = document.getElementById('main_content').style.display
+    if(key === 0){
+        document.getElementById('cond_new').click()
     }
 }
 
+// функция проверки пароля
+function check_password() {
+    let pass = document.getElementById('id_password').value;
+    let passPhrase = "1234"
+    setWithExpiry("myKey", pass, 5000)
+
+    if(String(pass)===passPhrase) {
+        close_modal_with_password()
+        service_mode()
+    } else {
+        alert("wrong password")
+        erase_inputField()
+        switch_toggle(0)
+        close_modal_with_password()
+    }
+}
+
+// функция добавления пароля в localstorage
+function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const item = {
+        value: value,
+        expiry: now.getTime() + ttl,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+}
+
+// функция получения пароля из localstorage
+function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+    if (!itemStr) {
+        return null
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+    if (now.getTime() > item.expiry) {
+        localStorage.removeItem(key)
+        return null
+    }
+    return item.value
+}
 
     function check_ws(){
         console.log(ws);
@@ -264,10 +306,10 @@ async function load_json() {
                 let obj = JSONObject['plc_state'];
                 for(let key in obj) {
                     if(document.getElementById("id_"+key)) {
-                        document.getElementById("id_"+key).innerHTML = key + " " +obj[key];
+                        document.getElementById("id_"+key).innerHTML = key + " " + "<b>" +obj[key] + "</b>";
                     } else {
                         let dateSpan = document.createElement('span');
-                        dateSpan.innerHTML = key + " " + obj[key];
+                        dateSpan.innerHTML = key + " " + "<b>" +obj[key] + "</b>";
                         dateSpan.id = "id_"+ key;
                         let li = document.createElement('li');
                         li.appendChild(dateSpan);

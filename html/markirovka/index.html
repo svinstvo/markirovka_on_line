@@ -38,7 +38,7 @@
                             </label>
                         </li>
                         <li class="nav-item" style="margin-top: 10px;"><a>
-                            <button class="btn btn-light shadow action-button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;margin-left: 3px;" type="button" onclick="open_modal_with_password();">
+                            <button class="btn btn-light shadow action-button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;margin-left: 3px;" type="button" onclick="reload_button()">
 	                            <strong>ОБНОВИТЬ</strong>
                             </button></a>
                         </li>
@@ -268,19 +268,19 @@
         <div class="row">
             <div class="col-md-5">
             </div>
-            <div class="col-md-3 col-lg-4 text-end" style="margin-top: 36px;">
+            <div class="col-md-3 col-lg-4 text-end">
                 <button id="manageButtonReset" class="btn btn-primary1 btn-lg" style="display: initial;min-height: 70px!important;min-width: 130px!important;" onclick=plc_manage("reset")>СБРОС</button>
                 <button id="manageButton" class="btn btn-primary1 btn-lg" style="display: initial;min-height: 70px!important;min-width: 130px!important;" onclick=plc_manage("start")>СТАРТ</button>
                 <button id="manageButton2" class="btn btn-primary1 btn-lg" style="display: initial;min-height: 70px!important;min-width: 130px!important;" onclick=plc_manage("stop")>СТОП</button>
             </div>
             <div class="col-md-3">
-                <fieldset style="margin-top: 10px;">
-                    <legend></legend>
+                <fieldset>
                     <div id="switch_toggle" class="shadow toggle">
-                        <input type="radio" id="cond_new" name="bike_cond" checked="checked">
+                        <input type="radio" id="cond_new" name="bike_cond" autocomplete="off" onclick="noservice_mode()" checked>
                         <label class="form-label" id="noservice" for="cond_new">Обычный режим</label>
-                        <input type="radio" id="cond_used" name="bike_cond">
-                        <label class="form-label" id="service" for="cond_used" onclick="function()">Сервисный режим</label>
+
+                        <input type="radio" id="cond_used" name="bike_cond" autocomplete="off" onclick="open_modal_with_password()">
+                        <label class="form-label" id="service" for="cond_used">Сервисный режим</label>
                     </div>
                 </fieldset>
             </div>
@@ -347,8 +347,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" style="font-size: 30px" onclick="close_modal_with_password()" data-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn btn-primary" style="font-size: 30px" onclick="checkpassword()">Подтвердить</button>
+                    <button type="button" class="btn btn-secondary" style="font-size: 30px" onclick="close_modal_with_password();noservice_mode()" data-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" style="font-size: 30px" onclick="check_password()">Подтвердить</button>
                 </div>
             </div>
         </div>
