@@ -44,6 +44,7 @@ window.onload = function()
     subscribe_on_select();
     setInterval(check_ws,5000);
     fill_controller_settings();
+    load_json();
 };
 
 // функция для кнопки перезагрузки
@@ -261,12 +262,12 @@ async function load_json() {
                     console.log("empty date");
                     set_date_on_server()
                 } else {
-                    //console.log(JSONObject['current_batch_date']);
+                   console.log("current_batch_date = " + JSONObject['current_batch_date']);
                    document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
                 }
-                //console.log(JSONObject['current_gtin']);
-                //console.log(document.getElementById("product_selector").value);
-                if (JSONObject['current_gtin'] !== document.getElementById("product_selector").value) {
+                console.log("current_cod_gp = " + JSONObject['current_cod_gp']);
+                console.log("product_selector.value = " + document.getElementById("product_selector").value);
+                if (JSONObject['current_cod_gp'] !== document.getElementById("product_selector").value) {
                   console.log("не равно ")
                 }
 
