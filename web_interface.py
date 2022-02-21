@@ -7,23 +7,30 @@ import work_with_db
 
 
 async def send_statistic_to_servers(app):
+    stat_receive_servers = app['stat_receive_servers']
+    params = {"session": app['session']}
     while True:
-        try:
-            prepared_dict = {}
-            prepared_dict.update({"markstation_id": app['markstation_id']})
-            prepared_dict.update({"source_date": datetime.now().strftime("%Y-%m-%d")})
-            prepared_dict.update(app["counters"])
-            prepared_dict.update({"current_gtin": app['current_gtin']})
-            prepared_dict.update({"current_cod_gp": app['current_cod_gp']})
-            prepared_dict.update({"current_batch_date": app['current_batch_date'].strftime("%Y-%m-%d")})
-            prepared_dict["plc_state"] = app['plc_state']
-            stat = json.dumps(prepared_dict)
-            print(stat)
-            async with aiohttp.ClientSession() as session:
-                await session.post("http://10.10.3.18:9090/line/statistic", json=stat)
+        prepared_dict = {}
+        prepared_dict.update({"markstation_id": app['markstation_id']})
+        prepared_dict.update({"source_date": datetime.now().strftime("%Y-%m-%d")})
+        prepared_dict.update(app["counters"])
+        prepared_dict.update({"current_gtin": app['current_gtin']})
+        prepared_dict.update({"current_cod_gp": app['current_cod_gp']})
+        prepared_dict.update({"current_batch_date": app['current_batch_date'].strftime("%Y-%m-%d")})
+        prepared_dict["plc_state"] = app['plc_state']
+        stat = json.dumps(prepared_dict).encode("utf-8")
 
-        except Exception as e:
-            print(e)
+        async with aiohttp.ClientSession() as session:
+            for server_url in stat_receive_servers:
+                try:
+                    print("----------------------------")
+                    print(server_url)
+                    print(stat)
+                    resp = await session.post(server_url, data=stat, params=params,ssl=False)
+                    print(f"response body: {resp}")
+                    print(f"response code: {resp.status}")
+                except Exception as e:
+                    print(e)
         await asyncio.sleep(60)
 
 
