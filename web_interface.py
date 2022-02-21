@@ -21,14 +21,23 @@ async def send_statistic_to_servers(app):
         stat = json.dumps(prepared_dict).encode("utf-8")
 
         async with aiohttp.ClientSession() as session:
-            for server_url in stat_receive_servers:
+            for server in stat_receive_servers:
                 try:
                     print("----------------------------")
-                    print(server_url)
+                    print(server['url'])
                     print(stat)
-                    resp = await session.post(server_url, data=stat, params=params,ssl=False)
-                    print(f"response body: {resp}")
-                    print(f"response code: {resp.status}")
+                    if "last_counter" in server:
+                        print("in")
+                        if prepared_dict['total_codes'] != server['last_counter']:
+                            resp = await session.post(server['url'], data=stat, params=params, ssl=False)
+                            print(f"total={prepared_dict['total_codes']} last_counter = {server['last_counter']}")
+                            print(f"response body: {resp}")
+                            print(f"response code: {resp.status}")
+                            server['last_counter'] = prepared_dict['total_codes']
+                    else:
+                        resp = await session.post(server['url'], data=stat, params=params, ssl=False)
+                        print(f"response body: {resp}")
+                        print(f"response code: {resp.status}")
                 except Exception as e:
                     print(e)
         await asyncio.sleep(60)
