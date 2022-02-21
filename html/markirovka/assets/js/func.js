@@ -157,7 +157,7 @@ function switch_toggle(key) {
 // функция проверки пароля
 function check_password() {
     let pass = document.getElementById('id_password').value;
-    setWithExpiry("myKey", pass, 5000)
+    setWithExpiry("myKey", pass, 600000)
 
     if(String(pass)===passPhrase) {
         close_modal_with_password()
