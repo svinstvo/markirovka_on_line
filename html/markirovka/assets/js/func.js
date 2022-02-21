@@ -115,11 +115,13 @@ async function open_modal_with_date() {
     $('#modal-1').modal('show')
 };
 
+// пароль
+const passPhrase = "1234"
 // Всплывающее окно с вводом пароля
 async function open_modal_with_password() {
     let inputField = document.getElementById('id_password')
     inputField.value = getWithExpiry("myKey");
-    if (inputField.value==="1234") {
+    if (inputField.value===passPhrase) {
         service_mode()
     } else {
         $('#modal-password').modal('show')
@@ -155,7 +157,6 @@ function switch_toggle(key) {
 // функция проверки пароля
 function check_password() {
     let pass = document.getElementById('id_password').value;
-    let passPhrase = "1234"
     setWithExpiry("myKey", pass, 5000)
 
     if(String(pass)===passPhrase) {
