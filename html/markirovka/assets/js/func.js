@@ -123,6 +123,7 @@ async function open_modal_with_password() {
         service_mode()
     } else {
         $('#modal-password').modal('show')
+        switch_toggle(0)
     }
     erase_inputField()
 };
@@ -146,6 +147,8 @@ function switch_toggle(key) {
     maincont = document.getElementById('main_content').style.display
     if(key === 0){
         document.getElementById('cond_new').click()
+    } else {
+        document.getElementById('cond_used').click()
     }
 }
 
@@ -158,6 +161,7 @@ function check_password() {
     if(String(pass)===passPhrase) {
         close_modal_with_password()
         service_mode()
+        switch_toggle(1)
     } else {
         alert("wrong password")
         erase_inputField()
