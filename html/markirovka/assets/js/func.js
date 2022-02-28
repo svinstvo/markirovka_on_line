@@ -38,13 +38,12 @@ function subscribe_on_select() {
 window.onload = function()
 {
     //get_date_from_user();
-    get_date_from_json();
     fill_product_selector();
+    get_date_from_json();
     subscribe_ws();
     subscribe_on_select();
     setInterval(check_ws,5000);
     fill_controller_settings();
-    load_json();
 };
 
 // функция для кнопки перезагрузки
@@ -210,7 +209,7 @@ function getWithExpiry(key) {
         ws = new WebSocket(url);
         ws.onmessage = function(event) {
             console.log(event);
-            load_json()
+            load_json();
         };
         load_json()
     }
@@ -230,15 +229,15 @@ function set_date_on_server() {
         });
 }
 
-async function load_json() {
+function load_json() {
         let url = window.location.origin +"/line/statistic";
         $.ajax({
             url:url.toString(),
             dataType: 'text',
             success:function (result) {
                 //console.log(result);
-                JSONObject = JSON.parse(result);
-                selected_cod_gp = JSONObject['current_cod_gp'];
+                let JSONObject = JSON.parse(result);
+                let selected_cod_gp = JSONObject['current_cod_gp'];
                 document.getElementById("product_selector").value = selected_cod_gp;
                 document.getElementById('count_total').innerText=JSONObject['total_codes'];
                 document.getElementById('count_bad').innerText=JSONObject['defect_codes'];
@@ -266,9 +265,10 @@ async function load_json() {
                    document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
                 }
                 console.log("current_cod_gp = " + JSONObject['current_cod_gp']);
-                console.log("product_selector.value = " + document.getElementById("product_selector").value);
+                console.log("product_selector.value1 = " + document.getElementById("product_selector").value);
                 if (JSONObject['current_cod_gp'] !== document.getElementById("product_selector").value) {
-                  console.log("не равно ")
+                    console.log("current_cod_gp != product_selector.value")
+                    console.log("пробуем заново")
                 }
 
                 //Заполенение последний 10 сканированных кодов
@@ -401,9 +401,10 @@ function fill_product_selector() {
                     opt.innerHTML = JSONObject[k];
                     selector.add(opt,null)
                 }
+                load_json()
             }
         });
-}
+};
 
 
 // загрузка настроек из JSON и заполнение

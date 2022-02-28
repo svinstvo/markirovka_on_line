@@ -257,22 +257,22 @@
                     </div>
                 </div>
                 <button class="btn btn-primary btn-lg" id="save_button" onclick="send_settings()" type="button" style="margin: 20px;">Сохранить</button>
-                <button class="btn btn-danger btn-lg" id="reset_button" onclick="fill_controller_settings();hide_reset_button()" style="display: none" type="button">Сбросить</button>
+                <button class="btn btn-danger btn-lg" id="reset_button" onclick="fill_controller_settings();hide_reset_button()" style="display: none;" type="button">Сбросить</button>
                 </form>
             </div>
             <div id="plc_state" class="col-lg-3 col-xl-3" style="font-size: 18px"></div>
         </div>
     </div>
-    <div class="container" id="servce_toggle">
+    <div class="container" id="servce_toggle" style="pointer-events: none;">
         <div class="row">
             <div class="col-md-5">
             </div>
-            <div class="col-md-3 col-lg-4 text-end">
+            <div class="col-md-3 col-lg-4 text-end" style="pointer-events: auto;">
                 <button id="manageButtonReset" class="btn btn-primary1 btn-lg" style="display: initial;min-height: 70px!important;min-width: 130px!important;" onclick=plc_manage("reset")>СБРОС</button>
                 <button id="manageButton" class="btn btn-primary1 btn-lg" style="display: initial;min-height: 70px!important;min-width: 130px!important;" onclick=plc_manage("start")>СТАРТ</button>
                 <button id="manageButton2" class="btn btn-primary1 btn-lg" style="display: initial;min-height: 70px!important;min-width: 130px!important;" onclick=plc_manage("stop")>СТОП</button>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" style="pointer-events: auto;">
                 <fieldset>
                     <div id="switch_toggle" class="shadow toggle">
                         <input type="radio" id="cond_new" name="bike_cond" autocomplete="off" onclick="noservice_mode()" checked>
