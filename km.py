@@ -27,7 +27,7 @@ async def km_add(request):
         km = raw_km[:6]
         status = "noread"
         response_text = "noread"
-        getting_gtin = gtin
+        getting_gtin = ""
         getting_tail, getting_crypto_tail = "", ""
         request.app['last_10_codes'].append(km)
         request.app['counters']['defect_codes'] += 1
