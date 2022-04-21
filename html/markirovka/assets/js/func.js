@@ -23,12 +23,12 @@ function subscribe_on_select() {
     document.getElementById("product_selector").addEventListener('change',function(){
         url=new URL(window.location.origin +"/line/web_interface/set_gtin");
         url.searchParams.append('cod_gp',this.value);
-        console.log(url.toString());
+        //console.log(url.toString());
         $.ajax({
             url:url.toString(),
             dataType: 'text',
             success:function (result) {
-                console.log("cod_gp: "+result);
+                //console.log("cod_gp: "+result);
             }
         });
     })
@@ -61,7 +61,7 @@ function get_date_from_json() {
             success: function (result) {
                 //console.log(result);
                 JSONObject = JSON.parse(result);
-                console.log("JSONObject['current_batch_date'] = " + JSONObject['current_batch_date']);
+                //console.log("JSONObject['current_batch_date'] = " + JSONObject['current_batch_date']);
                 document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
                 document.getElementById('current_date_modal').innerText=JSONObject['current_batch_date']
             }
@@ -197,7 +197,7 @@ function getWithExpiry(key) {
 }
 
     function check_ws(){
-        console.log(ws);
+        //console.log(ws);
         if (ws.readyState !== 1) {
             subscribe_ws()
         }
@@ -208,7 +208,7 @@ function getWithExpiry(key) {
         let url = "ws://"+window.location.host+"/line/ws";
         ws = new WebSocket(url);
         ws.onmessage = function(event) {
-            console.log(event);
+            //console.log(event);
             load_json();
         };
         load_json()
@@ -219,12 +219,12 @@ function set_date_on_server() {
         current_date=document.getElementById('current_date_modal').innerText;
         url=new URL(window.location.origin +"/line/web_interface/set_current_batch_date");
         url.searchParams.append('date',current_date);
-        console.log(url.toString());
+        //console.log(url.toString());
         $.ajax({
             url:url.toString(),
             dataType: 'text',
             success:function (result) {
-                console.log("set date: "+result);
+                //console.log("set date: "+result);
             }
         });
 }
@@ -258,17 +258,17 @@ function load_json() {
                 }
                 // console.log("status_text = " + status_text);
                 if (JSONObject['current_batch_date']==='1-01-01') {
-                    console.log("empty date");
+                    //console.log("empty date");
                     set_date_on_server()
                 } else {
-                   console.log("current_batch_date = " + JSONObject['current_batch_date']);
+                   //console.log("current_batch_date = " + JSONObject['current_batch_date']);
                    document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
                 }
-                console.log("current_cod_gp = " + JSONObject['current_cod_gp']);
-                console.log("product_selector.value1 = " + document.getElementById("product_selector").value);
+                //console.log("current_cod_gp = " + JSONObject['current_cod_gp']);
+                //console.log("product_selector.value1 = " + document.getElementById("product_selector").value);
                 if (JSONObject['current_cod_gp'] !== document.getElementById("product_selector").value) {
-                    console.log("current_cod_gp != product_selector.value")
-                    console.log("пробуем заново")
+                    //console.log("current_cod_gp != product_selector.value")
+                    //console.log("пробуем заново")
                 }
 
                 //Заполенение последний 10 сканированных кодов
@@ -350,14 +350,14 @@ function plc_manage(button){
         console.log("error")
     }
 
-    console.log(sendKey);
+    //console.log(sendKey);
 
     url=new URL(window.location.origin +"/line/web_interface/button_pressed");
     $.ajax({
         url: url,
         data: "button=" + sendKey,
         success: function (response) {
-            console.log(response)
+            //console.log(response)
         },
         error: function (xhr) {
             console.log(xhr)
@@ -367,16 +367,16 @@ function plc_manage(button){
 
 // Функция записи значения debug_mode
 function set_debug_mode() {
-    console.log("debug_switch_id = " +document.getElementById("debug_switch_id").checked)
+    //console.log("debug_switch_id = " +document.getElementById("debug_switch_id").checked)
     let debugSwitchId = document.getElementById("debug_switch_id").checked;
     let url = new URL(window.location.origin + "/line/web_interface/set_debug_mode");
     url.searchParams.append('debug_mode', +!debugSwitchId);
-    console.log(url.toString());
+    //console.log(url.toString());
     $.ajax({
         url:url.toString(),
         dataType: 'text',
         success:function (response){
-            console.log(response)
+            //console.log(response)
         },
         error:function (xhr){
             console.log(xhr)
@@ -424,9 +424,9 @@ function fill_controller_settings() {
                         $('input[id=' +k +'1]').val(obj);
                 }
             let camera_html = document.getElementById("camera_optimization");
-            console.log("cam_html = " + camera_html.checked)
+            //console.log("cam_html = " + camera_html.checked)
             let cam_status = JSONObject["camera_optimization"];
-            console.log("cam_status = " + cam_status);
+            //console.log("cam_status = " + cam_status);
             camera_html.checked = cam_status === "1";
         }
     })
@@ -447,7 +447,7 @@ function send_settings() {
         url:url,
         data:settings,
         success:function (response){
-            console.log(response)
+            //console.log(response)
         },
         error:function (xhr){
             console.log(xhr)
