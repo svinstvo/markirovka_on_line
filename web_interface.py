@@ -10,8 +10,10 @@ async def send_statistic_to_servers(app):
     stat_receive_servers = app['stat_receive_servers']
     params = {"session": app['session']}
     while True:
+
         prepared_dict = {}
         prepared_dict.update({"markstation_id": app['markstation_id']})
+        prepared_dict.update({"last_modify_date": app['last_modify_date']})
         prepared_dict.update({"source_date": datetime.now().strftime("%Y-%m-%d")})
         prepared_dict.update(app["counters"])
         prepared_dict.update({"current_gtin": app['current_gtin']})
@@ -34,6 +36,8 @@ async def send_statistic_to_servers(app):
                             print(f"response body: {resp}")
                             print(f"response code: {resp.status}")
                             server['last_counter'] = prepared_dict['total_codes']
+                        else:
+                            print('Counter not changed, dont send.')
                     else:
                         resp = await session.post(server['url'], data=stat, params=params, ssl=False)
                         print(f"response body: {resp}")

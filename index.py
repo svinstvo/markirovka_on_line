@@ -8,6 +8,7 @@ import web_interface
 import work_with_db
 import plc_connector
 import os
+import glob
 
 
 async def readconfig(app):
@@ -48,8 +49,9 @@ async def start_server(app):
     app['plc_last seen'] = datetime.datetime.now()
     app['plc_state'] = {}
 
-    app['stat_receive_servers'] = [{"url":'http://10.10.3.116:6000/request/marking/marking_line/MarkingLine/get_info_line', "last_counter":""},
-                                   {"url":'http://192.168.100.100/terminal/markstation/send_statistic'}]
+    app['stat_receive_servers'] = [
+        {"url": 'http://10.10.3.17:6000/request/marking/marking_line/MarkingLine/get_info_line', "last_counter": ""},
+        {"url": 'http://192.168.100.100/terminal/markstation/send_statistic'}]
 
     # app['remote_server'] = await asyncpg.create_pool(dsn="postgresql://postgres:111111@10.10.3.105:5432/markirovka",
     #                                           min_size=1, max_size=3)
@@ -57,6 +59,24 @@ async def start_server(app):
     #                                          min_size=1, max_size=3)
 
     # asyncio.create_task(work_with_db.load_counters_from_db(app, loop=True))
+
+    # На старте программы смотрим даты всех файлов в каталоге программы, для определения версии программы
+    path = os.path.abspath(os.getcwd()) + '/**/'
+    max_date = 0
+
+    for dir in glob.glob(path, recursive=True):
+        if '_' in dir:
+            continue
+        print(dir)
+        with os.scandir(dir) as dir_entries:
+            for entry in dir_entries:
+                info = entry.stat()
+                if max_date < info.st_mtime:
+                    max_date = info.st_mtime
+
+    app['last_modify_date'] = datetime.datetime.fromtimestamp(max_date).strftime("%Y-%m-%d")
+    print(f"last_modify_date - {app['last_modify_date']}")
+
     asyncio.create_task(plc_connector.start_servers(app))
     asyncio.create_task(web_interface.send_statistic_to_servers(app))
 
