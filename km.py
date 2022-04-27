@@ -48,7 +48,7 @@ async def km_add(request):
             getting_crypto_tail = ""
 
         if getting_gtin!=gtin:
-            request.app['counters']['duplicates_codes'] += 1
+            request.app['counters']['defect_codes'] += 1
             status = "wrong_product"
             response_text = "duplicate"
             request.app['last_10_codes'].append("Не тот продукт " + raw_km)
