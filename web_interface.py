@@ -29,7 +29,6 @@ async def send_statistic_to_servers(app):
                     print(server['url'])
                     print(stat)
                     if "last_counter" in server:
-                        print("in")
                         if prepared_dict['total_codes'] != server['last_counter']:
                             resp = await session.post(server['url'], data=stat, params=params, ssl=False)
                             print(f"total={prepared_dict['total_codes']} last_counter = {server['last_counter']}")

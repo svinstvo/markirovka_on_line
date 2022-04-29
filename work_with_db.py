@@ -1,14 +1,14 @@
 import asyncio
 
 
-async def save_into_db(app, cod_gp,gtin, tail, crypto_tail, batch_date, status):
+async def save_into_db(app, cod_gp, gtin, tail, crypto_tail, batch_date, status):
     pool = app['local_server']
     markstation_id = app['markstation_id']
     async with pool.acquire() as connection:
         async with connection.transaction():
             result = await connection.fetch(
                 f'insert into marking.line (cod_gp,gtin, tail, crypto_tail, batch_date,verified_status,line) values ($1,$2,$3,$4,$5,$6,$7)',
-                cod_gp,gtin, tail, crypto_tail, batch_date, status, markstation_id)
+                cod_gp, gtin, tail, crypto_tail, batch_date, status, markstation_id)
             # print(result)
 
 
@@ -18,7 +18,7 @@ async def load_counters_from_db(app, loop):
     markstation_id = app['markstation_id']
     while True:
         try:
-            #if app['current_gtin'] != "" and app["current_batch_date"] != "":
+            # if app['current_gtin'] != "" and app["current_batch_date"] != "":
             if app['current_cod_gp'] != "" and app["current_batch_date"] != "":
                 async with pool.acquire() as connection:
                     async with connection.transaction():
@@ -60,8 +60,9 @@ async def get_available_product_list(app):
 
     async with pool.acquire() as connection:
         async with connection.transaction():
-            record = await connection.fetch("select cod_gp,concat('(',cod_gp,')-',name) from marking.available_products where line = $1;",
-                                            app['markstation_id'])
+            record = await connection.fetch(
+                "select cod_gp,concat('(',cod_gp,')-',name) from marking.available_products where line = $1;",
+                app['markstation_id'])
 
     result = {}
     for line in record:
@@ -89,7 +90,8 @@ async def save_logs(app, message):
     markstation_id = app['markstation_id']
     async with pool.acquire() as connection:
         async with connection.transaction():
-            await connection.fetch('insert into marking.logs (line,message) values ($1,$2)', markstation_id, str(message))
+            await connection.fetch('insert into marking.logs (line,message) values ($1,$2)', markstation_id,
+                                   str(message))
 
     return
 
@@ -102,6 +104,5 @@ async def get_gtin_by_cod_gp(app, cod_gp):
         async with connection.transaction():
             record = await connection.fetch(
                 "select gtin from marking.available_products where line = $1 and cod_gp=$2",
-                app['markstation_id'],cod_gp)
-    return(record[0]['gtin'])
-
+                app['markstation_id'], cod_gp)
+    return (record[0]['gtin'])
