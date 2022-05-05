@@ -68,6 +68,28 @@ function get_date_from_json() {
         })
 };
 
+// функция для скрывания кнопок переключения даты
+function hideDateButton() {
+    let dateStringFromPage = document.getElementById('current_date_modal').innerHTML;
+    let dateISOFromPage = new Date(dateStringFromPage).toISOString().slice(0,10);
+    let dateISOFromSystem = new Date().toISOString().slice(0,10);
+    // мини функция для получения даты на +10 дней
+    Date.prototype.addDays = function() {
+        let date = new Date(this.valueOf());
+        date.setDate(date.getDate() + 10);
+        return date.toISOString().slice(0,10);
+    }
+    let dateFromSystem = new Date();
+    let datePlusTenDays = dateFromSystem.addDays();
+    let LButton = document.getElementById('button_left');
+    let needToHide = (dateISOFromPage===dateISOFromSystem);
+    needToHide ? LButton.style.display = "none" : LButton.style.display = "initial";
+    let RButton = document.getElementById('button_right');
+    let needToHideMore = (dateISOFromPage===(datePlusTenDays));
+    needToHideMore ? RButton.style.display = "none" : RButton.style.display = "initial";
+
+};
+
 // кнопка переключения даты на день вперед
 document.getElementById('button_right').onclick = function()
 {
@@ -81,6 +103,7 @@ document.getElementById('button_right').onclick = function()
     let yyyy = tomorrow.getFullYear();
     tomorrow = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date_modal').innerHTML = tomorrow;
+    hideDateButton()
 };
 
 // кнопка переключения даты на день назад
@@ -96,6 +119,7 @@ document.getElementById('button_left').onclick = function()
     let yyyy = yesterday.getFullYear();
     yesterday = yyyy + '-' + mm + '-' + dd;
     document.getElementById('current_date_modal').innerHTML = yesterday;
+    hideDateButton()
 };
 
 // кнопка закрытия всплывающего окна с датой (применить)
