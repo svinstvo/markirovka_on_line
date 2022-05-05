@@ -6,7 +6,7 @@ import json
 import work_with_db
 
 
-async def send_statistic_to_servers(app):
+async def send_statistic_to_servers(app,infinity_loop=True):
     stat_receive_servers = app['stat_receive_servers']
     params = {"session": app['session']}
     while True:
@@ -43,6 +43,8 @@ async def send_statistic_to_servers(app):
                         print(f"response code: {resp.status}")
                 except Exception as e:
                     print(e)
+        if not infinity_loop:
+            return
         await asyncio.sleep(60)
 
 
@@ -81,8 +83,10 @@ async def set_current_gtin(request):
     # request.app['current_gtin'] = request.rel_url.query['cod_gp']
     request.app['current_cod_gp'] = request.rel_url.query['cod_gp']
     request.app['current_gtin'] = await work_with_db.get_gtin_by_cod_gp(request.app, request.app['current_cod_gp'])
+    await send_statistic_to_servers(request.app,infinity_loop=False)
     await work_with_db.load_counters_from_db(request.app, loop=False)
     asyncio.create_task(ws_send_update(request.app))
+
     return web.Response(text="ok")
 
 
@@ -97,6 +101,7 @@ async def set_current_batch_date(request):
     raw_date = request.rel_url.query['date']
     print(raw_date)
     try:
+        await send_statistic_to_servers(request.app,infinity_loop=False)
         date = datetime.strptime(raw_date, '%Y-%m-%d')
         request.app['current_batch_date'] = date
         await work_with_db.load_counters_from_db(request.app, loop=False)

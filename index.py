@@ -78,7 +78,7 @@ async def start_server(app):
     print(f"last_modify_date - {app['last_modify_date']}")
 
     asyncio.create_task(plc_connector.start_servers(app))
-    asyncio.create_task(web_interface.send_statistic_to_servers(app))
+    asyncio.create_task(web_interface.send_statistic_to_servers(app,infinity_loop=True))
 
 
 async def close_pool(app):
