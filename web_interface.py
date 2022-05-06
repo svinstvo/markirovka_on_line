@@ -44,6 +44,8 @@ async def send_statistic_to_servers(app,infinity_loop=True):
                 except Exception as e:
                     print(e)
         if not infinity_loop:
+            # Отладочная фигня
+            #await asyncio.sleep(4)
             return
         await asyncio.sleep(60)
 
@@ -155,8 +157,10 @@ async def get_controller_settings(request):
                 request.app['plc_state'][
                     'message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{message_from_plc}"
                 asyncio.create_task(ws_send_update(request.app))
+                asyncio.create_task(send_statistic_to_servers(request.app, infinity_loop=False))
                 asyncio.create_task(
                     work_with_db.save_logs(app=request.app, message=request.app['plc_state']['message_from_plc']))
+
 
         except Exception as e:
             request.app['plc_state'][
