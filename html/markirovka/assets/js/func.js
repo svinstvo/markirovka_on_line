@@ -243,12 +243,12 @@ function set_date_on_server() {
         current_date=document.getElementById('current_date_modal').innerText;
         url=new URL(window.location.origin +"/line/web_interface/set_current_batch_date");
         url.searchParams.append('date',current_date);
-        //console.log(url.toString());
+        console.log(url.toString());
         $.ajax({
             url:url.toString(),
             dataType: 'text',
             success:function (result) {
-                //console.log("set date: "+result);
+                console.log("set date: "+result);
             }
         });
 }
@@ -354,8 +354,45 @@ function load_json() {
                 green_red_status("manageButton", startStatus + 1);
                 green_red_status("manageButton2", stopStatus + 1);
                 green_red_status("manageButtonReset",resetStatus + 1);
+
+                // station id в кнопку
+                document.getElementById("markstation_id").innerText = JSONObject["markstation_id"];
+
+                // print status
+                // отображение блока для принтеров
+                let printAvailable = JSONObject["print_available"];
+                let printerBlock = document.getElementById("printer_block").style;
+                printAvailable ? printerBlock.display = "flex" : printerBlock.display = "none";
+
+                // статус переключателя для принтера
+                try {
+                    let print_mode_value = JSONObject["printer"]["printing"];
+                    console.log("debug mode = " + debug_mode_value);
+                    document.getElementById("print_switch_id").checked = String(print_mode_value) === "1";
+                } catch (e) {
+                    //console.log("no printer");
+                }
             }
         });
+}
+
+// Функция записи значения printing
+function set_print_mode() {
+    console.log("print_switch_id = " +document.getElementById("print_switch_id").checked)
+    let printSwitchId = document.getElementById("print_switch_id").checked;
+    let url = new URL(window.location.origin + "/line/web_interface/set_print_mode");
+    url.searchParams.append('printing', +printSwitchId);
+    console.log(url.toString());
+    $.ajax({
+        url:url.toString(),
+        dataType: 'text',
+        success:function (response){
+            console.log(response)
+        },
+        error:function (xhr){
+            console.log(xhr)
+        }
+    })
 }
 
 // функция с кнопками управления plc

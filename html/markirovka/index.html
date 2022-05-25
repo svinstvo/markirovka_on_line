@@ -28,19 +28,17 @@
             <nav class="navbar navbar-light navbar-expand-md">
                 <div class="container-fluid">
                     <ul class="navbar-nav text-center" id="header_status">
-                        <li class="nav-item" ><a class="nav-link active status_bad" id="scanner_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус сканера</a></li>
-                        <li class="nav-item" style="margin-left: 10px; margin-right: 10px;"><a class="nav-link active status_bad" id="controller_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус контроллера</a></li>
-                        <li class="nav-item" style="margin-right: 10px; margin-top: -13px; width: 100px;">
+                        <li class="nav-item" style="margin: auto;"><a class="nav-link active status_bad" id="scanner_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус сканера</a></li>
+                        <li class="nav-item" style="margin: auto;margin-left: 10px!important;"><a class="nav-link active status_bad" id="controller_status" style="border-style: solid; font-weight: bold;font-size: 20px;color: rgb(0,0,0);">статус контроллера</a></li>
+                        <li class="nav-item" style="margin: auto; width: 100px;">
                             <h3 id="debug_status_name">status</h3>
                             <label class="switch">
                                 <input id="debug_switch_id" onchange=set_debug_mode() type="checkbox"/>
                                 <span class="slider round"></span>
                             </label>
                         </li>
-                        <li class="nav-item" style="margin-top: 10px;"><a>
-                            <button class="btn btn-light shadow action-button" style="width: 120px;font-size: 14px;background-color: #01a982;border: 1px solid #01a982;font-family: 'Source Sans Pro', sans-serif;font-weight: 400;margin-left: 3px;" type="button" onclick="reload_button()">
-	                            <strong>ОБНОВИТЬ</strong>
-                            </button></a>
+                        <li class="nav-item markstation_id" style="margin-bottom: 10px;display:flex">
+	                        <strong id="markstation_id" style="margin:auto;">A0-00</strong>
                         </li>
                     </ul>
                 </div>
@@ -151,11 +149,21 @@
                         2dcode
                     </span>
                 </div>
-                <div class="col" style="text-align: center">
-                    <span style="font-size: 25px;">message from plc:</span>
-                    <span style="font-size: 25px;" id="messageFromPlcMain">
-                        message_from_plc
-                    </span>
+                <div class="col">
+                    <div class="row">
+                        <div style="font-size: 25px;text-align: right;" class="col">message from plc:</div>
+                        <div style="font-size: 25px;" id="messageFromPlcMain" class="col">
+                            message_from_plc
+                        </div>
+                    </div>
+                    <div class="row" id="printer_block" style="margin:20px;display: none">
+                        <h3 id="print_status_name">print</h3>
+                        <label class="switch">
+                            <input id="print_switch_id" type="checkbox" onchange="set_print_mode()"/>
+                            <span class="slider round"></span>
+                        </label>
+                        <h3 id="text_from_printer">text</h3>
+                    </div>
                 </div>
             </div>
 
