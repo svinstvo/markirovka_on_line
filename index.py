@@ -1,6 +1,8 @@
 from aiohttp import web
 import datetime
 import configparser
+
+import printing
 from km import *
 import asyncpg
 import aioredis
@@ -12,7 +14,7 @@ import glob
 
 
 async def readconfig(app):
-    config = configparser.ConfigParser()
+    config: configparser = configparser.ConfigParser()
     config.read("settings.conf")
     # app['remote_server'] = await asyncpg.create_pool(dsn=config.get("server", "remote_server_dsn"), min_size=1,
     #                                                 max_size=3)
@@ -27,6 +29,18 @@ async def readconfig(app):
     app['button_pressed_time_duration'] = int(config.get("server", "button_pressed_time_duration"))
     app['enable_unique_check'] = int(config.get("server", "enable_unique_check"))
     app['redis_timeout'] = float(config.get("server", "enable_unique_check"))
+    print(config.sections())
+
+    if "print" in config:
+        app['printer'] = {}
+        app['printer']['enable'] = True  # Доступность печати в целом
+        app['printer']['printer_model'] = config.get('print', 'model')
+        app['printer']['printer_ip'] = config.get('print', 'ip')
+        app['printer']['printer_port'] = config.getint('print', 'port')
+        app['printer']['printing'] = 0  # Текущее положение переключателя в веб интерфейсе
+        app['print_available'] = True
+    else:
+        app['print_available'] = False
 
     return
 
@@ -67,7 +81,7 @@ async def start_server(app):
     for dir in glob.glob(path, recursive=True):
         if '_' in dir:
             continue
-        print(dir)
+        # print(dir)
         with os.scandir(dir) as dir_entries:
             for entry in dir_entries:
                 info = entry.stat()
@@ -77,8 +91,10 @@ async def start_server(app):
     app['last_modify_date'] = datetime.datetime.fromtimestamp(max_date).strftime("%Y-%m-%d")
     print(f"last_modify_date - {app['last_modify_date']}")
 
-    asyncio.create_task(plc_connector.start_servers(app))
-    asyncio.create_task(web_interface.send_statistic_to_servers(app,infinity_loop=True))
+    asyncio.create_task(plc_connector.start_servers(app))  # Сокетный сервер для приема сообщений от плк
+    asyncio.create_task(web_interface.send_statistic_to_servers(app, infinity_loop=True))
+    if app['print_available']:
+        asyncio.create_task(printing.run_server(app))
 
 
 async def close_pool(app):
@@ -112,6 +128,7 @@ app.add_routes([
     web.get('/line/web_interface/set_debug_mode', web_interface.set_debug_mode),
     web.get('/line/web_interface/update_plc_last_seen', web_interface.update_plc_last_seen),
     web.get('/line/web_interface/button_pressed', web_interface.button_pressed),
+    web.get('/line/web_interface/set_print_mode',web_interface.set_print_mode),
     web.get('/line/ws', web_interface.websocket_handler),
     web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
 ])
