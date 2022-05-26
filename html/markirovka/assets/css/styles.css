@@ -85,3 +85,27 @@ div#plc_state {
 #plc_settings {
   min-height: 620px;
 }
+
+li.nav-item {
+  margin-right: 10px!important;
+}
+
+.markstation_id {
+  width: 100px;
+  font-size: 30px;
+  background-color: white;
+  border-radius: 15px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  margin: auto;
+}
+
+#print_status_name {
+  width: 34%;
+  text-align: end;
+}
+
+#text_from_printer {
+  width: 50%;
+  text-align: left;
+}
