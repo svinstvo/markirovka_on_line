@@ -3,10 +3,12 @@ from aiohttp import web
 from datetime import datetime
 import asyncio
 import json
+
+import printing
 import work_with_db
 
 
-async def send_statistic_to_servers(app,infinity_loop=True):
+async def send_statistic_to_servers(app, infinity_loop=True):
     stat_receive_servers = app['stat_receive_servers']
     params = {"session": app['session']}
     while True:
@@ -44,6 +46,8 @@ async def send_statistic_to_servers(app,infinity_loop=True):
                 except Exception as e:
                     print(e)
         if not infinity_loop:
+            # Отладочная фигня
+            # await asyncio.sleep(4)
             return
         await asyncio.sleep(60)
 
@@ -65,6 +69,7 @@ async def get_statistic(request):
     # print(request.app["counters"])
     prepared_dict = {}
     prepared_dict.update(request.app["counters"])
+    prepared_dict.update({"markstation_id": request.app['markstation_id']})
     prepared_dict.update({"current_gtin": request.app['current_gtin']})
     prepared_dict.update({"current_cod_gp": request.app['current_cod_gp']})
     prepared_dict.update({"current_product_name": request.app['current_product_name']})
@@ -73,6 +78,10 @@ async def get_statistic(request):
     prepared_dict["last_10_codes"] = request.app['last_10_codes']
     prepared_dict["plc_state"] = request.app['plc_state']
     prepared_dict["plc_last seen"] = (datetime.now() - request.app['plc_last seen']).total_seconds()
+    prepared_dict.update({"print_available": request.app['print_available']})
+    if request.app['print_available']:
+        prepared_dict.update({'printer':{'printing':request.app['printer']['printing']}})
+
 
     json_responce = json.dumps(prepared_dict)
     return web.Response(text=json_responce, content_type="application/json")
@@ -83,7 +92,7 @@ async def set_current_gtin(request):
     # request.app['current_gtin'] = request.rel_url.query['cod_gp']
     request.app['current_cod_gp'] = request.rel_url.query['cod_gp']
     request.app['current_gtin'] = await work_with_db.get_gtin_by_cod_gp(request.app, request.app['current_cod_gp'])
-    await send_statistic_to_servers(request.app,infinity_loop=False)
+    await send_statistic_to_servers(request.app, infinity_loop=False)
     await work_with_db.load_counters_from_db(request.app, loop=False)
     asyncio.create_task(ws_send_update(request.app))
 
@@ -101,7 +110,7 @@ async def set_current_batch_date(request):
     raw_date = request.rel_url.query['date']
     print(raw_date)
     try:
-        await send_statistic_to_servers(request.app,infinity_loop=False)
+        await send_statistic_to_servers(request.app, infinity_loop=False)
         date = datetime.strptime(raw_date, '%Y-%m-%d')
         request.app['current_batch_date'] = date
         await work_with_db.load_counters_from_db(request.app, loop=False)
@@ -155,8 +164,10 @@ async def get_controller_settings(request):
                 request.app['plc_state'][
                     'message_from_plc'] = f"{datetime.now().strftime('%H:%M:%S')};{message_from_plc}"
                 asyncio.create_task(ws_send_update(request.app))
+                asyncio.create_task(send_statistic_to_servers(request.app, infinity_loop=False))
                 asyncio.create_task(
                     work_with_db.save_logs(app=request.app, message=request.app['plc_state']['message_from_plc']))
+
 
         except Exception as e:
             request.app['plc_state'][
@@ -223,3 +234,11 @@ async def button_pressed(request):
     button = request.rel_url.query['button']
     asyncio.create_task(set_and_unset(request.app, button, request.app['button_pressed_time_duration']))
     return web.Response(text="ok", content_type="text/plain")
+
+
+async def set_print_mode(request):
+    printing_status = request.rel_url.query['printing']
+    request.app['printer']['printing'] = int(printing_status)
+    await printing.set_print_mode(request.app)
+    await ws_send_update(request.app)
+    return web.Response(text="ok", content_type="plain/text")
