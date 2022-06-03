@@ -49,7 +49,7 @@
         <div class="container">
             <div class="row" style="height: 80px;">
                 <div class="col">
-                    <h1 id="current_date_main" style="text-align: center;font-size: 40px;" onclick=open_modal_with_date()>2021-12-00<br></h1>
+                    <h1 id="current_date_main" style="text-align: center;font-size: 40px;" onclick=open_modal_with_date()>2021-12-01<br></h1>
                 </div>
             </div>
             <div class="modal fade" id="modal-1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="top:70px" aria-hidden="true">
@@ -63,7 +63,7 @@
                             <div class="row" id="date" style="height: 70px;width: 100%;display:flex;">
                                 <div class="col-2 col-lg-3 col-xl-3" style="text-align: right;"><button class="btn btn-primary btn-lg" id="button_left" type="button" onclick="function()"><i class="fa fa-arrow-left" style="font-size: 40px;"></i></button></div>
                                 <div class="col-8 col-sm-8 col-lg-6 col-xl-6 offset-sm-0">
-                                    <h1 id="current_date_modal" style="text-align: center;font-size: 40px;min-width: 215px;">2021-12-00<br></h1>
+                                    <h1 id="current_date_modal" style="text-align: center;font-size: 40px;min-width: 215px;">2021-12-01<br></h1>
                                 </div>
                                 <div class="col-2 col-lg-3 col-xl-3"><button class="btn btn-primary btn-lg" id="button_right" type="button" onclick="function()"><i class="fa fa-arrow-right" style="font-size: 40px;"></i></button></div>
                             </div>
@@ -216,7 +216,7 @@
                     </div>
                 </div><hr style="height: 2px"/>
                 <div class="row row-settings">
-                    <div class="col-lg-8 col-xl-8"><span title="time_continuous_brak" style="font-size: 22px;">time_continuous_brak&nbsp;</span></div>
+                    <div class="col-lg-8 col-xl-8"><span title="time_continuous_brak" style="font-size: 22px;">Количество брака на 100 сканирований </span></div>
                     <div class="col-lg-4 col-xl-4"><form>
                         <input id="1_time_continuous_brak1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" style="min-width: 230px" onchange="reset_settings()" oninput="this.form.amountInput.value=this.value" />
                         <input class="plc_settings" id="1_time_continuous_brak" type="number" name="amountInput" min="0" max="10000" step="10" value="0" onchange="reset_settings()" oninput="this.form.amountRange.value=this.value" />
@@ -240,7 +240,7 @@
                     </div>
                 </div><hr style="height: 2px"/>
                 <div class="row row-settings">
-                    <div class="col-lg-8 col-xl-8"><span style="font-size: 22px;">(2)time_continuous_brak_2&nbsp;</span></div>
+                    <div class="col-lg-8 col-xl-8"><span style="font-size: 22px;">(2)Количество брака на 100 сканирований&nbsp;</span></div>
                     <div class="col-lg-4 col-xl-4"><form>
                         <input id="2_time_continuous_brak1" type="range" name="amountRange" min="0" max="10000" step="10" value="0" style="min-width: 230px" onchange="reset_settings()" oninput="this.form.amountInput.value=this.value" />
                         <input class="plc_settings" id="2_time_continuous_brak" type="number" name="amountInput" min="0" max="10000" step="10" value="0" onchange="reset_settings()" oninput="this.form.amountRange.value=this.value" />

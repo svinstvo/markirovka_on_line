@@ -44,15 +44,12 @@ window.onload = function()
     subscribe_on_select();
     setInterval(check_ws,5000);
     fill_controller_settings();
+    open_modal_with_date();
+    hideDateButton();
 };
 
-// функция для кнопки перезагрузки
-function reload_button(){
-    get_date_from_json();
-    fill_controller_settings();
-};
-
-// Функция получения и отображения даты из JSON
+// Функция получения и отображения даты на странице из JSON
+// а в модальном окне исходя из времени пк
 function get_date_from_json() {
     let url = window.location.origin +"/line/statistic";
         $.ajax({
@@ -63,16 +60,27 @@ function get_date_from_json() {
                 JSONObject = JSON.parse(result);
                 //console.log("JSONObject['current_batch_date'] = " + JSONObject['current_batch_date']);
                 document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
-                document.getElementById('current_date_modal').innerText=JSONObject['current_batch_date']
+                document.getElementById('current_date_modal').innerText=new Date().toISOString().slice(0,10);
             }
         })
+};
+// функция ставит текущую дату
+function set_current_date() {
+    let dateISOFromSystem = new Date().toISOString().slice(0,10);
+    console.log("dateISOFromSystem = " + dateISOFromSystem);
 };
 
 // функция для скрывания кнопок переключения даты
 function hideDateButton() {
-    let dateStringFromPage = document.getElementById('current_date_modal').innerHTML;
-    let dateISOFromPage = new Date(dateStringFromPage).toISOString().slice(0,10);
+    let dateStringFromPageModal = document.getElementById('current_date_modal').innerText;
+    console.log("dateStringFromPage = " + dateStringFromPageModal);
+    let dateISOFromPage = new Date(dateStringFromPageModal).toISOString().slice(0,10);
+    console.log("dateISOFromPage = " + dateISOFromPage);
     let dateISOFromSystem = new Date().toISOString().slice(0,10);
+    console.log("dateISOFromSystem = " + dateISOFromSystem);
+    // убираем ошибку с датой до необходимых значений
+    dateISOFromPage < dateISOFromSystem ? (dateISOFromPage = dateISOFromSystem) : console.log('date good');
+
     // мини функция для получения даты на +10 дней
     Date.prototype.addDays = function() {
         let date = new Date(this.valueOf());
@@ -87,7 +95,6 @@ function hideDateButton() {
     let RButton = document.getElementById('button_right');
     let needToHideMore = (dateISOFromPage===(datePlusTenDays));
     needToHideMore ? RButton.style.display = "none" : RButton.style.display = "initial";
-
 };
 
 // кнопка переключения даты на день вперед
@@ -135,7 +142,7 @@ function close_modal_with_date() {
 };
 
 // Всплывающее окно с датой по смене продукта
-async function open_modal_with_date() {
+function open_modal_with_date() {
     $('#modal-1').modal('show')
 };
 
@@ -367,10 +374,10 @@ function load_json() {
                 // статус переключателя для принтера
                 try {
                     let print_mode_value = JSONObject["printer"]["printing"];
-                    console.log("debug mode = " + debug_mode_value);
+                    console.log("print mode = " + print_mode_value);
                     document.getElementById("print_switch_id").checked = String(print_mode_value) === "1";
                 } catch (e) {
-                    //console.log("no printer");
+                    console.log("no printer");
                 }
             }
         });
