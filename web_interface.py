@@ -74,6 +74,7 @@ async def get_statistic(request):
     prepared_dict.update({"current_cod_gp": request.app['current_cod_gp']})
     prepared_dict.update({"current_product_name": request.app['current_product_name']})
     prepared_dict.update({"current_batch_date": request.app['current_batch_date'].strftime("%Y-%m-%d")})
+    prepared_dict.update({"delta_days_onstartup": request.app['delta_days_onstartup']})
     prepared_dict["status"] = request.app['status']
     prepared_dict["last_10_codes"] = request.app['last_10_codes']
     prepared_dict["plc_state"] = request.app['plc_state']

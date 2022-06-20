@@ -29,6 +29,7 @@ async def readconfig(app):
     app['button_pressed_time_duration'] = int(config.get("server", "button_pressed_time_duration"))
     app['enable_unique_check'] = int(config.get("server", "enable_unique_check"))
     app['redis_timeout'] = float(config.get("server", "enable_unique_check"))
+    app['delta_days_onstartup'] = config.get("server", "delta_days_onstartup")
     print(config.sections())
 
     if "print" in config:
@@ -81,7 +82,6 @@ async def start_server(app):
     for dir in glob.glob(path, recursive=True):
         if '_' in dir:
             continue
-        # print(dir)
         with os.scandir(dir) as dir_entries:
             for entry in dir_entries:
                 info = entry.stat()
