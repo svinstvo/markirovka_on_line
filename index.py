@@ -65,8 +65,9 @@ async def start_server(app):
     app['plc_state'] = {}
 
     app['stat_receive_servers'] = [
-        {"url": 'http://10.10.3.17:6000/request/marking/marking_line/MarkingLine/get_info_line', "last_counter": ""},
-        {"url": 'http://192.168.100.100/terminal/markstation/send_statistic'}]
+        {"url": 'http://10.10.3.17:6000/request/marking/marking_line/MarkingLine/get_info_line', "last_counter": "",
+         "resp_status": ""},
+        {"url": 'http://192.168.100.100/terminal/markstation/send_statistic', "resp_status": 0}]
 
     # app['remote_server'] = await asyncpg.create_pool(dsn="postgresql://postgres:111111@10.10.3.105:5432/markirovka",
     #                                           min_size=1, max_size=3)
@@ -128,7 +129,7 @@ app.add_routes([
     web.get('/line/web_interface/set_debug_mode', web_interface.set_debug_mode),
     web.get('/line/web_interface/update_plc_last_seen', web_interface.update_plc_last_seen),
     web.get('/line/web_interface/button_pressed', web_interface.button_pressed),
-    web.get('/line/web_interface/set_print_mode',web_interface.set_print_mode),
+    web.get('/line/web_interface/set_print_mode', web_interface.set_print_mode),
     web.get('/line/ws', web_interface.websocket_handler),
     web.static('/line/static_files/', os.path.abspath(os.getcwd()), show_index=True)
 ])
