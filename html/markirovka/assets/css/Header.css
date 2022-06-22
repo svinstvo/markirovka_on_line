@@ -76,15 +76,12 @@
   color: #fff;
 }
 
-#status {
-}
-
 .status_ok {
-  background-color: #01a982;
+  background-color: #01a982!important;
 }
 
 .status_bad {
-  background-color: crimson;
+  background-color: crimson!important;
 }
 
 #servce_toggle {

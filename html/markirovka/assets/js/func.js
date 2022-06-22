@@ -317,12 +317,12 @@ function load_json() {
 
                 // статус в шапке
                 let scanner_status = JSONObject["plc_state"]["alarm_no_scanner"];
-                green_red_status("scanner_status", scanner_status);
+                green_red_status("scanner_status", scanner_status, 1);
                 let controller_status = JSONObject["plc_last seen"];
                 if(controller_status<1.5){
-                    green_red_status("controller_status", 1)
+                    green_red_status("controller_status", 1, 1)
                 } else {
-                    green_red_status("controller_status", 0)
+                    green_red_status("controller_status", 0, 1)
                 }
 
                 // определение debug_mode из JSON
@@ -358,9 +358,9 @@ function load_json() {
                 let startStatus = JSONObject["status"]["button_start_pressed"]
                 let stopStatus = JSONObject["status"]["button_stop_pressed"]
                 let resetStatus = JSONObject["status"]["button_reset_pressed"]
-                green_red_status("manageButton", startStatus + 1);
-                green_red_status("manageButton2", stopStatus + 1);
-                green_red_status("manageButtonReset",resetStatus + 1);
+                green_red_status("manageButton", startStatus + 1, 1);
+                green_red_status("manageButton2", stopStatus + 1, 1);
+                green_red_status("manageButtonReset",resetStatus + 1, 1);
 
                 // station id в кнопку
                 document.getElementById("markstation_id").innerText = JSONObject["markstation_id"];
@@ -379,6 +379,11 @@ function load_json() {
                 } catch (e) {
                     console.log("no printer");
                 }
+
+                // статус доступности клиентской станции
+                let ResponseNot200 = JSONObject["stat_servers_response_not_200"];
+                green_red_status("bg_markstation_id", ResponseNot200, 0)
+
             }
         });
 }
@@ -548,9 +553,9 @@ function hide_reset_button() {
 
 // функция для определения статуса (id: элемент, который красим;
 //                                  Value: 1 - зеленый, 0 и другие - красный)
-function green_red_status(id, value){
-    // console.log(id, value);
-    if (String(value)==="1"){
+function green_red_status(id, value, needToGreen){
+    console.log(id, value, needToGreen);
+    if (String(value)===String(needToGreen)){
         document.getElementById(String(id)).classList.remove("status_bad");
         document.getElementById(String(id)).classList.add("status_ok");
     } else {
