@@ -37,17 +37,18 @@ async def send_statistic_to_servers(app, infinity_loop=True):
                             print(f"response body: {resp}")
                             print(f"response code: {resp.status}")
                             server['last_counter'] = prepared_dict['total_codes']
+                            server["resp_status"] = resp.status
                         else:
                             print('Counter not changed, dont send.')
                     else:
                         resp = await session.post(server['url'], data=stat, params=params, ssl=False)
                         print(f"response body: {resp}")
                         print(f"response code: {resp.status}")
+                        server["resp_status"] = resp.status
                 except Exception as e:
+                    server["resp_status"] = 0
                     print(e)
         if not infinity_loop:
-            # Отладочная фигня
-            # await asyncio.sleep(4)
             return
         await asyncio.sleep(60)
 
@@ -65,6 +66,14 @@ async def ws_send_update(app):
     return
 
 
+async def stat_servers_response_not_200(app):
+    resp = 0
+    for server in app['stat_receive_servers']:
+        if server['resp_status'] != 200:
+            resp = +1
+    return resp
+
+
 async def get_statistic(request):
     # print(request.app["counters"])
     prepared_dict = {}
@@ -74,14 +83,15 @@ async def get_statistic(request):
     prepared_dict.update({"current_cod_gp": request.app['current_cod_gp']})
     prepared_dict.update({"current_product_name": request.app['current_product_name']})
     prepared_dict.update({"current_batch_date": request.app['current_batch_date'].strftime("%Y-%m-%d")})
+    prepared_dict.update({"delta_days_onstartup": request.app['delta_days_onstartup']})
     prepared_dict["status"] = request.app['status']
     prepared_dict["last_10_codes"] = request.app['last_10_codes']
     prepared_dict["plc_state"] = request.app['plc_state']
     prepared_dict["plc_last seen"] = (datetime.now() - request.app['plc_last seen']).total_seconds()
+    prepared_dict["stat_servers_response_not_200"] = await stat_servers_response_not_200(request.app)
     prepared_dict.update({"print_available": request.app['print_available']})
     if request.app['print_available']:
-        prepared_dict.update({'printer':{'printing':request.app['printer']['printing']}})
-
+        prepared_dict.update({'printer': {'printing': request.app['printer']['printing']}})
 
     json_responce = json.dumps(prepared_dict)
     return web.Response(text=json_responce, content_type="application/json")
