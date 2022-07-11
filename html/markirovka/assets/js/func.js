@@ -1,5 +1,4 @@
 let deltaDays = 0;
-console.log("до " + deltaDays);
 load_json();
 
 // Показ сервисного режима
@@ -63,35 +62,38 @@ function get_date_from_json() {
                 //console.log(result);
                 JSONObject = JSON.parse(result);
                 //console.log("JSONObject['current_batch_date'] = " + JSONObject['current_batch_date']);
-                document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
-                datePlusDelta('current_date_modal', deltaDays);
+                document.getElementById('current_date_main').innerText=JSONObject['current_batch_date'];
+                let dateString = document.getElementById('current_date_modal').innerText;
+                document.getElementById('current_date_modal').innerText = datePlusDelta(dateString, deltaDays);
             }
         })
 };
 
 // костыль для возможности добавления дней к дате
-function datePlusDelta (dateID, delta) {
+// dateString - строка даты в формате ISO
+// delta - разница дней для станции
+function datePlusDelta (dateString, delta) {
     if (delta == 0) {
-        document.getElementById(dateID).innerText=new Date().toISOString().slice(0,10);
+        dateString = new Date().toISOString().slice(0,10);
+        return dateString;
     } else {
         let symbol = delta.slice(0,1);
         let num = delta.slice(1);
         try {
             num = Number(num)
         } catch {console.log("error datePlusDelta")}
-        console.log("num = " + num)
         let date = new Date();
-        console.log("после " + deltaDays.slice(1,2));
+        console.log('datestring ' + date);
         if (symbol=="+") {
             date.setDate(date.getDate() + num)
-            console.log("plus")
         } else if (symbol=="-") {
             date.setDate(date.getDate() - num)
-            console.log("minus")
         } else {
             console.log("error datePlusDelta")
         };
-        document.getElementById(dateID).innerText=date.toISOString().slice(0,10);
+        dateString = date.toISOString().slice(0,10);
+        console.log('datestring ' + dateString);
+        return dateString;
     };
 };
 // функция ставит текущую дату
@@ -103,11 +105,13 @@ function set_current_date() {
 // функция для скрывания кнопок переключения даты
 function hideDateButton() {
     let dateStringFromPageModal = document.getElementById('current_date_modal').innerText;
-    console.log("dateStringFromPage = " + dateStringFromPageModal);
+    //console.log("dateStringFromPage = " + dateStringFromPageModal);
     let dateISOFromPage = new Date(dateStringFromPageModal).toISOString().slice(0,10);
     console.log("dateISOFromPage = " + dateISOFromPage);
     let dateISOFromSystem = new Date().toISOString().slice(0,10);
-    console.log("dateISOFromSystem = " + dateISOFromSystem);
+    console.log("dateISOFromSystemReal = " + dateISOFromSystem);
+    dateISOFromSystem = datePlusDelta(dateISOFromSystem, deltaDays);
+    console.log("dateISOFromSystemDelta = " + dateISOFromSystem);     //delta
     // убираем ошибку с датой до необходимых значений
     dateISOFromPage < dateISOFromSystem ? (dateISOFromPage = dateISOFromSystem) : console.log('date good');
 
@@ -119,6 +123,7 @@ function hideDateButton() {
     }
     let dateFromSystem = new Date();
     let datePlusTenDays = dateFromSystem.addDays();
+
     let LButton = document.getElementById('button_left');
     let needToHide = (dateISOFromPage===dateISOFromSystem);
     needToHide ? LButton.style.display = "none" : LButton.style.display = "initial";
