@@ -1,3 +1,7 @@
+let deltaDays = 0;
+console.log("до " + deltaDays);
+load_json();
+
 // Показ сервисного режима
 function service_mode() {
     let m = document.getElementById('main_content');
@@ -60,9 +64,35 @@ function get_date_from_json() {
                 JSONObject = JSON.parse(result);
                 //console.log("JSONObject['current_batch_date'] = " + JSONObject['current_batch_date']);
                 document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
-                document.getElementById('current_date_modal').innerText=new Date().toISOString().slice(0,10);
+                datePlusDelta('current_date_modal', deltaDays);
             }
         })
+};
+
+// костыль для возможности добавления дней к дате
+function datePlusDelta (dateID, delta) {
+    if (delta == 0) {
+        document.getElementById(dateID).innerText=new Date().toISOString().slice(0,10);
+    } else {
+        let symbol = delta.slice(0,1);
+        let num = delta.slice(1);
+        try {
+            num = Number(num)
+        } catch {console.log("error datePlusDelta")}
+        console.log("num = " + num)
+        let date = new Date();
+        console.log("после " + deltaDays.slice(1,2));
+        if (symbol=="+") {
+            date.setDate(date.getDate() + num)
+            console.log("plus")
+        } else if (symbol=="-") {
+            date.setDate(date.getDate() - num)
+            console.log("minus")
+        } else {
+            console.log("error datePlusDelta")
+        };
+        document.getElementById(dateID).innerText=date.toISOString().slice(0,10);
+    };
 };
 // функция ставит текущую дату
 function set_current_date() {
@@ -133,12 +163,6 @@ document.getElementById('button_left').onclick = function()
 function accept_modal_with_date() {
     $('#modal-1').modal('hide')
     set_date_on_server();
-};
-
-// вторая кнопка закрытия всплывающего окна с датой (крестик)
-function close_modal_with_date() {
-    $('#modal-1').modal('hide')
-    get_date_from_json();
 };
 
 // Всплывающее окно с датой по смене продукта
@@ -384,6 +408,8 @@ function load_json() {
                 let ResponseNot200 = JSONObject["stat_servers_response_not_200"];
                 green_red_status("bg_markstation_id", ResponseNot200, 0)
 
+                // добавление дельты для станций
+                deltaDays = JSONObject["delta_days_onstartup"];
             }
         });
 }
@@ -554,7 +580,7 @@ function hide_reset_button() {
 // функция для определения статуса (id: элемент, который красим;
 //                                  Value: 1 - зеленый, 0 и другие - красный)
 function green_red_status(id, value, needToGreen){
-    console.log(id, value, needToGreen);
+    //console.log(id, value, needToGreen);
     if (String(value)===String(needToGreen)){
         document.getElementById(String(id)).classList.remove("status_bad");
         document.getElementById(String(id)).classList.add("status_ok");
