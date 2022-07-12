@@ -70,7 +70,7 @@ async def ws_send_update(app):
 async def stat_servers_response_not_200(app):
     resp = 0
     for server in app['stat_receive_servers']:
-        if server['resp_status'] != 200:
+        if server['resp_status'] != 200 and server['resp_status'] != 412:
             resp = +1
     return resp
 
