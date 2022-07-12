@@ -22,7 +22,8 @@ async def send_statistic_to_servers(app, infinity_loop=True):
         prepared_dict.update({"current_cod_gp": app['current_cod_gp']})
         prepared_dict.update({"current_batch_date": app['current_batch_date'].strftime("%Y-%m-%d")})
         prepared_dict["plc_state"] = app['plc_state']
-        stat = json.dumps(prepared_dict).encode("utf-8")
+        #stat = json.dumps(prepared_dict).encode("utf-8")
+        stat = json.dumps(prepared_dict)
 
         async with aiohttp.ClientSession() as session:
             for server in stat_receive_servers:
@@ -32,7 +33,7 @@ async def send_statistic_to_servers(app, infinity_loop=True):
                     print(stat)
                     if "last_counter" in server:
                         if prepared_dict['total_codes'] != server['last_counter']:
-                            resp = await session.post(server['url'], data=stat, params=params, ssl=False)
+                            resp = await session.post(server['url'], json=stat, params=params, ssl=False)
                             print(f"total={prepared_dict['total_codes']} last_counter = {server['last_counter']}")
                             print(f"response body: {resp}")
                             print(f"response code: {resp.status}")
