@@ -1,3 +1,6 @@
+let deltaDays = 0;
+load_json();
+
 // Показ сервисного режима
 function service_mode() {
     let m = document.getElementById('main_content');
@@ -59,10 +62,39 @@ function get_date_from_json() {
                 //console.log(result);
                 JSONObject = JSON.parse(result);
                 //console.log("JSONObject['current_batch_date'] = " + JSONObject['current_batch_date']);
-                document.getElementById('current_date_main').innerText=JSONObject['current_batch_date']
-                document.getElementById('current_date_modal').innerText=new Date().toISOString().slice(0,10);
+                document.getElementById('current_date_main').innerText=JSONObject['current_batch_date'];
+                let dateString = document.getElementById('current_date_modal').innerText;
+                document.getElementById('current_date_modal').innerText = datePlusDelta(dateString, deltaDays);
             }
         })
+};
+
+// костыль для возможности добавления дней к дате
+// dateString - строка даты в формате ISO
+// delta - разница дней для станции
+function datePlusDelta (dateString, delta) {
+    if (delta == 0) {
+        dateString = new Date().toISOString().slice(0,10);
+        return dateString;
+    } else {
+        let symbol = delta.slice(0,1);
+        let num = delta.slice(1);
+        try {
+            num = Number(num)
+        } catch {console.log("error datePlusDelta")}
+        let date = new Date();
+        console.log('datestring ' + date);
+        if (symbol=="+") {
+            date.setDate(date.getDate() + num)
+        } else if (symbol=="-") {
+            date.setDate(date.getDate() - num)
+        } else {
+            console.log("error datePlusDelta")
+        };
+        dateString = date.toISOString().slice(0,10);
+        console.log('datestring ' + dateString);
+        return dateString;
+    };
 };
 // функция ставит текущую дату
 function set_current_date() {
@@ -73,11 +105,13 @@ function set_current_date() {
 // функция для скрывания кнопок переключения даты
 function hideDateButton() {
     let dateStringFromPageModal = document.getElementById('current_date_modal').innerText;
-    console.log("dateStringFromPage = " + dateStringFromPageModal);
+    //console.log("dateStringFromPage = " + dateStringFromPageModal);
     let dateISOFromPage = new Date(dateStringFromPageModal).toISOString().slice(0,10);
     console.log("dateISOFromPage = " + dateISOFromPage);
     let dateISOFromSystem = new Date().toISOString().slice(0,10);
-    console.log("dateISOFromSystem = " + dateISOFromSystem);
+    console.log("dateISOFromSystemReal = " + dateISOFromSystem);
+    dateISOFromSystem = datePlusDelta(dateISOFromSystem, deltaDays);
+    console.log("dateISOFromSystemDelta = " + dateISOFromSystem);     //delta
     // убираем ошибку с датой до необходимых значений
     dateISOFromPage < dateISOFromSystem ? (dateISOFromPage = dateISOFromSystem) : console.log('date good');
 
@@ -89,6 +123,7 @@ function hideDateButton() {
     }
     let dateFromSystem = new Date();
     let datePlusTenDays = dateFromSystem.addDays();
+
     let LButton = document.getElementById('button_left');
     let needToHide = (dateISOFromPage===dateISOFromSystem);
     needToHide ? LButton.style.display = "none" : LButton.style.display = "initial";
@@ -133,12 +168,6 @@ document.getElementById('button_left').onclick = function()
 function accept_modal_with_date() {
     $('#modal-1').modal('hide')
     set_date_on_server();
-};
-
-// вторая кнопка закрытия всплывающего окна с датой (крестик)
-function close_modal_with_date() {
-    $('#modal-1').modal('hide')
-    get_date_from_json();
 };
 
 // Всплывающее окно с датой по смене продукта
@@ -384,6 +413,8 @@ function load_json() {
                 let ResponseNot200 = JSONObject["stat_servers_response_not_200"];
                 green_red_status("bg_markstation_id", ResponseNot200, 0)
 
+                // добавление дельты для станций
+                deltaDays = JSONObject["delta_days_onstartup"];
             }
         });
 }
@@ -554,7 +585,7 @@ function hide_reset_button() {
 // функция для определения статуса (id: элемент, который красим;
 //                                  Value: 1 - зеленый, 0 и другие - красный)
 function green_red_status(id, value, needToGreen){
-    console.log(id, value, needToGreen);
+    //console.log(id, value, needToGreen);
     if (String(value)===String(needToGreen)){
         document.getElementById(String(id)).classList.remove("status_bad");
         document.getElementById(String(id)).classList.add("status_ok");
