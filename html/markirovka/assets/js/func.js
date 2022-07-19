@@ -176,7 +176,7 @@ function open_modal_with_date() {
 };
 
 // пароль
-const passPhrase = "1234"
+const passPhrase = "2022"
 // Всплывающее окно с вводом пароля
 async function open_modal_with_password() {
     let inputField = document.getElementById('id_password')
