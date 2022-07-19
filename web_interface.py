@@ -24,7 +24,6 @@ async def send_statistic_to_servers(app, infinity_loop=True):
         prepared_dict["plc_state"] = app['plc_state']
         #stat = json.dumps(prepared_dict).encode("utf-8")
         stat = json.dumps(prepared_dict)
-
         async with aiohttp.ClientSession() as session:
             for server in stat_receive_servers:
                 try:
@@ -33,7 +32,7 @@ async def send_statistic_to_servers(app, infinity_loop=True):
                     print(stat)
                     if "last_counter" in server:
                         if prepared_dict['total_codes'] != server['last_counter']:
-                            resp = await session.post(server['url'], json=stat, params=params, ssl=False)
+                            resp = await session.post(server['url'], data=stat, params=params, ssl=False)
                             print(f"total={prepared_dict['total_codes']} last_counter = {server['last_counter']}")
                             print(f"response body: {resp}")
                             print(f"response code: {resp.status}")
@@ -48,6 +47,7 @@ async def send_statistic_to_servers(app, infinity_loop=True):
                         server["resp_status"] = resp.status
                 except Exception as e:
                     server["resp_status"] = 0
+                    print("except")
                     print(e)
         if not infinity_loop:
             return

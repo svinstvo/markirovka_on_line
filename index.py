@@ -65,7 +65,7 @@ async def start_server(app):
     app['plc_state'] = {}
 
     app['stat_receive_servers'] = [
-        {"url": 'http://10.10.3.17:6000/request/marking/marking_line/MarkingLine/get_info_line', "last_counter": "",
+        {"url": 'http://10.10.3.116:6200/request/marking/marking_line/MarkingLine/get_info_line', "last_counter": "",
          "resp_status": ""},
         {"url": 'http://192.168.100.100/terminal/markstation/send_statistic', "resp_status": 0}]
 
