@@ -126,7 +126,10 @@ async def handle_port2002(reader, writer):
             stat_from_plc['count_no_trans_metka_2'] = int.from_bytes(data[44:48], byteorder="big")
             stat_from_plc['count_brak_no_zazor_2'] = int.from_bytes(data[48:52], byteorder="big")
             stat_from_plc['machine_status'] = int.from_bytes(data[52:56], byteorder="big")
-            stat_from_plc['message_from_plc'] = data[56:88].decode('utf-8')
+            stat_from_plc['count_parovoz'] = int.from_bytes(data[56:60], byteorder="big")
+            stat_from_plc['reserved1'] = int.from_bytes(data[60:64], byteorder="big")
+            stat_from_plc['reserved2'] = int.from_bytes(data[64:68], byteorder="big")
+            stat_from_plc['message_from_plc'] = data[68:100].decode('utf-8')
 
             async with aiohttp.ClientSession() as session:
                 async with session.get("http://127.0.0.1:8090/line/web_interface/get_controller_settings",

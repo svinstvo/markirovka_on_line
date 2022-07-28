@@ -77,20 +77,20 @@ async def start_server(app):
     # asyncio.create_task(work_with_db.load_counters_from_db(app, loop=True))
 
     # На старте программы смотрим даты всех файлов в каталоге программы, для определения версии программы
-    path = os.path.abspath(os.getcwd()) + '/**/'
-    max_date = 0
+    #path = os.path.abspath(os.getcwd()) + '/**/'
+    #max_date = 0
 
-    for dir in glob.glob(path, recursive=True):
-        if '_' in dir:
-            continue
-        with os.scandir(dir) as dir_entries:
-            for entry in dir_entries:
-                info = entry.stat()
-                if max_date < info.st_mtime:
-                    max_date = info.st_mtime
+    #for dir in glob.glob(path, recursive=True):
+    #    if '_' in dir:
+    #        continue
+    #    with os.scandir(dir) as dir_entries:
+    #        for entry in dir_entries:
+    #            info = entry.stat()
+    #            if max_date < info.st_mtime:
+    #                max_date = info.st_mtime
 
-    app['last_modify_date'] = datetime.datetime.fromtimestamp(max_date).strftime("%Y-%m-%d")
-    print(f"last_modify_date - {app['last_modify_date']}")
+    app['last_modify_date'] = '2022-07-27'
+    #print(f"last_modify_date - {app['last_modify_date']}")
 
     asyncio.create_task(plc_connector.start_servers(app))  # Сокетный сервер для приема сообщений от плк
     asyncio.create_task(web_interface.send_statistic_to_servers(app, infinity_loop=True))
